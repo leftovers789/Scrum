@@ -1,52 +1,39 @@
 package LogManagement;
 
 import BusManagement.Bus;
-import EmployeeManagement.Mechanic;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-public class MechanicReportLog {
+public class MaintenanceReport {
 
-    private Mechanic mechanic;
-    private List<Bus> bussesMaintained = new ArrayList<>();
-    private List<Bus> bussesFixed=new ArrayList<>();
+    private Bus bus;
     private Date dateChecked;
-    private boolean minorIssue;
+    private boolean issue;
     private String descriptionOfIssue;
     private double issueEstimatedCost;
 
-    public MechanicReportLog(Mechanic mechanic, Date dateChecked, boolean issueFound, 
+    public MaintenanceReport(Bus bus, Date dateChecked, boolean issue,
             String descriptionOfIssue, double issueEstimatedCost) {
-        this.mechanic = mechanic;
+        this.bus = bus;
         this.dateChecked = dateChecked;
-        this.minorIssue = issueFound;
+        this.issue = issue;
         this.descriptionOfIssue = descriptionOfIssue;
         this.issueEstimatedCost = issueEstimatedCost;
     }
 
-    public Mechanic getMechanic() {
-        return this.mechanic;
+    public Bus getBus() {
+        return bus;
     }
 
-    /**
-     *
-     * @param mechanic
-     */
-    public void setMechanic(Mechanic mechanic) {
-        this.mechanic = mechanic;
+    public void setBusChecked(Bus bus) {
+        this.bus = bus;
     }
 
-    public List<Bus> getBussesMaintained() {
-        return bussesMaintained;
+    public boolean hasIssue() {
+        return issue;
     }
 
-    /**
-     *
-     * @param bus
-     */
-    public void addBus(Bus busChecked) {
-        this.bussesMaintained.add(busChecked);
+    public void setIssue(boolean issue) {
+        this.issue = issue;
     }
 
     public Date getDateChecked() {
@@ -62,7 +49,7 @@ public class MechanicReportLog {
     }
 
     public boolean hasMinorIssue() {
-        return this.minorIssue;
+        return this.issue;
     }
 
     /**
@@ -70,7 +57,7 @@ public class MechanicReportLog {
      * @param issueFound
      */
     public void setIssueFound(boolean issueFound) {
-        this.minorIssue = issueFound;
+        this.issue = issueFound;
     }
 
     public String getDescriptionOfIssue() {
@@ -91,7 +78,7 @@ public class MechanicReportLog {
 
     /**
      *
-     * @param issueCost
+     * @param issueEstimatedCost
      */
     public void setIssueEstimatedCost(double issueEstimatedCost) {
         this.issueEstimatedCost = issueEstimatedCost;
