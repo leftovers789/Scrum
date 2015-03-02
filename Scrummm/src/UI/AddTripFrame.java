@@ -47,7 +47,7 @@ public class AddTripFrame extends javax.swing.JFrame {
         for (Bus bus : busCo.getBusses()) {
             busNoCBox.addItem(bus.getBusNumber());
         }
-        ReferenceNoLabel.setText(CodeGenerator.generateReferenceNumber());
+        ReferenceNoLabel.setText(gen.generateReferenceNumber());
         locationFromText = (JTextField) locationFromComboBox.getEditor().getEditorComponent();
         locationToText = (JTextField) locationToComboBox.getEditor().getEditorComponent();
         venueText = (JTextField) tripVenueComboBox.getEditor().getEditorComponent();

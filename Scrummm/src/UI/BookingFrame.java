@@ -21,6 +21,7 @@ public class BookingFrame extends javax.swing.JFrame {
     private Trip trip;
     private Passenger passenger;
     private TicketType ticketType;
+    private CodeGenerator gen=CodeGenerator.getInstance();
     private Ticket ticket;
     private SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy  -  hh:mm");
     private Gender gender;
@@ -35,7 +36,7 @@ public class BookingFrame extends javax.swing.JFrame {
         tickerTypeButtonGroup.add(regularRadioButton);
         tickerTypeButtonGroup.add(halfFareRadioButton);
         tickerTypeButtonGroup.add(discountedRadioButton);
-        tickerNoLabel.setText(CodeGenerator.generateTicketNumber());
+        tickerNoLabel.setText(gen.generateTicketNumber());
     }
 
     /**
