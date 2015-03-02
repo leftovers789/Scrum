@@ -353,6 +353,9 @@ public class BookingFrame extends javax.swing.JFrame {
             if(Integer.parseInt(ageTextField.getText()) > Ticket.getMinimumAgeForHalfFare())
                 JOptionPane.showMessageDialog(null, "Maximum age for Half fare is "+Ticket.getMinimumAgeForHalfFare()+" yrs old.", "Not allowed!", JOptionPane.ERROR_MESSAGE);
         }
+        else if(contactNoTextField.getText().length() != 11){
+            JOptionPane.showMessageDialog(null, "Invalid contact number", "Error!", JOptionPane.ERROR_MESSAGE);
+        }
         else{
             String fName = fNameTextField.getText();
             String lName = lNameTextField.getText();
