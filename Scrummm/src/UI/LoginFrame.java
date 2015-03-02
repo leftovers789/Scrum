@@ -31,11 +31,9 @@ public class LoginFrame extends javax.swing.JFrame {
     }
 
     private void hideFields() {
-        usernameLabel.setVisible(false);
         usernameField.setVisible(false);
         passwordField.setVisible(false);
         passwordLabel.setVisible(false);
-        idLabel.setVisible(false);
         idField.setVisible(false);
         logInButton.setVisible(false);
     }
@@ -52,9 +50,7 @@ public class LoginFrame extends javax.swing.JFrame {
         companyNameLabel = new javax.swing.JLabel();
         logInAsComboBox = new javax.swing.JComboBox();
         logInAsLabel = new javax.swing.JLabel();
-        usernameLabel = new javax.swing.JLabel();
         passwordLabel = new javax.swing.JLabel();
-        idLabel = new javax.swing.JLabel();
         usernameField = new javax.swing.JTextField();
         idField = new javax.swing.JTextField();
         passwordField = new javax.swing.JPasswordField();
@@ -62,7 +58,7 @@ public class LoginFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        logInAsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select", "Manager", "Cashier", "Mechanic" }));
+        logInAsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "        Select", "       Manager", "       Cashier", "       Mechanic" }));
         logInAsComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 logInAsComboBoxActionPerformed(evt);
@@ -71,11 +67,21 @@ public class LoginFrame extends javax.swing.JFrame {
 
         logInAsLabel.setText("Log In As:");
 
-        usernameLabel.setText("Username:");
-
         passwordLabel.setText("Password:");
 
-        idLabel.setText("ID:");
+        usernameField.setText("       USERNAME");
+        usernameField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                usernameFieldMouseClicked(evt);
+            }
+        });
+
+        idField.setText("             I.D.");
+        idField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                idFieldMouseClicked(evt);
+            }
+        });
 
         logInButton.setText("Log In");
         logInButton.addActionListener(new java.awt.event.ActionListener() {
@@ -94,22 +100,21 @@ public class LoginFrame extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(companyNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(logInAsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(usernameLabel)
-                            .addComponent(idLabel)
-                            .addComponent(passwordLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(24, 24, 24)
+                                .addComponent(logInAsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(16, 16, 16))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(passwordLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(logInButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(logInAsComboBox, 0, 135, Short.MAX_VALUE)
                             .addComponent(usernameField)
                             .addComponent(passwordField)
                             .addComponent(idField))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(logInButton, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -122,20 +127,16 @@ public class LoginFrame extends javax.swing.JFrame {
                     .addComponent(logInAsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(logInAsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(usernameLabel)
-                    .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(passwordLabel)
-                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(idField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(idLabel)
-                    .addComponent(idField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(passwordLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(logInButton)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 22, Short.MAX_VALUE))
         );
 
         pack();
@@ -149,12 +150,11 @@ public class LoginFrame extends javax.swing.JFrame {
             logInButton.setVisible(true);
             if (logInAsComboBoxSelectedIndex == 1) {
                 usernameField.setVisible(true);
-                usernameLabel.setVisible(true);
+
                 passwordLabel.setVisible(true);
                 passwordField.setVisible(true);
             } else {
                 idField.setVisible(true);
-                idLabel.setVisible(true);
             }
         }
     }//GEN-LAST:event_logInAsComboBoxActionPerformed
@@ -202,7 +202,7 @@ public class LoginFrame extends javax.swing.JFrame {
                     if (employee instanceof Cashier) {
                         //put here sian lasaga cashier frame
                     } else if (employee instanceof Mechanic) {
-                        MaintenanceFrame maintenanceFrame=new MaintenanceFrame();
+                        MaintenanceFrame maintenanceFrame = new MaintenanceFrame();
                         maintenanceFrame.show();
                         this.hide();
                     }
@@ -211,6 +211,16 @@ public class LoginFrame extends javax.swing.JFrame {
 
         }
     }//GEN-LAST:event_logInButtonActionPerformed
+
+    private void usernameFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usernameFieldMouseClicked
+        // TODO add your handling code here:
+        usernameField.setText("");
+    }//GEN-LAST:event_usernameFieldMouseClicked
+
+    private void idFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_idFieldMouseClicked
+        // TODO add your handling code here:
+        idField.setText("");
+    }//GEN-LAST:event_idFieldMouseClicked
 
     /**
      * @param args the command line arguments
@@ -250,13 +260,11 @@ public class LoginFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel companyNameLabel;
     private javax.swing.JTextField idField;
-    private javax.swing.JLabel idLabel;
     private javax.swing.JComboBox logInAsComboBox;
     private javax.swing.JLabel logInAsLabel;
     private javax.swing.JButton logInButton;
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;
     private javax.swing.JTextField usernameField;
-    private javax.swing.JLabel usernameLabel;
     // End of variables declaration//GEN-END:variables
 }
