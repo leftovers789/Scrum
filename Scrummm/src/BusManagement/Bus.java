@@ -84,7 +84,7 @@ public class Bus {
         this.busType = busType;
     }
 
-    public boolean getAvailability() {
+    public boolean isAvailable() {
         return this.availability;
     }
 

@@ -9,6 +9,7 @@ import BusManagement.*;
 import EmployeeManagement.*;
 import LogManagement.MaintenanceReport;
 import RegistryManagement.*;
+import java.nio.charset.Charset;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -46,12 +47,6 @@ public class MaintenanceFrame extends javax.swing.JFrame {
         setTableConfiguration(bussesForStateCheckTable, bussesForStateCheckTableModel);
         setTableConfiguration(bussesForRepairTable, bussesForRepairTableModel);
 
-        Mechanic mechanic = new Mechanic(WIDTH, Gender.MALE, null, null, null, null, null, null);
-
-        Bus bus = new Bus("dfaf", BusType.ORDINARY, true, "dfaf", WIDTH, null, null, null, null);
-        mechanic.addBusForMaintenance(bus);
-        busCompany.setCurrentLoggedIn(mechanic);
-        busCompany.addBus(bus);
         updateTable();
     }
 
@@ -482,10 +477,14 @@ public class MaintenanceFrame extends javax.swing.JFrame {
         mechanic.addMaintenanceReport(new MaintenanceReport(bus, new Date(), issue,
                 issueDescriptionTextArea.getText(), issueEstimatedCost, issueFixed));
         mechanic.getBussesForMaintenance().remove(bus);
-
+        
+        busCompany.getBusses().remove(bus);
+        busCompany.addBus(bus);
+        
         issue = false;
         issueFixed = false;
         bus = null;
+        busAvailability = false;
         clearFields();
         disableFields();
         updateTable();
@@ -534,6 +533,7 @@ public class MaintenanceFrame extends javax.swing.JFrame {
         if (issueComboBoxSelectedIndex == 2) {
             issue = false;
             disableFields();
+            busAvailability = true;
             issueComboBox.setEnabled(true);
             saveReportButton.setEnabled(true);
         }
@@ -542,10 +542,12 @@ public class MaintenanceFrame extends javax.swing.JFrame {
     private void busStateComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_busStateComboBoxActionPerformed
         if (busStateComboBox.getSelectedIndex() == 1) {
             busAvailability = true;
+            bus.setAvailability(busAvailability);
         }
 
         if (busStateComboBox.getSelectedIndex() == 2) {
             busAvailability = false;
+            bus.setAvailability(busAvailability);
         }
     }//GEN-LAST:event_busStateComboBoxActionPerformed
 
@@ -558,6 +560,7 @@ public class MaintenanceFrame extends javax.swing.JFrame {
         for (Bus bus : mechanic.getBussesForRepair()) {
             bussesForRepairTableModel.addRow(new Object[]{bus.getBusNumber(), bus.getPlateNumber()});
         }
+      
     }
 
     public void clearFields() {
