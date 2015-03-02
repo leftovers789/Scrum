@@ -22,7 +22,6 @@ public class SearchEngine {
     private Registry reg = Registry.getInstance();
     private BusCompany busCo = BusCompany.getInstance();
     
-    
     public Bus searchBusByBusNo(String busNo){
         for (Bus bus : busCo.getBusses()) {
             if(!busNo.isEmpty() && bus.getBusNumber().equalsIgnoreCase(busNo)){

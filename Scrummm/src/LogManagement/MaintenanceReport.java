@@ -10,14 +10,24 @@ public class MaintenanceReport {
     private boolean issue;
     private String descriptionOfIssue;
     private double issueEstimatedCost;
+    private boolean issueFixed;
 
-    public MaintenanceReport(Bus bus, Date dateChecked, boolean issue,
-            String descriptionOfIssue, double issueEstimatedCost) {
+    public MaintenanceReport(Bus bus, Date dateChecked, boolean issue, String descriptionOfIssue,
+            double issueEstimatedCost, boolean issueFixed) {
         this.bus = bus;
         this.dateChecked = dateChecked;
         this.issue = issue;
         this.descriptionOfIssue = descriptionOfIssue;
         this.issueEstimatedCost = issueEstimatedCost;
+        this.issueFixed = issueFixed;
+    }
+
+    public boolean isIssueFixed() {
+        return issueFixed;
+    }
+
+    public void setIssueFixed(boolean issueFixed) {
+        this.issueFixed = issueFixed;
     }
 
     public Bus getBus() {
