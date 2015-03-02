@@ -309,7 +309,7 @@ public class ScheduleDetailsFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         BookingFrame booking = new BookingFrame();
         int row = tripListTable.getSelectedRow();
-        String refNo = (String) tripsTableModel.getValueAt(row, 5);
+        String refNo = (String) tripsTableModel.getValueAt(row, 4);
         trip = (Trip) search.searchByRefNo(refNo);
         booking.loadTrip(trip);
         booking.show();

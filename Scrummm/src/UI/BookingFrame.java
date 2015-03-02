@@ -349,6 +349,10 @@ public class BookingFrame extends javax.swing.JFrame {
                 ageTextField.getText().isEmpty() || contactNoTextField.getText().isEmpty() || ticketType==null){
             JOptionPane.showMessageDialog(null, "Please fill all the data.", "Not complete!", JOptionPane.ERROR_MESSAGE);
         }
+        else if(ticketType==TicketType.Half_Fare){
+            if(Integer.parseInt(ageTextField.getText()) > Ticket.getMinimumAgeForHalfFare())
+                JOptionPane.showMessageDialog(null, "Maximum age for Half fare is "+Ticket.getMinimumAgeForHalfFare()+" yrs old.", "Not allowed!", JOptionPane.ERROR_MESSAGE);
+        }
         else{
             String fName = fNameTextField.getText();
             String lName = lNameTextField.getText();

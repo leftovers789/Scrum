@@ -16,6 +16,7 @@ public class Ticket {
     private TicketType type;
     private double price;
     private static double discountedRate;
+    private static int minimumAgeForHalfFare;
 
     public Ticket(String tickerNumber, TicketType type, double price) {
         this.tickerNumber = tickerNumber;
@@ -45,6 +46,14 @@ public class Ticket {
 
     public static void setDiscountedRate(double discountedRate) {
         Ticket.discountedRate = discountedRate/100;
+    }
+
+    public static void setMinimumAgeForHalfFare(int minimumAgeForHalfFare) {
+        Ticket.minimumAgeForHalfFare = minimumAgeForHalfFare;
+    }
+
+    public static int getMinimumAgeForHalfFare() {
+        return minimumAgeForHalfFare;
     }
     
     

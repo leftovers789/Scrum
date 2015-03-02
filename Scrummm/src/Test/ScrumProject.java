@@ -39,7 +39,7 @@ public class ScrumProject {
         SearchEngine search = new SearchEngine();
         Registry reg = Registry.getInstance();
         Trip trip;
-        trip = new Trip(TripStatus.READY, 1000, "Iloilo", "Batanes", bus, new Date("02/15/15 9:05"), "Ungka Terminal", "RE1550002");
+        trip = new Trip(TripStatus.READY, 1000, "Iloilo", "Batanes", bus, new Date("02/15/15 9:05"), "RE1550002", "Ungka Terminal");
         reg.addTrip(trip);
 
         AddTripFrame tripFrame = new AddTripFrame();
