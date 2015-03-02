@@ -10,6 +10,7 @@ import EmployeeManagement.*;
 import LogManagement.MaintenanceReport;
 import RegistryManagement.*;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -28,12 +29,14 @@ public class MaintenanceFrame extends javax.swing.JFrame {
     private boolean issue;
     private boolean busAvailability;
     private boolean issueFixed;
+    private Date date = new Date();
     private Bus bus;
     private BusCompany busCompany = BusCompany.getInstance();
     private DefaultTableModel bussesForStateCheckTableModel
             = new DefaultTableModel(new String[]{"Bus #", "Bus Plate #"}, 0);
     private DefaultTableModel bussesForRepairTableModel
             = new DefaultTableModel(new String[]{"Bus #", "Bus Plate #"}, 0);
+    private SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd,yyyy");
 
     /**
      * Creates new form MaintenanceFrame
@@ -47,7 +50,11 @@ public class MaintenanceFrame extends javax.swing.JFrame {
         setTableConfiguration(bussesForStateCheckTable, bussesForStateCheckTableModel);
         setTableConfiguration(bussesForRepairTable, bussesForRepairTableModel);
 
-        updateTable();
+     //   updateTable();
+
+        /*    currentlyLoggedInLabel.setText(mechanic.getLastName() + ", " + mechanic.getFirstName()
+         + " " + mechanic.getMiddleName());*/
+        dateLabel.setText(sdf.format(date));
     }
 
     /**
@@ -277,6 +284,11 @@ public class MaintenanceFrame extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        currentlyLoggedInLabel.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+
+        dateLabel.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        dateLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
         bussesForStateCheckTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -476,11 +488,17 @@ public class MaintenanceFrame extends javax.swing.JFrame {
 
         mechanic.addMaintenanceReport(new MaintenanceReport(bus, new Date(), issue,
                 issueDescriptionTextArea.getText(), issueEstimatedCost, issueFixed));
-        mechanic.getBussesForMaintenance().remove(bus);
+        if (bussesForStateCheckTable.getSelectedRow() >= 0) {
+            mechanic.getBussesForMaintenance().remove(bus);
+        }
+        
+        if (bussesForRepairTable.getSelectedRow() >= 0) {
+            mechanic.getBussesForRepair().remove(bus);
+        }
         
         busCompany.getBusses().remove(bus);
         busCompany.addBus(bus);
-        
+
         issue = false;
         issueFixed = false;
         bus = null;
@@ -560,7 +578,7 @@ public class MaintenanceFrame extends javax.swing.JFrame {
         for (Bus bus : mechanic.getBussesForRepair()) {
             bussesForRepairTableModel.addRow(new Object[]{bus.getBusNumber(), bus.getPlateNumber()});
         }
-      
+
     }
 
     public void clearFields() {

@@ -202,7 +202,9 @@ public class LoginFrame extends javax.swing.JFrame {
                     if (employee instanceof Cashier) {
                         //put here sian lasaga cashier frame
                     } else if (employee instanceof Mechanic) {
-                        //mechanic frame
+                        MaintenanceFrame maintenanceFrame=new MaintenanceFrame();
+                        maintenanceFrame.show();
+                        this.hide();
                     }
                 }
             }
