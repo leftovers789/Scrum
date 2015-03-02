@@ -1,6 +1,5 @@
 package EmployeeManagement;
 
-
 public abstract class Employee {
 
     private int age;
@@ -12,7 +11,8 @@ public abstract class Employee {
     private String middleName;
     private String id;
 
-    public Employee(int age, Gender gender, String address, String cellphoneNumber, String firstName, String lastName, String middleName, String id) {
+    public Employee(int age, Gender gender, String address, String cellphoneNumber,
+            String firstName, String lastName, String middleName, String id) {
         this.age = age;
         this.gender = gender;
         this.address = address;

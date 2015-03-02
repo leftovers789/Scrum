@@ -488,6 +488,7 @@ public class MaintenanceFrame extends javax.swing.JFrame {
 
         mechanic.addMaintenanceReport(new MaintenanceReport(bus, new Date(), issue,
                 issueDescriptionTextArea.getText(), issueEstimatedCost, issueFixed));
+        
         if (bussesForStateCheckTable.getSelectedRow() >= 0) {
             mechanic.getBussesForMaintenance().remove(bus);
         }
