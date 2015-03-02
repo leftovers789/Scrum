@@ -41,10 +41,10 @@ public class ScrumProject {
         Trip trip;
         trip = new Trip(TripStatus.READY, 1000, "Iloilo", "Batanes", bus, new Date("02/15/15 9:05"), "RE1550002", "Ungka Terminal");
         reg.addTrip(trip);
-
+        Ticket.setDiscountedRate(20);
+        Ticket.setMinimumAgeForHalfFare(5);
         AddTripFrame tripFrame = new AddTripFrame();
         tripFrame.show();
-        Ticket.setDiscountedRate(20);
         
         ScheduleDetailsFrame sched = new ScheduleDetailsFrame();
         sched.show();
