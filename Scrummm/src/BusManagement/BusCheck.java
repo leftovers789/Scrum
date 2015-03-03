@@ -16,18 +16,8 @@ import java.util.List;
  */
 public class BusCheck {
 
-//    private String plateNumber;
-//    private BusType busType;
-//    private boolean availability;
-//    private String busNumber;
-//    private int capacity;
-//    private Driver driver;
-//    private Conductor conductor;
-//    private List<String> tireSerialNumbers = new ArrayList<>();
-//    private String engineSerialNumber;
-//    private Date dateAdded;
     private List<BusCompany> busses = new ArrayList<>();
-    
+
     BusUpdate update = new BusUpdate();
 
     public void check() {
@@ -41,7 +31,7 @@ public class BusCheck {
                 Conductor conductor = bus.getBusses().get(i).getConductor();
                 int capacity = bus.getBusses().get(i).getCapacity();
                 boolean availability = bus.getBusses().get(i).isAvailable();
-                
+
                 update.update(busNumber, plateNumber, availability, capacity, driver, engineSerialNumber, busType, conductor);
             }
         }
