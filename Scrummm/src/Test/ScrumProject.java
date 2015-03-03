@@ -26,7 +26,6 @@ public class ScrumProject {
     public static void main(String[] args) {
         // TODO code application logic here
         
-        //Push test
         
 //        Trip t = new Trip();
 //        for (int i = 0; i < 10; i++) {

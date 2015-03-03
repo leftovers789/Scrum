@@ -49,11 +49,11 @@ public class SearchEngine {
         return results;
     }
     
-    public List<Trip> searchAvailableTrips(Date date){
+    public List<Trip> searchAvailableTrips(String date){
         List<Trip> results = new ArrayList<>();
         for (Trip trip : reg.getTrips()) {
-            Date date1 = new Date(trip.getSchedule().getMonth()+"/"+trip.getSchedule().getDay()+"/"+trip.getSchedule().getYear());
-            if(trip.getStatus().equals(TripStatus.READY) && date1.equals(date) && trip.getCapacity() > 0)
+            String date1 = trip.getSchedule().getMonth()+1+"/"+trip.getSchedule().getDate()+"/"+(trip.getSchedule().getYear()-100);
+            if(date1.equals(date))
                 results.add(trip);
         }
         return results;
@@ -63,6 +63,15 @@ public class SearchEngine {
         List<Passenger> results = new ArrayList<>();
         for (Passenger passenger : trip.getPassenger()) {
             results.add(passenger);
+        }
+        return results;
+    }
+    
+    public List<Trip> searchTripFromAndTo(String loc){
+        List<Trip> results = new ArrayList<>();
+        for (Trip trip : reg.getTrips()) {
+            if(trip.getTripFrom().contains(loc))
+                results.add(trip);   
         }
         return results;
     }

@@ -9,11 +9,22 @@ package UI;
 import BookingManagement.*;
 import BusManagement.*;
 import RegistryManagement.*;
+import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import net.sourceforge.jcalendarbutton.JCalendarButton;
+import net.sourceforge.jcalendarbutton.JTimeButton;
 /**
  *
  * @author Sian Paul Lasaga
@@ -22,13 +33,22 @@ public class AddTripFrame extends javax.swing.JFrame {
 
     private BusCompany busCo = BusCompany.getInstance();
     private Trip trip = new Trip();
+    private List<Trip> tripList;
     private SearchEngine search = new SearchEngine();
     private Registry reg = Registry.getInstance();
     private static CodeGenerator gen = CodeGenerator.getInstance();
+    private Vector<String> v = new Vector<>();
+    private Vector<String> v2 = new Vector<>();
+    private boolean hide_flag = false;
     private JTextField locationFromText;
     private JTextField locationToText;
     private JTextField venueText;
     private Vector<String> busNumbers=new Vector<String>();
+    private FlowLayout flMain = new FlowLayout();
+    private SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+    private SimpleDateFormat df1 = new SimpleDateFormat("hh:mm a");
+    private JCalendarButton jCalendar = new JCalendarButton();
+    private JTimeButton jTime = new JTimeButton();
     /**
      * Creates new form AddTripFrame
      */
@@ -39,10 +59,6 @@ public class AddTripFrame extends javax.swing.JFrame {
         }
         busNoCBox.setModel(new DefaultComboBoxModel(busNumbers));
         updateTripButton.setEnabled(false);
-        yearCBox.setModel(new DefaultComboBoxModel());
-        for (int i = 2015; i <= 2020; i++) {
-            yearCBox.addItem(i);
-        }
         busNoCBox.setModel(new DefaultComboBoxModel());
         for (Bus bus : busCo.getBusses()) {
             busNoCBox.addItem(bus.getBusNumber());
@@ -51,20 +67,38 @@ public class AddTripFrame extends javax.swing.JFrame {
         locationFromText = (JTextField) locationFromComboBox.getEditor().getEditorComponent();
         locationToText = (JTextField) locationToComboBox.getEditor().getEditorComponent();
         venueText = (JTextField) tripVenueComboBox.getEditor().getEditorComponent();
-    
-//        routeText.addKeyListener(new KeyAdapter() {
-//            public void keyTyped(KeyEvent e){
-//                EventQueue.invokeLater(new Runnable(){
-//                    @Override
-//                    public void run() {
-//                        String text = routeText.getText();
-//                        if(text.length() == 0){
-//                            routeText.hidePopup();
-//                        }
-//                    }
-//                    
-//                });
-//            }});
+        datePanel.setLayout(flMain);
+        datePanel.add(jCalendar);
+        jCalendar.addPropertyChangeListener(new PropertyChangeListener(){
+            @Override
+            public void propertyChange(PropertyChangeEvent evt){
+                if(evt.getNewValue() instanceof Date){
+                    dateTextField.setText(df.format(evt.getNewValue()));
+                }
+            }
+        });
+        timePanel.setLayout(flMain);
+        timePanel.add(jTime);
+        jTime.addPropertyChangeListener(new PropertyChangeListener(){
+            @Override
+            public void propertyChange(PropertyChangeEvent evt){
+                if(evt.getNewValue() instanceof Date){
+                    timeTextField.setText(df1.format(evt.getNewValue()));
+                }
+            }
+        });
+        locationFromSuggestionBox();
+        locationToSuggestionBox();
+        venueSuggestionBox();
+        for (Trip trip1 : reg.getTrips()) {
+            String loc = trip1.getTripFrom();
+            String loc2 = trip1.getTripTo();
+            String ven = trip1.getVenue();
+            v.add(loc);
+            v.add(loc2);
+            v2.add(ven);
+        }
+        
     }
 
     /**
@@ -87,13 +121,7 @@ public class AddTripFrame extends javax.swing.JFrame {
         AddTripButton = new javax.swing.JButton();
         ViewTripsButton = new javax.swing.JButton();
         busNoCBox = new javax.swing.JComboBox();
-        monthLabel = new javax.swing.JLabel();
-        monthCBox = new javax.swing.JComboBox();
-        jLabel7 = new javax.swing.JLabel();
-        dayCBox = new javax.swing.JComboBox();
-        jLabel8 = new javax.swing.JLabel();
-        yearCBox = new javax.swing.JComboBox();
-        timeText = new javax.swing.JFormattedTextField();
+        timeTextField = new javax.swing.JFormattedTextField();
         backButton = new javax.swing.JButton();
         ReferenceNoLabel = new javax.swing.JLabel();
         updateTripButton = new javax.swing.JButton();
@@ -104,6 +132,9 @@ public class AddTripFrame extends javax.swing.JFrame {
         locationFromComboBox = new javax.swing.JComboBox();
         locationToComboBox = new javax.swing.JComboBox();
         tripVenueComboBox = new javax.swing.JComboBox();
+        dateTextField = new javax.swing.JFormattedTextField();
+        datePanel = new javax.swing.JPanel();
+        timePanel = new javax.swing.JPanel();
 
         ViewTripsButton1.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         ViewTripsButton1.setText("View Trips");
@@ -154,37 +185,6 @@ public class AddTripFrame extends javax.swing.JFrame {
             }
         });
 
-        monthLabel.setText("Month:");
-
-        monthCBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-Select-", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }));
-        monthCBox.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                monthCBoxMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                monthCBoxMouseEntered(evt);
-            }
-        });
-
-        jLabel7.setText("Day:");
-
-        dayCBox.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                dayCBoxMouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                dayCBoxMouseEntered(evt);
-            }
-        });
-
-        jLabel8.setText("Year:");
-
-        yearCBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                yearCBoxActionPerformed(evt);
-            }
-        });
-
         backButton.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         backButton.setText("Back");
         backButton.addActionListener(new java.awt.event.ActionListener() {
@@ -204,7 +204,7 @@ public class AddTripFrame extends javax.swing.JFrame {
         });
 
         jLabel9.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jLabel9.setText("Trip Venue:");
+        jLabel9.setText("Venue:");
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Route"));
 
@@ -247,6 +247,30 @@ public class AddTripFrame extends javax.swing.JFrame {
 
         tripVenueComboBox.setEditable(true);
 
+        dateTextField.setEditable(false);
+
+        javax.swing.GroupLayout datePanelLayout = new javax.swing.GroupLayout(datePanel);
+        datePanel.setLayout(datePanelLayout);
+        datePanelLayout.setHorizontalGroup(
+            datePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 29, Short.MAX_VALUE)
+        );
+        datePanelLayout.setVerticalGroup(
+            datePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 26, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout timePanelLayout = new javax.swing.GroupLayout(timePanel);
+        timePanel.setLayout(timePanelLayout);
+        timePanelLayout.setHorizontalGroup(
+            timePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 29, Short.MAX_VALUE)
+        );
+        timePanelLayout.setVerticalGroup(
+            timePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 26, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -255,54 +279,53 @@ public class AddTripFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(monthLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(monthCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel7)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(dayCBox, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(24, 24, 24)
-                                        .addComponent(jLabel8)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(yearCBox, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel9)
-                                            .addComponent(jLabel2))
-                                        .addGap(15, 15, 15)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(busNoCBox, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(tripVenueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(backButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(ViewTripsButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(updateTripButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE)
-                                .addComponent(AddTripButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addGap(18, 18, 18)
                                 .addComponent(ReferenceNoLabel))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel4)
-                                        .addComponent(jLabel6))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(timeText, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(priceText, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(backButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ViewTripsButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(updateTripButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(AddTripButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGap(20, 20, 20)
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                                        .addComponent(priceText, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(52, 52, 52))
+                                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                            .addComponent(datePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                            .addComponent(busNoCBox, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))))
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(dateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))))
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel4))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel9)
+                                    .addComponent(jLabel6))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(timeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(timePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(tripVenueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -313,72 +336,252 @@ public class AddTripFrame extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(monthLabel)
-                    .addComponent(monthCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7)
-                    .addComponent(dayCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(yearCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
-                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel1)
+                                .addComponent(jLabel6)
+                                .addComponent(dateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(timeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(timePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(timeText, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(busNoCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                            .addComponent(jLabel2)
+                            .addComponent(busNoCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9)
+                            .addComponent(tripVenueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(priceText, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tripVenueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9))
-                        .addGap(41, 41, 41)
+                            .addComponent(priceText, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                         .addComponent(AddTripButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(updateTripButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(ViewTripsButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                        .addComponent(datePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
 
-        //dayCBox.setModel(new DefaultComboBoxModel());
-        //try{
-            //if(monthCBox.getSelectedItem().toString().equals("Feb")){
-                //    for(int i = 1; i<=29; i++){
-                    //        monthCBox.addItem(i);
-                    //    }
-                //}
-            //}
-        //catch(Exception e){
-            ////}
-        //}
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(22, Short.MAX_VALUE))
+        );
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-    getContentPane().setLayout(layout);
-    layout.setHorizontalGroup(
-        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(layout.createSequentialGroup()
-            .addContainerGap()
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-    );
-    layout.setVerticalGroup(
-        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(layout.createSequentialGroup()
-            .addContainerGap()
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-    );
-
-    pack();
+        pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public void locationFromSuggestionBox(){
+        locationFromText.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e){
+                EventQueue.invokeLater(new Runnable(){
+                    @Override
+                    public void run() {
+                        String text = locationFromText.getText();
+                        if(text.length() == 0){
+                            locationFromComboBox.hidePopup();
+                            locationFromComboBox.setModel(new DefaultComboBoxModel(v));
+                            locationFromComboBox.setSelectedIndex(-1);
+                            locationFromText.setText("");
+                        } else{
+                            DefaultComboBoxModel m = getSuggestedModel(v, text);
+                            if(m.getSize() == 0 || hide_flag){
+                                locationFromComboBox.hidePopup();
+                                hide_flag = false;
+                            } else{
+                                if(m.getSize()==1){
+                                    tripList = search.searchTripFromAndTo(m.getSelectedItem().toString());
+                                }
+                                locationFromComboBox.setModel(m);
+                                locationFromComboBox.setSelectedIndex(-1);
+                                locationFromText.setText(text);
+                                locationFromComboBox.showPopup();
+                            }
+                        }
+                    }
+                    
+                });
+            }
+            
+            public void keyPressed(KeyEvent e){
+                String text = locationFromText.getText();
+                DefaultComboBoxModel m = getSuggestedModel(v, text);
+                int code = e.getKeyCode();
+                if (code == KeyEvent.VK_ENTER) {
+                    if (!v.contains(text)) {
+                        Collections.sort(v);
+                        tripList = search.searchTripFromAndTo(m.getSelectedItem().toString());
+                        locationFromComboBox.setModel(getSuggestedModel(v, text));
+                        locationFromComboBox.setSelectedIndex(-1);
+                        locationFromText.setText(text);
+                    }
+                    hide_flag = true;
+                }else if(code == KeyEvent.VK_ESCAPE){
+                    hide_flag = true;
+                }else if(code == KeyEvent.VK_RIGHT){
+                    for (int i = 0; i < v.size(); i++) {
+                        String str = v.elementAt(i);
+                        if(str.startsWith(text)){
+                            locationFromComboBox.setSelectedIndex(-1);
+                            locationFromText.setText(str);
+                            return;
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    public void locationToSuggestionBox(){
+        locationToText.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e){
+                EventQueue.invokeLater(new Runnable(){
+                    @Override
+                    public void run() {
+                        String text = locationToText.getText();
+                        if(text.length() == 0){
+                            locationToComboBox.hidePopup();
+                            locationToComboBox.setModel(new DefaultComboBoxModel(v));
+                            locationToComboBox.setSelectedIndex(-1);
+                            locationToText.setText("");
+                        } else{
+                            DefaultComboBoxModel m = getSuggestedModel(v, text);
+                            if(m.getSize() == 0 || hide_flag){
+                                locationToComboBox.hidePopup();
+                                hide_flag = false;
+                            } else{
+                                if(m.getSize()==1){
+                                    tripList = search.searchTripFromAndTo(m.getSelectedItem().toString());
+                                }
+                                locationToComboBox.setModel(m);
+                                locationToComboBox.setSelectedIndex(-1);
+                                locationToText.setText(text);
+                                locationToComboBox.showPopup();
+                            }
+                        }
+                    }
+                    
+                });
+            }
+            
+            public void keyPressed(KeyEvent e){
+                String text = locationToText.getText();
+                DefaultComboBoxModel m = getSuggestedModel(v, text);
+                int code = e.getKeyCode();
+                if (code == KeyEvent.VK_ENTER) {
+                    if (!v.contains(text)) {
+                        Collections.sort(v);
+                        tripList = search.searchTripFromAndTo(m.getSelectedItem().toString());
+                        locationToComboBox.setModel(getSuggestedModel(v, text));
+                        locationToComboBox.setSelectedIndex(-1);
+                        locationToText.setText(text);
+                    }
+                    hide_flag = true;
+                }else if(code == KeyEvent.VK_ESCAPE){
+                    hide_flag = true;
+                }else if(code == KeyEvent.VK_RIGHT){
+                    for (int i = 0; i < v.size(); i++) {
+                        String str = v.elementAt(i);
+                        if(str.startsWith(text)){
+                            locationToComboBox.setSelectedIndex(-1);
+                            locationToText.setText(str);
+                            return;
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    public void venueSuggestionBox(){
+        venueText.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e){
+                EventQueue.invokeLater(new Runnable(){
+                    @Override
+                    public void run() {
+                        String text = venueText.getText();
+                        if(text.length() == 0){
+                            tripVenueComboBox.hidePopup();
+                            tripVenueComboBox.setModel(new DefaultComboBoxModel(v2));
+                            tripVenueComboBox.setSelectedIndex(-1);
+                            venueText.setText("");
+                        } else{
+                            DefaultComboBoxModel m = getSuggestedModel(v2, text);
+                            if(m.getSize() == 0 || hide_flag){
+                                locationToComboBox.hidePopup();
+                                hide_flag = false;
+                            } else{
+                                if(m.getSize()==1){
+                                    tripList = search.searchTripFromAndTo(m.getSelectedItem().toString());
+                                }
+                                tripVenueComboBox.setModel(m);
+                                tripVenueComboBox.setSelectedIndex(-1);
+                                venueText.setText(text);
+                                tripVenueComboBox.showPopup();
+                            }
+                        }
+                    }
+                    
+                });
+            }
+            
+            public void keyPressed(KeyEvent e){
+                String text = venueText.getText();
+                DefaultComboBoxModel m = getSuggestedModel(v2, text);
+                int code = e.getKeyCode();
+                if (code == KeyEvent.VK_ENTER) {
+                    if (!v2.contains(text)) {
+                        Collections.sort(v2);
+                        tripList = search.searchTripFromAndTo(m.getSelectedItem().toString());
+                        tripVenueComboBox.setModel(getSuggestedModel(v2, text));
+                        tripVenueComboBox.setSelectedIndex(-1);
+                        venueText.setText(text);
+                    }
+                    hide_flag = true;
+                }else if(code == KeyEvent.VK_ESCAPE){
+                    hide_flag = true;
+                }else if(code == KeyEvent.VK_RIGHT){
+                    for (int i = 0; i < v2.size(); i++) {
+                        String str = v2.elementAt(i);
+                        if(str.startsWith(text)){
+                            tripVenueComboBox.setSelectedIndex(-1);
+                            venueText.setText(str);
+                            return;
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    private static DefaultComboBoxModel getSuggestedModel(java.util.List<String> list, String text){
+        DefaultComboBoxModel m = new DefaultComboBoxModel();
+        for (String s : list) {
+            s = s.toUpperCase();
+            if (s.startsWith(text.toUpperCase())) {
+                m.addElement(s);
+            }
+        }
+        return m;
+    }
+    
     public void loadData(Trip trip){
         updateTripButton.setEnabled(true);
         AddTripButton.setEnabled(false);
@@ -387,13 +590,8 @@ public class AddTripFrame extends javax.swing.JFrame {
         locationFromText.setText(trip.getTripFrom());
         locationToText.setText(trip.getTripTo());
         busNoCBox.setSelectedItem(trip.getBus().getBusNumber());
-        monthCBox.setSelectedIndex(trip.getSchedule().getMonth()+1);
-        for (int i = 1; i <= 31; i++) {
-            dayCBox.addItem(i);
-        }
-        dayCBox.setSelectedIndex(trip.getSchedule().getDate()-1);
-        yearCBox.setSelectedIndex(trip.getSchedule().getYear()-115);
-        timeText.setText(trip.getSchedule().getHours()+":"+trip.getSchedule().getMinutes());
+        dateTextField.setText(df.format(trip.getSchedule()));
+        timeTextField.setText(df1.format(trip.getSchedule()));
         venueText.setText(trip.getVenue());
         priceText.setText(trip.getPrice()+"");
         this.trip = trip;
@@ -406,15 +604,15 @@ public class AddTripFrame extends javax.swing.JFrame {
 
     private void updateTripButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateTripButtonActionPerformed
         // TODO add your handling code here:
-        if(locationFromText.getText().isEmpty() || locationToText.getText().isEmpty() || busNoCBox.getSelectedItem().toString().isEmpty() || monthCBox.getSelectedIndex() == 0
-            || dayCBox.getSelectedItem().toString().isEmpty() || timeText.getText().isEmpty() || priceText.getText().isEmpty()){
+        if(locationFromText.getText().isEmpty() || locationToText.getText().isEmpty() || busNoCBox.getSelectedItem().toString().isEmpty() 
+            || timeTextField.getText().isEmpty() || priceText.getText().isEmpty()){
             JOptionPane.showMessageDialog(null, "Please fill all the data.", "Not complete!", JOptionPane.ERROR_MESSAGE);
         }
         else{
             String locationFrom = locationFromText.getText();
             String locationTo = locationToText.getText();
-            String time = timeText.getText();
-            String date = (int)(monthCBox.getSelectedIndex())+"/"+dayCBox.getSelectedItem().toString()+"/"+(int)(yearCBox.getSelectedIndex()+15);
+            Date time = new Date(timeTextField.getText());
+            Date date = new Date(dateTextField.getText());
             String busNo = busNoCBox.getSelectedItem().toString();
             Bus bus = search.searchBusByBusNo(busNo);      
             String venue = venueText.getText();
@@ -436,49 +634,6 @@ public class AddTripFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_updateTripButtonActionPerformed
 
-    private void yearCBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yearCBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_yearCBoxActionPerformed
-
-    private void dayCBoxMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dayCBoxMouseEntered
-        // TODO add your handling code here:
-        dayCBox.setModel(new DefaultComboBoxModel());
-        String month = null;
-        month = monthCBox.getSelectedItem().toString();
-        if(month.equals("Feb")){
-            for (int i = 1; i < 30; i++) {
-                dayCBox.addItem(i);
-            }
-        }
-        if(month.equals("Jan")||month.equals("Mar")||month.equals("May")||month.equals("Jul")
-            ||month.equals("Aug")||month.equals("Oct")||month.equals("Dec")){
-            for (int i = 1; i < 32; i++) {
-                dayCBox.addItem(i);
-            }
-        }
-        if(month.equals("Apr")||month.equals("Jun")||month.equals("Sep")||month.equals("Oct")
-            ||month.equals("Nov")){
-            for (int i = 1; i < 31; i++) {
-                dayCBox.addItem(i);
-            }
-        }
-    }//GEN-LAST:event_dayCBoxMouseEntered
-
-    private void dayCBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dayCBoxMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_dayCBoxMouseClicked
-
-    private void monthCBoxMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_monthCBoxMouseEntered
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_monthCBoxMouseEntered
-
-    /*Mouse events bellow are empty(Cannot be deleted)*/
-    private void monthCBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_monthCBoxMouseClicked
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_monthCBoxMouseClicked
-
     private void busNoCBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_busNoCBoxActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_busNoCBoxActionPerformed
@@ -491,15 +646,15 @@ public class AddTripFrame extends javax.swing.JFrame {
 
     private void AddTripButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddTripButtonActionPerformed
         // TODO add your handling code here:
-        if(locationFromText.getText().isEmpty() || locationToText.getText().isEmpty() || busNoCBox.getSelectedItem().toString().isEmpty() || monthCBox.getSelectedIndex() == 0
-            || dayCBox.getSelectedItem().toString().isEmpty() || timeText.getText().isEmpty() || priceText.getText().isEmpty()){
+        if(locationFromText.getText().isEmpty() || locationToText.getText().isEmpty() || busNoCBox.getSelectedItem().toString().isEmpty()
+            || timeTextField.getText().isEmpty() || priceText.getText().isEmpty()){
             JOptionPane.showMessageDialog(null, "Please fill all the data.", "Not complete!", JOptionPane.ERROR_MESSAGE);
         }
         else{
             String locationFrom = locationFromText.getText();
             String locationTo = locationToText.getText();
-            String time = timeText.getText();
-            String date = (int)(monthCBox.getSelectedIndex())+"/"+dayCBox.getSelectedItem().toString()+"/"+(int)(yearCBox.getSelectedIndex()+15);
+            Date time = new Date(timeTextField.getText());
+            Date date = new Date(dateTextField.getText());
             String busNo = busNoCBox.getSelectedItem().toString();
             Bus bus = search.searchBusByBusNo(busNo);      
             String venue = venueText.getText();
@@ -562,7 +717,8 @@ public class AddTripFrame extends javax.swing.JFrame {
     private javax.swing.JButton ViewTripsButton1;
     private javax.swing.JButton backButton;
     private javax.swing.JComboBox busNoCBox;
-    private javax.swing.JComboBox dayCBox;
+    private javax.swing.JPanel datePanel;
+    private javax.swing.JFormattedTextField dateTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -570,19 +726,15 @@ public class AddTripFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JComboBox locationFromComboBox;
     private javax.swing.JComboBox locationToComboBox;
-    private javax.swing.JComboBox monthCBox;
-    private javax.swing.JLabel monthLabel;
     private javax.swing.JTextField priceText;
-    private javax.swing.JFormattedTextField timeText;
+    private javax.swing.JPanel timePanel;
+    private javax.swing.JFormattedTextField timeTextField;
     private javax.swing.JComboBox tripVenueComboBox;
     private javax.swing.JButton updateTripButton;
-    private javax.swing.JComboBox yearCBox;
     // End of variables declaration//GEN-END:variables
 }

@@ -22,7 +22,7 @@ public class ConfirmBooking extends javax.swing.JFrame {
     private DecimalFormat decimal = new DecimalFormat("#.##");
     private double lessDiscount;
     private BookingFrame bookingFrame;
-    private SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy hh:mm");
+    private SimpleDateFormat df = new SimpleDateFormat("EEE MMMM dd, YYYY hh:mm a");
     /**
      * Creates new form ConfirmBooking
      */
@@ -32,7 +32,8 @@ public class ConfirmBooking extends javax.swing.JFrame {
     
     public void loadData(Passenger passenger, Trip trip, BookingFrame booking){
         ticketNoLabel.setText(passenger.getTicket().getTickerNumber());
-        schedLabel.setText(trip.getTripFrom()+" to "+trip.getTripTo()+" - "+df.format(trip.getSchedule()));
+        routeLabel.setText(trip.getTripFrom()+" to "+trip.getTripTo());
+        schedLabel.setText(df.format(trip.getSchedule()));
         busLabel.setText(trip.getBus().getBusType().toString()+": "+trip.getBus().getBusNumber());
         nameLabel.setText(passenger.getLastName()+", "+passenger.getFirstName());
         ageLabel.setText(String.valueOf(passenger.getAge())+"yrs old,");
@@ -97,13 +98,14 @@ public class ConfirmBooking extends javax.swing.JFrame {
         priceLabel = new javax.swing.JLabel();
         lessDiscountLabel = new javax.swing.JLabel();
         totalPriceLabel = new javax.swing.JLabel();
-        schedLabel = new javax.swing.JLabel();
+        routeLabel = new javax.swing.JLabel();
         ticketNoLabel = new javax.swing.JLabel();
         ticketNoLabel1 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         venueLabel = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         busLabel = new javax.swing.JLabel();
+        schedLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -275,8 +277,8 @@ public class ConfirmBooking extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        schedLabel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        schedLabel.setText("Trip Schedule");
+        routeLabel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        routeLabel.setText("Route");
 
         ticketNoLabel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         ticketNoLabel.setText("Ticket Number");
@@ -295,6 +297,9 @@ public class ConfirmBooking extends javax.swing.JFrame {
 
         busLabel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         busLabel.setText("Bus");
+
+        schedLabel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        schedLabel.setText("Schedule");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -316,12 +321,15 @@ public class ConfirmBooking extends javax.swing.JFrame {
                             .addComponent(venueLabel)
                             .addComponent(ticketNoLabel)))
                     .addComponent(jLabel11)
+                    .addComponent(routeLabel)
                     .addComponent(schedLabel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addComponent(routeLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(schedLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -337,7 +345,7 @@ public class ConfirmBooking extends javax.swing.JFrame {
                     .addComponent(busLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -347,27 +355,26 @@ public class ConfirmBooking extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(120, 120, 120)
-                        .addComponent(backButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(confirmButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 24, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(backButton)
+                .addGap(18, 18, 18)
+                .addComponent(confirmButton)
+                .addGap(44, 44, 44))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(backButton)
                     .addComponent(confirmButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -446,6 +453,7 @@ public class ConfirmBooking extends javax.swing.JFrame {
     private javax.swing.JLabel lessDiscountLabel;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JLabel priceLabel;
+    private javax.swing.JLabel routeLabel;
     private javax.swing.JLabel schedLabel;
     private javax.swing.JLabel ticketNoLabel;
     private javax.swing.JLabel ticketNoLabel1;

@@ -23,7 +23,7 @@ public class BookingFrame extends javax.swing.JFrame {
     private TicketType ticketType;
     private CodeGenerator gen=CodeGenerator.getInstance();
     private Ticket ticket;
-    private SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy  -  hh:mm");
+    private SimpleDateFormat df = new SimpleDateFormat("EEE MMMM dd, YYYY  -  hh:mm a");
     private Gender gender;
 //    private static CodeGenerator gen = CodeGenerator.getInstance();
     /**
@@ -254,15 +254,6 @@ public class BookingFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(busTypeLabel)
-                        .addGap(63, 63, 63)
-                        .addComponent(tripSchedLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tickerNoLabel)
-                        .addGap(93, 93, 93))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(layout.createSequentialGroup()
@@ -279,7 +270,16 @@ public class BookingFrame extends javax.swing.JFrame {
                                 .addComponent(halfFareRadioButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(discountedRadioButton)))
-                        .addContainerGap(22, Short.MAX_VALUE))))
+                        .addContainerGap(22, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(busTypeLabel)
+                        .addGap(63, 63, 63)
+                        .addComponent(tripSchedLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tickerNoLabel)
+                        .addGap(38, 38, 38))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
