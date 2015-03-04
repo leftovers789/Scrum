@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 public class BookingFrame extends javax.swing.JFrame {
 
     private Trip trip;
+    private Trip oldTrip;
     private Passenger passenger;
     private TicketType ticketType;
     private CodeGenerator gen=CodeGenerator.getInstance();
@@ -37,6 +38,11 @@ public class BookingFrame extends javax.swing.JFrame {
         tickerTypeButtonGroup.add(halfFareRadioButton);
         tickerTypeButtonGroup.add(discountedRadioButton);
         tickerNoLabel.setText(gen.generateTicketNumber());
+        editButton.hide();
+        removeButton.hide();
+        reBookButton.hide();
+        updateButton.hide();
+        confirmReBooking.hide();
     }
 
     /**
@@ -74,6 +80,11 @@ public class BookingFrame extends javax.swing.JFrame {
         halfFareRadioButton = new javax.swing.JRadioButton();
         discountedRadioButton = new javax.swing.JRadioButton();
         busTypeLabel = new javax.swing.JLabel();
+        editButton = new javax.swing.JButton();
+        reBookButton = new javax.swing.JButton();
+        removeButton = new javax.swing.JButton();
+        updateButton = new javax.swing.JButton();
+        confirmReBooking = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -136,15 +147,15 @@ public class BookingFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(lNameTextField))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(fNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(fNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel7)
@@ -153,8 +164,8 @@ public class BookingFrame extends javax.swing.JFrame {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(ageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(contactNoTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(addressTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addContainerGap(98, Short.MAX_VALUE))
+                                    .addComponent(addressTextField))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -246,6 +257,41 @@ public class BookingFrame extends javax.swing.JFrame {
 
         busTypeLabel.setText("Bus type here");
 
+        editButton.setText("Edit");
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editButtonActionPerformed(evt);
+            }
+        });
+
+        reBookButton.setText("Re-book");
+        reBookButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reBookButtonActionPerformed(evt);
+            }
+        });
+
+        removeButton.setText("Remove");
+        removeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeButtonActionPerformed(evt);
+            }
+        });
+
+        updateButton.setText("Update");
+        updateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateButtonActionPerformed(evt);
+            }
+        });
+
+        confirmReBooking.setText("Confirm Re-booking");
+        confirmReBooking.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confirmReBookingActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -254,32 +300,40 @@ public class BookingFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(backButton)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(tickerNoLabel)
+                        .addGap(79, 79, 79)
+                        .addComponent(tripSchedLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(busTypeLabel)
+                        .addGap(29, 29, 29))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
                                 .addComponent(jLabel9)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(regularRadioButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(halfFareRadioButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(discountedRadioButton)))
-                        .addContainerGap(22, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(busTypeLabel)
-                        .addGap(63, 63, 63)
-                        .addComponent(tripSchedLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel2)
+                                .addGap(6, 6, 6)
+                                .addComponent(discountedRadioButton))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(confirmReBooking)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(editButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(reBookButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(removeButton)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(updateButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tickerNoLabel)
-                        .addGap(38, 38, 38))))
+                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(backButton)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -291,18 +345,23 @@ public class BookingFrame extends javax.swing.JFrame {
                     .addComponent(tripSchedLabel)
                     .addComponent(busTypeLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(regularRadioButton)
                     .addComponent(halfFareRadioButton)
                     .addComponent(discountedRadioButton))
-                .addGap(7, 7, 7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(okButton)
-                    .addComponent(backButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(backButton)
+                    .addComponent(editButton)
+                    .addComponent(reBookButton)
+                    .addComponent(removeButton)
+                    .addComponent(updateButton)
+                    .addComponent(confirmReBooking))
+                .addContainerGap())
         );
 
         pack();
@@ -312,6 +371,84 @@ public class BookingFrame extends javax.swing.JFrame {
         this.trip = trip;
         tripSchedLabel.setText(df.format(trip.getSchedule()));
         busTypeLabel.setText(String.valueOf(trip.getBus().getBusType()));
+    }
+    
+    public void loadPassenger(Passenger passenger, Trip trip){
+        editButton.show();
+        removeButton.show();
+        reBookButton.show();
+        okButton.hide();
+        tickerNoLabel.setText(passenger.getTicket().getTickerNumber());
+        tripSchedLabel.setText(df.format(trip.getSchedule()));
+        busTypeLabel.setText(String.valueOf(trip.getBus().getBusType()));
+        fNameTextField.disable();
+        fNameTextField.setText(passenger.getFirstName());
+        lNameTextField.disable();
+        lNameTextField.setText(passenger.getLastName());
+        maleRadioButton.disable();
+        femaleRadioButton.disable();
+        if(passenger.getGender()==Gender.MALE){
+            maleRadioButton.setSelected(true);
+        }
+        else{
+            femaleRadioButton.setSelected(true);
+        }
+        ageTextField.disable();
+        ageTextField.setText(passenger.getAge()+"");
+        addressTextField.disable();
+        addressTextField.setText(passenger.getAddress());
+        contactNoTextField.disable();
+        contactNoTextField.setText(passenger.getContactNumber());
+        regularRadioButton.disable();
+        halfFareRadioButton.disable();
+        discountedRadioButton.disable();
+        if(passenger.getTicket().getType()==TicketType.Regular){
+            regularRadioButton.setSelected(true);
+        }
+        else if(passenger.getTicket().getType()==TicketType.Half_Fare){
+            halfFareRadioButton.setSelected(true);
+        }
+        else if(passenger.getTicket().getType()==TicketType.Discounted){
+            discountedRadioButton.setSelected(true);
+        }
+        this.passenger = passenger;
+        this.trip = trip;
+    }
+    
+    public void loadReBookData(Passenger passenger, Trip oldTrip, Trip trip){
+        editButton.hide();
+        removeButton.hide();
+        reBookButton.hide();
+        updateButton.hide();
+        okButton.hide();
+        confirmReBooking.show();
+        tickerNoLabel.setText(passenger.getTicket().getTickerNumber());
+        tripSchedLabel.setText(df.format(trip.getSchedule()));
+        busTypeLabel.setText(String.valueOf(trip.getBus().getBusType()));
+        fNameTextField.setText(passenger.getFirstName());
+        lNameTextField.setText(passenger.getLastName());
+        if(passenger.getGender()==Gender.MALE){
+            maleRadioButton.setSelected(true);
+        }
+        else{
+            femaleRadioButton.setSelected(true);
+        }
+        ageTextField.disable();
+        ageTextField.setText(passenger.getAge()+"");
+        addressTextField.setText(passenger.getAddress());
+        contactNoTextField.setText(passenger.getContactNumber());
+        if(passenger.getTicket().getType()==TicketType.Regular){
+            regularRadioButton.setSelected(true);
+        }
+        else if(passenger.getTicket().getType()==TicketType.Half_Fare){
+            halfFareRadioButton.setSelected(true);
+        }
+        else if(passenger.getTicket().getType()==TicketType.Discounted){
+            discountedRadioButton.setSelected(true);
+        }
+        this.passenger = passenger;
+        this.trip = trip;
+        this.oldTrip = oldTrip;
     }
     
     private void lNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lNameTextFieldActionPerformed
@@ -377,6 +514,62 @@ public class BookingFrame extends javax.swing.JFrame {
         this.hide();
     }//GEN-LAST:event_backButtonActionPerformed
 
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        // TODO add your handling code here:
+        editButton.hide();
+        removeButton.hide();
+        reBookButton.hide();
+        okButton.show();
+        fNameTextField.enable();
+        lNameTextField.enable();
+        maleRadioButton.enable();
+        femaleRadioButton.enable();
+        ageTextField.enable();
+        addressTextField.enable();
+        contactNoTextField.enable();
+        regularRadioButton.enable();
+        halfFareRadioButton.enable();
+        discountedRadioButton.enable();
+        updateButton.show();
+    }//GEN-LAST:event_editButtonActionPerformed
+
+    private void reBookButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reBookButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_reBookButtonActionPerformed
+
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
+        // TODO add your handling code here:
+        int reply = JOptionPane.showConfirmDialog(null, "Remove this passenger from the trip?", "Confirm removing", JOptionPane.YES_NO_OPTION);
+        if(reply == JOptionPane.YES_OPTION){
+            trip.removePassenger(passenger);
+        }
+    }//GEN-LAST:event_removeButtonActionPerformed
+
+    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
+        // TODO add your handling code here:
+        String fName = fNameTextField.getText();
+        String lName = lNameTextField.getText();
+        int age = Integer.parseInt(ageTextField.getText());
+        String contactNo = contactNoTextField.getText();
+        String ticketNo = tickerNoLabel.getText();
+        String address = addressTextField.getText();
+        double price = trip.getPrice();
+        ticket = new Ticket(ticketNo, ticketType, price);
+        passenger.setFirstName(fName);
+        passenger.setLastName(lName);
+        passenger.setAge(age);
+        passenger.setContactNumber(contactNo);
+        passenger.setAddress(address);
+        passenger.setGender(gender);
+        passenger.setTicket(ticket);
+        trip.removePassenger(passenger);
+        trip.addPassenger(passenger);
+    }//GEN-LAST:event_updateButtonActionPerformed
+
+    private void confirmReBookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmReBookingActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_confirmReBookingActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -417,8 +610,10 @@ public class BookingFrame extends javax.swing.JFrame {
     private javax.swing.JTextField ageTextField;
     private javax.swing.JButton backButton;
     private javax.swing.JLabel busTypeLabel;
+    private javax.swing.JButton confirmReBooking;
     private javax.swing.JTextField contactNoTextField;
     private javax.swing.JRadioButton discountedRadioButton;
+    private javax.swing.JButton editButton;
     private javax.swing.JTextField fNameTextField;
     private javax.swing.JRadioButton femaleRadioButton;
     private javax.swing.ButtonGroup genderButtonGroup;
@@ -435,9 +630,12 @@ public class BookingFrame extends javax.swing.JFrame {
     private javax.swing.JTextField lNameTextField;
     private javax.swing.JRadioButton maleRadioButton;
     private javax.swing.JButton okButton;
+    private javax.swing.JButton reBookButton;
     private javax.swing.JRadioButton regularRadioButton;
+    private javax.swing.JButton removeButton;
     private javax.swing.JLabel tickerNoLabel;
     private javax.swing.ButtonGroup tickerTypeButtonGroup;
     private javax.swing.JLabel tripSchedLabel;
+    private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables
 }

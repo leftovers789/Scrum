@@ -49,6 +49,7 @@ public class AddTripFrame extends javax.swing.JFrame {
     private SimpleDateFormat df1 = new SimpleDateFormat("hh:mm a");
     private JCalendarButton jCalendar = new JCalendarButton();
     private JTimeButton jTime = new JTimeButton();
+    private Date today = new Date();
     /**
      * Creates new form AddTripFrame
      */
@@ -608,11 +609,15 @@ public class AddTripFrame extends javax.swing.JFrame {
             || timeTextField.getText().isEmpty() || priceText.getText().isEmpty()){
             JOptionPane.showMessageDialog(null, "Please fill all the data.", "Not complete!", JOptionPane.ERROR_MESSAGE);
         }
+        else if(new Date(dateTextField.getText()+" "+timeTextField.getText()).compareTo(today) < 0){
+            JOptionPane.showMessageDialog(null, "Date must not be before today's date.", "Invalid date!", JOptionPane.ERROR_MESSAGE);
+        }
+        
         else{
             String locationFrom = locationFromText.getText();
             String locationTo = locationToText.getText();
-            Date time = new Date(timeTextField.getText());
-            Date date = new Date(dateTextField.getText());
+            String time = timeTextField.getText();
+            String date = dateTextField.getText();
             String busNo = busNoCBox.getSelectedItem().toString();
             Bus bus = search.searchBusByBusNo(busNo);      
             String venue = venueText.getText();
@@ -650,11 +655,16 @@ public class AddTripFrame extends javax.swing.JFrame {
             || timeTextField.getText().isEmpty() || priceText.getText().isEmpty()){
             JOptionPane.showMessageDialog(null, "Please fill all the data.", "Not complete!", JOptionPane.ERROR_MESSAGE);
         }
+        
+        else if(new Date(dateTextField.getText()+" "+timeTextField.getText()).compareTo(today) < 0){
+            JOptionPane.showMessageDialog(null, "Date must not be before today's date.", "Invalid date!", JOptionPane.ERROR_MESSAGE);
+        }
+        
         else{
             String locationFrom = locationFromText.getText();
             String locationTo = locationToText.getText();
-            Date time = new Date(timeTextField.getText());
-            Date date = new Date(dateTextField.getText());
+            String time = timeTextField.getText();
+            String date = dateTextField.getText();
             String busNo = busNoCBox.getSelectedItem().toString();
             Bus bus = search.searchBusByBusNo(busNo);      
             String venue = venueText.getText();

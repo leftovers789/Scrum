@@ -6,11 +6,16 @@
 
 package UI;
 
+import BookingManagement.Passenger;
+import BookingManagement.Trip;
+import RegistryManagement.SearchEngine;
 import java.awt.FlowLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 import net.sourceforge.jcalendarbutton.JCalendarButton;
 
 /**
@@ -19,9 +24,15 @@ import net.sourceforge.jcalendarbutton.JCalendarButton;
  */
 public class ManagePassengerFrame extends javax.swing.JFrame {
 
+    private Trip trip;
+    private Passenger passenger;
     private JCalendarButton jCalendar = new JCalendarButton();
     private FlowLayout flMain = new FlowLayout();
     private SimpleDateFormat df = new SimpleDateFormat("MMMM dd, YYYY");
+    private SearchEngine search = new SearchEngine();
+    private List<Trip> tripList;
+    private DefaultTableModel tripsTableModel = new DefaultTableModel(new String[]{"Schedule", "Route", "Bus type", "Status", "Ref no."}, 0);
+    private DefaultTableModel passengersTableModel = new DefaultTableModel(new String[]{"Ticket Number", "Passenger's name", "Age", "Ticket Type"}, 0);
     /**
      * Creates new form ManagePassengerFrame
      */
@@ -34,6 +45,13 @@ public class ManagePassengerFrame extends javax.swing.JFrame {
             public void propertyChange(PropertyChangeEvent evt){
                 if(evt.getNewValue() instanceof Date){
                     dateTextField.setText(df.format(evt.getNewValue()));
+                    tripsTableModel.setRowCount(0);
+                    tripList = (List<Trip>) search.searchAvailableTrips(df.format(evt.getNewValue()));
+                    for (Trip trip1 : tripList) {
+                        String route = trip1.getTripFrom()+" to "+trip1.getTripTo();
+                        tripsTableModel.addRow(new Object[]{ df.format(trip1.getSchedule()), route, 
+                            trip1.getBus().getBusType(), trip1.getStatus(), trip1.getReferenceNo()});
+                    }
                 }
             }
         });
@@ -146,6 +164,11 @@ public class ManagePassengerFrame extends javax.swing.JFrame {
         editDetailsButton.setText("Edit details...");
 
         viewButton.setText("View...");
+        viewButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -211,6 +234,16 @@ public class ManagePassengerFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void viewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewButtonActionPerformed
+        // TODO add your handling code here:
+        BookingFrame booking = new BookingFrame();
+        int row = passengersTable.getSelectedRow();
+        String refNo = (String) tripsTableModel.getValueAt(row, 4);
+        trip = (Trip) search.searchByRefNo(refNo);
+        booking.loadPassenger(passenger, trip);
+        booking.show();
+    }//GEN-LAST:event_viewButtonActionPerformed
 
     /**
      * @param args the command line arguments
