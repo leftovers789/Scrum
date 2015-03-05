@@ -75,4 +75,13 @@ public class SearchEngine {
         }
         return results;
     }
+    
+    public Passenger searchPassengerByTicketNumber(Trip trip, String ticketNumber){
+         for (Passenger passenger : trip.getPassenger()) {
+            if(passenger.getTicket().getTickerNumber().equalsIgnoreCase(ticketNumber)){
+                return passenger;
+            }
+        }
+        return null;
+    }
 }

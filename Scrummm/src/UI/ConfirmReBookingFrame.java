@@ -6,7 +6,9 @@
 
 package UI;
 
-import BookingManagement.*;
+import BookingManagement.Invoker;
+import BookingManagement.Passenger;
+import BookingManagement.Trip;
 import EmployeeManagement.Cashier;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -16,53 +18,22 @@ import javax.swing.JOptionPane;
  *
  * @author Sian Paul Lasaga
  */
-public class ConfirmBooking extends javax.swing.JFrame {
+public class ConfirmReBookingFrame extends javax.swing.JFrame {
 
     private Cashier cashier;
     private Invoker invoker = new Invoker();
     private Trip trip;
+    private Trip oldTrip;
     private Passenger passenger;
     private DecimalFormat decimal = new DecimalFormat("#.##");
     private double lessDiscount;
     private BookingFrame bookingFrame;
     private SimpleDateFormat df = new SimpleDateFormat("EEE MMMM dd, YYYY hh:mm a");
     /**
-     * Creates new form ConfirmBooking
+     * Creates new form ConfirmReBookingFrame
      */
-    public ConfirmBooking() {
+    public ConfirmReBookingFrame() {
         initComponents();
-    }
-    
-    public void loadData(Cashier cashier, Passenger passenger, Trip trip, BookingFrame booking){
-        ticketNoLabel.setText(passenger.getTicket().getTickerNumber());
-        routeLabel.setText(trip.getTripFrom()+" to "+trip.getTripTo());
-        schedLabel.setText(df.format(trip.getSchedule()));
-        busLabel.setText(trip.getBus().getBusType().toString()+": "+trip.getBus().getBusNumber());
-        nameLabel.setText(passenger.getLastName()+", "+passenger.getFirstName());
-        ageLabel.setText(String.valueOf(passenger.getAge())+"yrs old,");
-        genderLabel.setText(String.valueOf(passenger.getGender()));
-        venueLabel.setText(trip.getVenue());
-        contactNoLabel.setText(passenger.getContactNumber());
-        addressLabel.setText(passenger.getAddress());
-        ticketTypeLabel.setText(String.valueOf(passenger.getTicket().getType()));
-        priceLabel.setText(String.valueOf("Php  "+decimal.format(passenger.getTicket().getPrice())));
-        if(passenger.getTicket().getType()==TicketType.Discounted){
-            lessDiscount = passenger.getTicket().getPrice() * Ticket.getDiscountedRate();
-        }
-        else if(passenger.getTicket().getType()==TicketType.Half_Fare){
-            lessDiscount = passenger.getTicket().getPrice() * 0.5;
-        }
-        else{
-            lessDiscount = 0;
-        }
-        lessDiscountLabel.setText("Php -  "+decimal.format(lessDiscount));
-        double total = Double.parseDouble(decimal.format(passenger.getTicket().getPrice() - lessDiscount));
-        totalPriceLabel.setText("Php   "+String.valueOf(total));
-        passenger.getTicket().setPrice(total);
-        this.cashier = cashier;
-        this.trip = trip;
-        this.passenger = passenger;
-        this.bookingFrame = booking;
     }
 
     /**
@@ -74,8 +45,6 @@ public class ConfirmBooking extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        confirmButton = new javax.swing.JButton();
-        backButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         ageLabel = new javax.swing.JLabel();
@@ -94,9 +63,9 @@ public class ConfirmBooking extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         ticketTypeLabel = new javax.swing.JLabel();
-        priceLabel = new javax.swing.JLabel();
-        lessDiscountLabel = new javax.swing.JLabel();
-        totalPriceLabel = new javax.swing.JLabel();
+        currentPriceLabel = new javax.swing.JLabel();
+        oldPriceLabel = new javax.swing.JLabel();
+        additionalPaymentLabel = new javax.swing.JLabel();
         routeLabel = new javax.swing.JLabel();
         ticketNoLabel = new javax.swing.JLabel();
         ticketNoLabel1 = new javax.swing.JLabel();
@@ -105,22 +74,12 @@ public class ConfirmBooking extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         busLabel = new javax.swing.JLabel();
         schedLabel = new javax.swing.JLabel();
+        refNumbersLabel = new javax.swing.JLabel();
+        routeLabel2 = new javax.swing.JLabel();
+        confirmButton = new javax.swing.JButton();
+        backButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        confirmButton.setText("Confirm");
-        confirmButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                confirmButtonActionPerformed(evt);
-            }
-        });
-
-        backButton.setText("Back");
-        backButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                backButtonActionPerformed(evt);
-            }
-        });
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Summary"));
 
@@ -210,25 +169,25 @@ public class ConfirmBooking extends javax.swing.JFrame {
         jLabel6.setText("Ticket type:");
 
         jLabel7.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jLabel7.setText("Price:");
+        jLabel7.setText("Current ticket price:");
 
         jLabel8.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jLabel8.setText("Less discount:");
+        jLabel8.setText("Old ticket price:");
 
         jLabel5.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jLabel5.setText("Total:");
+        jLabel5.setText("Additional payment:");
 
         ticketTypeLabel.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         ticketTypeLabel.setText("type");
 
-        priceLabel.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        priceLabel.setText("price");
+        currentPriceLabel.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        currentPriceLabel.setText("currentPrice");
 
-        lessDiscountLabel.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        lessDiscountLabel.setText("less");
+        oldPriceLabel.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        oldPriceLabel.setText("oldPrice");
 
-        totalPriceLabel.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        totalPriceLabel.setText("total");
+        additionalPaymentLabel.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        additionalPaymentLabel.setText("additional");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -244,15 +203,15 @@ public class ConfirmBooking extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(priceLabel))
+                        .addComponent(currentPriceLabel))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(lessDiscountLabel))
+                        .addComponent(oldPriceLabel))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(totalPriceLabel)))
+                        .addComponent(additionalPaymentLabel)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -264,16 +223,16 @@ public class ConfirmBooking extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(priceLabel))
+                    .addComponent(currentPriceLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(lessDiscountLabel))
+                    .addComponent(oldPriceLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(totalPriceLabel))
-                .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(additionalPaymentLabel))
+                .addGap(0, 9, Short.MAX_VALUE))
         );
 
         routeLabel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
@@ -328,7 +287,7 @@ public class ConfirmBooking extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addComponent(routeLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(schedLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -346,8 +305,28 @@ public class ConfirmBooking extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        refNumbersLabel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        refNumbersLabel.setText("Reference numbers");
+
+        routeLabel2.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        routeLabel2.setText("Re-book:");
+
+        confirmButton.setText("Confirm");
+        confirmButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confirmButtonActionPerformed(evt);
+            }
+        });
+
+        backButton.setText("Back");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -355,21 +334,30 @@ public class ConfirmBooking extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 24, Short.MAX_VALUE))
+                .addComponent(routeLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(refNumbersLabel)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(backButton)
-                .addGap(18, 18, 18)
-                .addComponent(confirmButton)
-                .addGap(44, 44, 44))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(backButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(confirmButton))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(refNumbersLabel)
+                    .addComponent(routeLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(backButton)
                     .addComponent(confirmButton))
@@ -379,11 +367,41 @@ public class ConfirmBooking extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public void loadReBookingData(Cashier cashier, Passenger passenger, Trip oldTrip, Trip currentTrip, BookingFrame bookingFrame){
+        this.cashier = cashier;
+        this.passenger = passenger;
+        this.oldTrip = oldTrip;
+        this.trip = currentTrip;
+        this.bookingFrame = bookingFrame;
+        refNumbersLabel.setText("From "+oldTrip.getReferenceNo()+" to "+currentTrip.getReferenceNo());
+        ticketNoLabel.setText(passenger.getTicket().getTickerNumber());
+        routeLabel.setText(trip.getTripFrom()+" to "+trip.getTripTo());
+        schedLabel.setText(df.format(trip.getSchedule()));
+        busLabel.setText(trip.getBus().getBusType().toString()+": "+trip.getBus().getBusNumber());
+        nameLabel.setText(passenger.getLastName()+", "+passenger.getFirstName());
+        ageLabel.setText(String.valueOf(passenger.getAge())+"yrs old,");
+        genderLabel.setText(String.valueOf(passenger.getGender()));
+        venueLabel.setText(trip.getVenue());
+        contactNoLabel.setText(passenger.getContactNumber());
+        addressLabel.setText(passenger.getAddress());
+        ticketTypeLabel.setText(String.valueOf(passenger.getTicket().getType()));
+        currentPriceLabel.setText("Php  "+currentTrip.getPrice());
+        oldPriceLabel.setText("Php  "+oldTrip.getPrice());
+        if(currentTrip.getPrice() > oldTrip.getPrice()){
+            double additional = currentTrip.getPrice() - oldTrip.getPrice();
+            additionalPaymentLabel.setText("Php"+decimal.format(additional));
+        }
+        else{
+            additionalPaymentLabel.setText("Php     0.00");
+        }
+    }
+    
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
-        // TODO add your handling code here:    
-        JOptionPane.showMessageDialog(null, "The passenger has been booked", "Booking Completed", JOptionPane.INFORMATION_MESSAGE);
+        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(null, "The passenger has been re-booked", "Re-booking Completed", JOptionPane.INFORMATION_MESSAGE);
         bookingFrame.hide();
-        invoker.addPassengerWasExecuted(cashier, trip, passenger);
+        invoker.ReBookPassengerWasExecuted(cashier, passenger, trip, oldTrip);
+        bookingFrame.hide();
         this.hide();
     }//GEN-LAST:event_confirmButtonActionPerformed
 
@@ -409,31 +427,33 @@ public class ConfirmBooking extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ConfirmBooking.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConfirmReBookingFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ConfirmBooking.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConfirmReBookingFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ConfirmBooking.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConfirmReBookingFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ConfirmBooking.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConfirmReBookingFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ConfirmBooking().setVisible(true);
+                new ConfirmReBookingFrame().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel additionalPaymentLabel;
     private javax.swing.JLabel addressLabel;
     private javax.swing.JLabel ageLabel;
     private javax.swing.JButton backButton;
     private javax.swing.JLabel busLabel;
     private javax.swing.JButton confirmButton;
     private javax.swing.JLabel contactNoLabel;
+    private javax.swing.JLabel currentPriceLabel;
     private javax.swing.JLabel genderLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
@@ -449,15 +469,15 @@ public class ConfirmBooking extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JLabel lessDiscountLabel;
     private javax.swing.JLabel nameLabel;
-    private javax.swing.JLabel priceLabel;
+    private javax.swing.JLabel oldPriceLabel;
+    private javax.swing.JLabel refNumbersLabel;
     private javax.swing.JLabel routeLabel;
+    private javax.swing.JLabel routeLabel2;
     private javax.swing.JLabel schedLabel;
     private javax.swing.JLabel ticketNoLabel;
     private javax.swing.JLabel ticketNoLabel1;
     private javax.swing.JLabel ticketTypeLabel;
-    private javax.swing.JLabel totalPriceLabel;
     private javax.swing.JLabel venueLabel;
     // End of variables declaration//GEN-END:variables
 }

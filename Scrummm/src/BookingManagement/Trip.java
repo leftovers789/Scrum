@@ -116,6 +116,8 @@ public class Trip {
         this.capacity = capacity;
     }
     
-    
+    public void removePassenger(Passenger passenger){
+        this.passenger.remove(passenger);
+    }
         
 }

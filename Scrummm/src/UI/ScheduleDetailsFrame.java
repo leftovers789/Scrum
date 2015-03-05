@@ -6,8 +6,9 @@
 
 package UI;
 
-import RegistryManagement.*;
 import BookingManagement.*;
+import EmployeeManagement.Cashier;
+import RegistryManagement.*;
 import java.awt.FlowLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -29,9 +30,12 @@ import net.sourceforge.jcalendarbutton.JCalendarButton;
 public class ScheduleDetailsFrame extends javax.swing.JFrame {
 
     private Registry reg = Registry.getInstance();
+    private Cashier cashier;
     private SearchEngine search = new SearchEngine();
     private List<Trip> tripList;
     private Trip trip;
+    private Trip oldTrip;
+    private Passenger passenger;
     private DefaultTableModel tripsTableModel = new DefaultTableModel(new String[]{"Schedule", "Route", "Bus type", "Price", "Ref no."}, 0);
     private SimpleDateFormat df = new SimpleDateFormat("M/dd/yy");
     private JCalendarButton jCalendar = new JCalendarButton();
@@ -41,6 +45,9 @@ public class ScheduleDetailsFrame extends javax.swing.JFrame {
      */
     public ScheduleDetailsFrame() {
         initComponents();
+        continueButton.hide();
+        this.setSize(530, 445);
+        buttonsPanel.setSize(450, 65);
         tripListTable.setModel(tripsTableModel);
         datePanel.setLayout(flMain);
         datePanel.add(jCalendar);
@@ -76,30 +83,18 @@ public class ScheduleDetailsFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        proceedButton = new javax.swing.JButton();
-        exitButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tripListTable = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         dateTextField = new javax.swing.JTextField();
         datePanel = new javax.swing.JPanel();
+        buttonsPanel = new javax.swing.JPanel();
+        proceedButton = new javax.swing.JButton();
+        continueButton = new javax.swing.JButton();
+        backButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        proceedButton.setText("Proceed");
-        proceedButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                proceedButtonActionPerformed(evt);
-            }
-        });
-
-        exitButton.setText("Exit");
-        exitButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitButtonActionPerformed(evt);
-            }
-        });
 
         tripListTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -148,33 +143,73 @@ public class ScheduleDetailsFrame extends javax.swing.JFrame {
             .addGap(0, 24, Short.MAX_VALUE)
         );
 
+        proceedButton.setText("Proceed");
+        proceedButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                proceedButtonActionPerformed(evt);
+            }
+        });
+
+        continueButton.setText("Continue re-booking");
+        continueButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                continueButtonActionPerformed(evt);
+            }
+        });
+
+        backButton.setText("Back");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout buttonsPanelLayout = new javax.swing.GroupLayout(buttonsPanel);
+        buttonsPanel.setLayout(buttonsPanelLayout);
+        buttonsPanelLayout.setHorizontalGroup(
+            buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(buttonsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(proceedButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(continueButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(backButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        buttonsPanelLayout.setVerticalGroup(
+            buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(buttonsPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(proceedButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(continueButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(backButton)
+                .addGap(17, 17, 17))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel4)
+                .addGap(175, 175, 175))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel4)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(dateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(datePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(exitButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(proceedButton)))
-                        .addGap(20, 20, 20))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 479, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(datePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
+                            .addComponent(buttonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -191,29 +226,49 @@ public class ScheduleDetailsFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(proceedButton)
-                    .addComponent(exitButton))
+                .addComponent(buttonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public void loadCashier(Cashier cashier){
+        this.cashier = cashier;
+    }
+    
+    public void loadData(Passenger passenger, Trip oldTrip){
+        continueButton.show();
+        proceedButton.hide();
+        this.passenger = passenger;
+        this.oldTrip = oldTrip;
+    }
+    
     private void proceedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proceedButtonActionPerformed
         // TODO add your handling code here:
         BookingFrame booking = new BookingFrame();
         int row = tripListTable.getSelectedRow();
         String refNo = (String) tripsTableModel.getValueAt(row, 4);
         trip = (Trip) search.searchByRefNo(refNo);
-        booking.loadTrip(trip);
+        booking.loadTrip(cashier, trip);
         booking.show();
     }//GEN-LAST:event_proceedButtonActionPerformed
 
-    private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         // TODO add your handling code here:
         this.hide();
-    }//GEN-LAST:event_exitButtonActionPerformed
+    }//GEN-LAST:event_backButtonActionPerformed
+
+    private void continueButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_continueButtonActionPerformed
+        // TODO add your handling code here:
+        BookingFrame booking = new BookingFrame();
+        int row = tripListTable.getSelectedRow();
+        String refNo = (String) tripsTableModel.getValueAt(row, 4);
+        trip = (Trip) search.searchByRefNo(refNo);
+        booking.loadReBookData(cashier, passenger, oldTrip, trip);
+        booking.show();
+        this.hide();
+    }//GEN-LAST:event_continueButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -251,9 +306,11 @@ public class ScheduleDetailsFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton backButton;
+    private javax.swing.JPanel buttonsPanel;
+    private javax.swing.JButton continueButton;
     private javax.swing.JPanel datePanel;
     private javax.swing.JTextField dateTextField;
-    private javax.swing.JButton exitButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;

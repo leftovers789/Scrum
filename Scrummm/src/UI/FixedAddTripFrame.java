@@ -6,9 +6,12 @@
 
 package UI;
 
-import BookingManagement.*;
-import BusManagement.*;
-import RegistryManagement.*;
+import BookingManagement.Trip;
+import BusManagement.Bus;
+import BusManagement.BusCompany;
+import RegistryManagement.CodeGenerator;
+import RegistryManagement.Registry;
+import RegistryManagement.SearchEngine;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.event.KeyAdapter;
@@ -21,16 +24,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import net.sourceforge.jcalendarbutton.JCalendarButton;
 import net.sourceforge.jcalendarbutton.JTimeButton;
+
 /**
  *
  * @author Sian Paul Lasaga
  */
-public class AddTripFrame extends javax.swing.JFrame {
-
+public class FixedAddTripFrame extends javax.swing.JFrame {
+    
+    private Date today = new Date();
     private BusCompany busCo = BusCompany.getInstance();
     private Trip trip = new Trip();
     private List<Trip> tripList;
@@ -49,22 +53,25 @@ public class AddTripFrame extends javax.swing.JFrame {
     private SimpleDateFormat df1 = new SimpleDateFormat("hh:mm a");
     private JCalendarButton jCalendar = new JCalendarButton();
     private JTimeButton jTime = new JTimeButton();
-    private Date today = new Date();
+
     /**
-     * Creates new form AddTripFrame
+     * Creates new form FixedAddTripFrame
      */
-    public AddTripFrame() {
+    public FixedAddTripFrame() {
         initComponents();
+        for (int i = 0; i < 8; i++) {
+            int year = today.getYear() - 100 + 2000 + i;
+            yearComboBox.addItem(year);
+        }
+        
         for (Bus bus : busCo.getBusses()) {
             busNumbers.add(bus.getBusNumber());
         }
         busNoCBox.setModel(new DefaultComboBoxModel(busNumbers));
-        updateTripButton.setEnabled(false);
         busNoCBox.setModel(new DefaultComboBoxModel());
         for (Bus bus : busCo.getBusses()) {
             busNoCBox.addItem(bus.getBusNumber());
         }
-        ReferenceNoLabel.setText(gen.generateReferenceNumber());
         locationFromText = (JTextField) locationFromComboBox.getEditor().getEditorComponent();
         locationToText = (JTextField) locationToComboBox.getEditor().getEditorComponent();
         venueText = (JTextField) tripVenueComboBox.getEditor().getEditorComponent();
@@ -111,7 +118,6 @@ public class AddTripFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        ViewTripsButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -119,13 +125,8 @@ public class AddTripFrame extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         priceText = new javax.swing.JTextField();
-        AddTripButton = new javax.swing.JButton();
-        ViewTripsButton = new javax.swing.JButton();
         busNoCBox = new javax.swing.JComboBox();
         timeTextField = new javax.swing.JFormattedTextField();
-        backButton = new javax.swing.JButton();
-        ReferenceNoLabel = new javax.swing.JLabel();
-        updateTripButton = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
@@ -136,18 +137,22 @@ public class AddTripFrame extends javax.swing.JFrame {
         dateTextField = new javax.swing.JFormattedTextField();
         datePanel = new javax.swing.JPanel();
         timePanel = new javax.swing.JPanel();
-
-        ViewTripsButton1.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        ViewTripsButton1.setText("View Trips");
-        ViewTripsButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ViewTripsButton1ActionPerformed(evt);
-            }
-        });
+        jLabel13 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox();
+        jComboBox2 = new javax.swing.JComboBox();
+        jComboBox3 = new javax.swing.JComboBox();
+        jLabel12 = new javax.swing.JLabel();
+        yearComboBox = new javax.swing.JComboBox();
+        AddTripButton = new javax.swing.JButton();
+        backButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Trip Menu"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Trip Information"));
 
         jLabel1.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel1.setText("Date:");
@@ -158,49 +163,15 @@ public class AddTripFrame extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel6.setText("Time:");
 
-        jLabel3.setText("Reference No.");
+        jLabel3.setText("Reference Numbers:");
 
         jLabel4.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel4.setText("Price:");
-
-        AddTripButton.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        AddTripButton.setText("Add Trip");
-        AddTripButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AddTripButtonActionPerformed(evt);
-            }
-        });
-
-        ViewTripsButton.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        ViewTripsButton.setText("View Trips");
-        ViewTripsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ViewTripsButtonActionPerformed(evt);
-            }
-        });
 
         busNoCBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-Select-" }));
         busNoCBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 busNoCBoxActionPerformed(evt);
-            }
-        });
-
-        backButton.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        backButton.setText("Back");
-        backButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                backButtonActionPerformed(evt);
-            }
-        });
-
-        ReferenceNoLabel.setText("#######");
-
-        updateTripButton.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        updateTripButton.setText("Update Trip");
-        updateTripButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updateTripButtonActionPerformed(evt);
             }
         });
 
@@ -272,6 +243,8 @@ public class AddTripFrame extends javax.swing.JFrame {
             .addGap(0, 26, Short.MAX_VALUE)
         );
 
+        jLabel13.setText("Automatically generated");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -280,60 +253,54 @@ public class AddTripFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(18, 18, 18)
-                                .addComponent(ReferenceNoLabel))
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(backButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ViewTripsButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(updateTripButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(AddTripButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGap(20, 20, 20)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGap(20, 20, 20)
+                                                .addComponent(priceText, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(52, 52, 52))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                                        .addComponent(priceText, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addGap(52, 52, 52))
-                                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                            .addComponent(datePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                            .addComponent(busNoCBox, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))))
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(dateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(datePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(busNoCBox, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))))
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel4))
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel9)
-                                    .addComponent(jLabel6))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(timeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(timePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(tripVenueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(dateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))))
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(timeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(timePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(tripVenueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(24, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel13)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(ReferenceNoLabel))
+                    .addComponent(jLabel13))
                 .addGap(12, 12, 12)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -355,35 +322,116 @@ public class AddTripFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(priceText, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-                        .addComponent(AddTripButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(updateTripButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ViewTripsButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(datePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addComponent(priceText, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(datePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Schedule Conditions"));
+
+        jLabel7.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel7.setText("Every:");
+
+        jLabel8.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel8.setText("from");
+
+        jLabel11.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel11.setText("to");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }));
+
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sep", "Oct", "Nov", "Dec" }));
+
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "July", "Aug", "Sep", "Oct", "Nov", "Dec" }));
+
+        jLabel12.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel12.setText("of");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(yearComboBox, 0, 65, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel11)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel12)
+                    .addComponent(yearComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(21, Short.MAX_VALUE))
+        );
+
+        AddTripButton.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        AddTripButton.setText("Add Trip");
+        AddTripButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AddTripButtonActionPerformed(evt);
+            }
+        });
+
+        backButton.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        backButton.setText("Back");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(AddTripButton, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(AddTripButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
@@ -583,101 +631,38 @@ public class AddTripFrame extends javax.swing.JFrame {
         return m;
     }
     
-    public void loadData(Trip trip){
-        updateTripButton.setEnabled(true);
-        AddTripButton.setEnabled(false);
-        ViewTripsButton.setEnabled(false);
-        ReferenceNoLabel.setText(trip.getReferenceNo());
-        locationFromText.setText(trip.getTripFrom());
-        locationToText.setText(trip.getTripTo());
-        busNoCBox.setSelectedItem(trip.getBus().getBusNumber());
-        dateTextField.setText(df.format(trip.getSchedule()));
-        timeTextField.setText(df1.format(trip.getSchedule()));
-        venueText.setText(trip.getVenue());
-        priceText.setText(trip.getPrice()+"");
-        this.trip = trip;
-        
-    }
-    
-    private void ViewTripsButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewTripsButton1ActionPerformed
+    private void AddTripButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddTripButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_ViewTripsButton1ActionPerformed
-
-    private void updateTripButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateTripButtonActionPerformed
-        // TODO add your handling code here:
-        if(locationFromText.getText().isEmpty() || locationToText.getText().isEmpty() || busNoCBox.getSelectedItem().toString().isEmpty() 
-            || timeTextField.getText().isEmpty() || priceText.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "Please fill all the data.", "Not complete!", JOptionPane.ERROR_MESSAGE);
-        }
-        else if(new Date(dateTextField.getText()+" "+timeTextField.getText()).compareTo(today) < 0){
-            JOptionPane.showMessageDialog(null, "Date must not be before today's date.", "Invalid date!", JOptionPane.ERROR_MESSAGE);
-        }
-        
-        else{
-            String locationFrom = locationFromText.getText();
-            String locationTo = locationToText.getText();
-            String time = timeTextField.getText();
-            String date = dateTextField.getText();
-            String busNo = busNoCBox.getSelectedItem().toString();
-            Bus bus = search.searchBusByBusNo(busNo);      
-            String venue = venueText.getText();
-            String referenceNo = ReferenceNoLabel.getText();
-            double price = Double.parseDouble(priceText.getText());
-            trip.setTripFrom(locationFrom);
-            trip.setTripTo(locationTo);
-            trip.setBus(bus);
-            trip.setSchedule(new Date(date+" "+time));
-            trip.setVenue(venue);
-            trip.setReferenceNo(referenceNo);
-            trip.setPrice(price);
-            reg.addTrip(trip);
-            reg.removeTrip(trip);
-            reg.addTrip(trip);
-            JOptionPane.showMessageDialog(null, "The trip has been updated", "Finished", JOptionPane.INFORMATION_MESSAGE);
-            this.hide();
-            new ViewTripMenu().show();
-        }
-    }//GEN-LAST:event_updateTripButtonActionPerformed
+//        if(locationFromText.getText().isEmpty() || locationToText.getText().isEmpty() || busNoCBox.getSelectedItem().toString().isEmpty()
+//            || timeTextField.getText().isEmpty() || priceText.getText().isEmpty()){
+//            JOptionPane.showMessageDialog(null, "Please fill all the data.", "Not complete!", JOptionPane.ERROR_MESSAGE);
+//        }
+//
+//        else if(new Date(dateTextField.getText()+" "+timeTextField.getText()).compareTo(today) < 0){
+//            JOptionPane.showMessageDialog(null, "Date must not be before today's date.", "Invalid date!", JOptionPane.ERROR_MESSAGE);
+//        }
+//
+//        else{
+//            String locationFrom = locationFromText.getText();
+//            String locationTo = locationToText.getText();
+//            String time = timeTextField.getText();
+//            String date = dateTextField.getText();
+//            String busNo = busNoCBox.getSelectedItem().toString();
+//            Bus bus = search.searchBusByBusNo(busNo);
+//            String venue = venueText.getText();
+//            String referenceNo = ReferenceNoLabel.getText();
+//            double price = Double.parseDouble(priceText.getText());
+//            trip = new Trip(TripStatus.READY, price, locationFrom, locationTo, bus, new Date(date+" "+time), referenceNo, venue);
+//            reg.addTrip(trip);
+//            JOptionPane.showMessageDialog(null, "The trip has been added", "Finished", JOptionPane.INFORMATION_MESSAGE);
+//            this.hide();
+//            new AddTripFrame().show();
+//        }
+    }//GEN-LAST:event_AddTripButtonActionPerformed
 
     private void busNoCBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_busNoCBoxActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_busNoCBoxActionPerformed
-
-    private void ViewTripsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewTripsButtonActionPerformed
-        // TODO add your handling code here:
-        ViewTripMenu view = new ViewTripMenu();
-        view.show();
-    }//GEN-LAST:event_ViewTripsButtonActionPerformed
-
-    private void AddTripButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddTripButtonActionPerformed
-        // TODO add your handling code here:
-        if(locationFromText.getText().isEmpty() || locationToText.getText().isEmpty() || busNoCBox.getSelectedItem().toString().isEmpty()
-            || timeTextField.getText().isEmpty() || priceText.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "Please fill all the data.", "Not complete!", JOptionPane.ERROR_MESSAGE);
-        }
-        
-        else if(new Date(dateTextField.getText()+" "+timeTextField.getText()).compareTo(today) < 0){
-            JOptionPane.showMessageDialog(null, "Date must not be before today's date.", "Invalid date!", JOptionPane.ERROR_MESSAGE);
-        }
-        
-        else{
-            String locationFrom = locationFromText.getText();
-            String locationTo = locationToText.getText();
-            String time = timeTextField.getText();
-            String date = dateTextField.getText();
-            String busNo = busNoCBox.getSelectedItem().toString();
-            Bus bus = search.searchBusByBusNo(busNo);      
-            String venue = venueText.getText();
-            String referenceNo = ReferenceNoLabel.getText();
-            double price = Double.parseDouble(priceText.getText());
-            trip = new Trip(TripStatus.READY, price, locationFrom, locationTo, bus, new Date(date+" "+time), referenceNo, venue);
-            reg.addTrip(trip);
-            JOptionPane.showMessageDialog(null, "The trip has been added", "Finished", JOptionPane.INFORMATION_MESSAGE);
-            this.hide();
-            new AddTripFrame().show();
-        }
-
-    }//GEN-LAST:event_AddTripButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         this.hide();
@@ -702,49 +687,55 @@ public class AddTripFrame extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AddTripFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FixedAddTripFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AddTripFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FixedAddTripFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AddTripFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FixedAddTripFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AddTripFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FixedAddTripFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AddTripFrame().setVisible(true);
+                new FixedAddTripFrame().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddTripButton;
-    private javax.swing.JLabel ReferenceNoLabel;
-    private javax.swing.JButton ViewTripsButton;
-    private javax.swing.JButton ViewTripsButton1;
     private javax.swing.JButton backButton;
     private javax.swing.JComboBox busNoCBox;
     private javax.swing.JPanel datePanel;
     private javax.swing.JFormattedTextField dateTextField;
+    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JComboBox jComboBox2;
+    private javax.swing.JComboBox jComboBox3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JComboBox locationFromComboBox;
     private javax.swing.JComboBox locationToComboBox;
     private javax.swing.JTextField priceText;
     private javax.swing.JPanel timePanel;
     private javax.swing.JFormattedTextField timeTextField;
     private javax.swing.JComboBox tripVenueComboBox;
-    private javax.swing.JButton updateTripButton;
+    private javax.swing.JComboBox yearComboBox;
     // End of variables declaration//GEN-END:variables
 }
