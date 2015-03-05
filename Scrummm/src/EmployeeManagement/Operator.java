@@ -10,18 +10,10 @@ package EmployeeManagement;
  *
  * @author windows
  */
-public class Cashier extends Employee{
-    
-    private String password;
+public class Operator extends Employee{
 
-    public Cashier(String password, int age, Gender gender, String address, String cellphoneNumber, String firstName, String lastName, String middleName, String id) {
+    public Operator(int age, Gender gender, String address, String cellphoneNumber, String firstName, String lastName, String middleName, String id) {
         super(age, gender, address, cellphoneNumber, firstName, lastName, middleName, id);
-        this.password = password;
     }
-    
-    public String getPassword() {
-        return password;
-    }
-    
     
 }

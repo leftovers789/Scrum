@@ -46,6 +46,7 @@ public class MaintenanceFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setResizable(true);
         disableFields();
+        
 
         setTableConfiguration(bussesForStateCheckTable, bussesForStateCheckTableModel);
         setTableConfiguration(bussesForRepairTable, bussesForRepairTableModel);

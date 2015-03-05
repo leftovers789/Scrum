@@ -53,9 +53,9 @@ public class CodeGenerator {
     public String generateId() {
         idCount++;
         String number = refNoCount + "";
-        String prefix = "BMA2PQ";
+        String prefix = "BA2P";
         String zero = "";
-        for (int i = 0; i < 5 - number.length(); i++) {
+        for (int i = 0; i < 3 - number.length(); i++) {
             zero = zero + "0";
         }
         return prefix + new Date().getYear() + zero + idCount;
