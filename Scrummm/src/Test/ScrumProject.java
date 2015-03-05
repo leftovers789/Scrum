@@ -10,6 +10,7 @@ package Test;
 
 import BookingManagement.*;
 import BusManagement.*;
+import EmployeeManagement.Gender;
 import RegistryManagement.*;
 import UI.*;
 import java.util.Date;
@@ -45,11 +46,13 @@ public class ScrumProject {
         reg.addTrip(trip);
         Ticket.setDiscountedRate(20);
         Ticket.setMinimumAgeForHalfFare(5);
-        AddTripFrame tripFrame = new AddTripFrame();
-        tripFrame.show();
-        
-        ScheduleDetailsFrame sched = new ScheduleDetailsFrame();
-        sched.show();
-        //test
+        Passenger passenger = new Passenger("Sian", "Lasaga", 18, Gender.MALE, "09090909090", "Ioloi", new Ticket("00005", TicketType.Discounted, 1000));
+        trip.addPassenger(passenger);
+//        AddTripFrame tripFrame = new AddTripFrame();
+//        tripFrame.show();
+//        
+//        ScheduleDetailsFrame sched = new ScheduleDetailsFrame();
+//        sched.show();
+        new CashierMainFrame().show();
     }    
 }

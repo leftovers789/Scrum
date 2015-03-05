@@ -8,6 +8,7 @@ package UI;
 
 import BookingManagement.Passenger;
 import BookingManagement.Trip;
+import EmployeeManagement.Cashier;
 import RegistryManagement.SearchEngine;
 import java.awt.FlowLayout;
 import java.beans.PropertyChangeEvent;
@@ -15,6 +16,9 @@ import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import net.sourceforge.jcalendarbutton.JCalendarButton;
 
@@ -24,11 +28,14 @@ import net.sourceforge.jcalendarbutton.JCalendarButton;
  */
 public class ManagePassengerFrame extends javax.swing.JFrame {
 
+    private Cashier cashier;
     private Trip trip;
     private Passenger passenger;
+    private List<Passenger> passengersList;
     private JCalendarButton jCalendar = new JCalendarButton();
     private FlowLayout flMain = new FlowLayout();
-    private SimpleDateFormat df = new SimpleDateFormat("MMMM dd, YYYY");
+    private SimpleDateFormat df = new SimpleDateFormat("M/dd/yy");
+    private SimpleDateFormat df1 = new SimpleDateFormat("MMMM dd, YYYY");
     private SearchEngine search = new SearchEngine();
     private List<Trip> tripList;
     private DefaultTableModel tripsTableModel = new DefaultTableModel(new String[]{"Schedule", "Route", "Bus type", "Status", "Ref no."}, 0);
@@ -40,16 +47,25 @@ public class ManagePassengerFrame extends javax.swing.JFrame {
         initComponents();
         datePanel.setLayout(flMain);
         datePanel.add(jCalendar);
+        tripsTable.setModel(tripsTableModel);
+        passengersTable.setModel(passengersTableModel);
+        tripList = (List<Trip>) search.searchAvailableTrips();
+        for (Trip trip1 : tripList) {
+            String route = trip1.getTripFrom()+" to "+trip1.getTripTo();
+            tripsTableModel.addRow(new Object[]{ df1.format(trip1.getSchedule()), route, 
+                            trip1.getBus().getBusType(), trip1.getStatus(), trip1.getReferenceNo()});
+        }
+        
         jCalendar.addPropertyChangeListener(new PropertyChangeListener(){
             @Override
             public void propertyChange(PropertyChangeEvent evt){
                 if(evt.getNewValue() instanceof Date){
-                    dateTextField.setText(df.format(evt.getNewValue()));
+                    dateTextField.setText(df1.format(evt.getNewValue()));
                     tripsTableModel.setRowCount(0);
                     tripList = (List<Trip>) search.searchAvailableTrips(df.format(evt.getNewValue()));
                     for (Trip trip1 : tripList) {
                         String route = trip1.getTripFrom()+" to "+trip1.getTripTo();
-                        tripsTableModel.addRow(new Object[]{ df.format(trip1.getSchedule()), route, 
+                        tripsTableModel.addRow(new Object[]{ df1.format(trip1.getSchedule()), route, 
                             trip1.getBus().getBusType(), trip1.getStatus(), trip1.getReferenceNo()});
                     }
                 }
@@ -72,14 +88,12 @@ public class ManagePassengerFrame extends javax.swing.JFrame {
         datePanel = new javax.swing.JPanel();
         dateTextField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        viewPassengersButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         passengersTable = new javax.swing.JTable();
-        reBookButton = new javax.swing.JButton();
-        removeButton = new javax.swing.JButton();
-        editDetailsButton = new javax.swing.JButton();
         viewButton = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        backButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -97,6 +111,21 @@ public class ManagePassengerFrame extends javax.swing.JFrame {
             }
         ));
         jScrollPane1.setViewportView(tripsTable);
+        DefaultTableCellRenderer centerRenderer= new DefaultTableCellRenderer();
+        DefaultTableCellRenderer leftRenderer= new DefaultTableCellRenderer();
+        DefaultTableCellRenderer rightRenderer= new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        leftRenderer.setHorizontalAlignment (SwingConstants.LEFT);
+        rightRenderer.setHorizontalAlignment (SwingConstants.RIGHT);
+        tripsTable.setRowSelectionAllowed (true);
+        tripsTable.setSelectionMode (ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        tripsTable.setEnabled (true);
+        tripsTable.setSelectionBackground (java.awt.Color.GRAY);
+        for (int c = 0; c < tripsTable.getColumnCount(); c++)
+        {
+            Class<?> col_class = tripsTable.getColumnClass(c);
+            tripsTable.setDefaultEditor(col_class, null);        // remove editor
+        }
 
         javax.swing.GroupLayout datePanelLayout = new javax.swing.GroupLayout(datePanel);
         datePanel.setLayout(datePanelLayout);
@@ -109,25 +138,34 @@ public class ManagePassengerFrame extends javax.swing.JFrame {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
+        dateTextField.setEditable(false);
+
         jLabel1.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel1.setText("Date:");
+
+        viewPassengersButton.setText("View Passengers");
+        viewPassengersButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewPassengersButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1)
-                .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(dateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(datePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(datePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(viewPassengersButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -137,9 +175,15 @@ public class ManagePassengerFrame extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(dateTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
                         .addComponent(jLabel1)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(21, 21, 21))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(viewPassengersButton, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Manage Passengers"));
@@ -156,14 +200,19 @@ public class ManagePassengerFrame extends javax.swing.JFrame {
             }
         ));
         jScrollPane2.setViewportView(passengersTable);
+        leftRenderer.setHorizontalAlignment (SwingConstants.LEFT);
+        rightRenderer.setHorizontalAlignment (SwingConstants.RIGHT);
+        passengersTable.setRowSelectionAllowed (true);
+        passengersTable.setSelectionMode (ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        passengersTable.setEnabled (true);
+        passengersTable.setSelectionBackground (java.awt.Color.GRAY);
+        for (int c = 0; c < passengersTable.getColumnCount(); c++)
+        {
+            Class<?> col_class = passengersTable.getColumnClass(c);
+            passengersTable.setDefaultEditor(col_class, null);        // remove editor
+        }
 
-        reBookButton.setText("Re-book...");
-
-        removeButton.setText("Remove");
-
-        editDetailsButton.setText("Edit details...");
-
-        viewButton.setText("View...");
+        viewButton.setText("View info...");
         viewButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 viewButtonActionPerformed(evt);
@@ -176,35 +225,29 @@ public class ManagePassengerFrame extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 522, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(reBookButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(removeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(editDetailsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(viewButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addComponent(jScrollPane2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(viewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(42, 42, 42)
+                .addComponent(viewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(50, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
-                .addComponent(viewButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(editDetailsButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(reBookButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(removeButton)
-                .addGap(21, 21, 21))
         );
 
-        jButton4.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        jButton4.setText("Back");
+        backButton.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        backButton.setText("Back");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -213,11 +256,9 @@ public class ManagePassengerFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(backButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(106, 106, 106)))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -228,22 +269,43 @@ public class ManagePassengerFrame extends javax.swing.JFrame {
                 .addGap(29, 29, 29)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton4)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addComponent(backButton, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public void loadCashier(Cashier cashier){
+        this.cashier = cashier;
+    }
+    
     private void viewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewButtonActionPerformed
         // TODO add your handling code here:
         BookingFrame booking = new BookingFrame();
         int row = passengersTable.getSelectedRow();
-        String refNo = (String) tripsTableModel.getValueAt(row, 4);
-        trip = (Trip) search.searchByRefNo(refNo);
-        booking.loadPassenger(passenger, trip);
+        String ticketNumber = (String) passengersTableModel.getValueAt(row, 0);
+        passenger = (Passenger) search.searchPassengerByTicketNumber(trip, ticketNumber);
+        booking.loadPassenger(cashier, passenger, trip);
         booking.show();
     }//GEN-LAST:event_viewButtonActionPerformed
+
+    private void viewPassengersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewPassengersButtonActionPerformed
+        // TODO add your handling code here:
+        int row = tripsTable.getSelectedRow();
+        String refNo = (String) tripsTableModel.getValueAt(row, 4);
+        trip = (Trip) search.searchByRefNo(refNo);
+        passengersList = (List<Passenger>) search.searchPassengersInATrip(trip);
+        for (Passenger passenger1 : passengersList) {
+            passengersTableModel.addRow(new Object[]{passenger1.getTicket().getTickerNumber(), passenger1.getLastName()+", "+passenger1.getFirstName()
+                    , passenger1.getAge(), passenger1.getTicket().getType()});
+        }
+    }//GEN-LAST:event_viewPassengersButtonActionPerformed
+
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
+        // TODO add your handling code here:
+        this.hide();
+    }//GEN-LAST:event_backButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -281,19 +343,17 @@ public class ManagePassengerFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton backButton;
     private javax.swing.JPanel datePanel;
     private javax.swing.JTextField dateTextField;
-    private javax.swing.JButton editDetailsButton;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable passengersTable;
-    private javax.swing.JButton reBookButton;
-    private javax.swing.JButton removeButton;
     private javax.swing.JTable tripsTable;
     private javax.swing.JButton viewButton;
+    private javax.swing.JButton viewPassengersButton;
     // End of variables declaration//GEN-END:variables
 }

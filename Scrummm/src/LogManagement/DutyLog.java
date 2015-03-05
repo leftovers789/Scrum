@@ -2,13 +2,20 @@ package LogManagement;
 
 
 import EmployeeManagement.Employee;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class DutyLog {
 
 	private Employee employee;
 	private Date timeIn;
 	private Date timeOut;
+        private List<CashierLog> cashierLog = new ArrayList<>();
+        
+        public void addCashierLog(CashierLog log){
+            cashierLog.add(log);
+        }
 
 	public Employee getEmployee() {
 		return this.employee;

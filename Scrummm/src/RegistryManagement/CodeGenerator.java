@@ -60,5 +60,9 @@ public class CodeGenerator {
         }
         return prefix + new Date().getYear() + zero + idCount;
     }
+    
+    public void minusTicketNumberCount(){
+        ticketNoCount--;
+    }
 
 }

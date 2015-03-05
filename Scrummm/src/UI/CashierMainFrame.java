@@ -6,11 +6,24 @@
 
 package UI;
 
+import EmployeeManagement.Cashier;
+import EmployeeManagement.Gender;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 /**
  *
  * @author Sian Paul Lasaga
  */
 public class CashierMainFrame extends javax.swing.JFrame {
+    
+    private List<String> logs = new ArrayList<>();
+    private ScheduleDetailsFrame schedFrame = new ScheduleDetailsFrame();
+    private ManagePassengerFrame manageFrame = new ManagePassengerFrame();
+    public Cashier cashier = new Cashier(30, Gender.FEMALE, "", "", "", "", "", "");
+    private Date timeIn;
+    private Date timeOut;
 
     /**
      * Creates new form CashierMainFrame
@@ -47,9 +60,19 @@ public class CashierMainFrame extends javax.swing.JFrame {
 
         bookButton.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         bookButton.setText("Book a Passenger");
+        bookButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bookButtonActionPerformed(evt);
+            }
+        });
 
         manageButton.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         manageButton.setText("Manage Passenger Trips");
+        manageButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                manageButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -87,6 +110,23 @@ public class CashierMainFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    public void loadData(Cashier cashier){
+        this.cashier = cashier;
+        timeIn = new Date();
+    }
+    
+    private void bookButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookButtonActionPerformed
+        // TODO add your handling code here:
+        schedFrame.loadCashier(cashier);
+        schedFrame.show();
+    }//GEN-LAST:event_bookButtonActionPerformed
+
+    private void manageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageButtonActionPerformed
+        // TODO add your handling code here:
+        manageFrame.loadCashier(cashier);
+        manageFrame.show();
+    }//GEN-LAST:event_manageButtonActionPerformed
 
     /**
      * @param args the command line arguments
