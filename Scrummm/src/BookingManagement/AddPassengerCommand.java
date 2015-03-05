@@ -7,7 +7,7 @@
 package BookingManagement;
 
 import EmployeeManagement.Cashier;
-import LogManagement.CashierLog;
+import LogManagement.*;
 import LogManagement.DutyLog;
 import java.util.Date;
 
@@ -17,7 +17,7 @@ import java.util.Date;
  */
 public class AddPassengerCommand implements Command{
     
-    private DutyLog log = new DutyLog();
+    private DutyLog log = DutyLog.getInstance();
     private Cashier cashier;
     private Trip trip;
     private Passenger passenger;
@@ -32,7 +32,7 @@ public class AddPassengerCommand implements Command{
     @Override
     public void execute() {   
         trip.addPassenger(passenger);
-        log.addCashierLog(new CashierLog(cashier, passenger, action, new Date()));      
+        log.addActionLog(new CashierActionLog(passenger, action));      
     }
     
 }

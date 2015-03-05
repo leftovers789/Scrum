@@ -173,7 +173,7 @@ public class LoginFrame extends javax.swing.JFrame {
         if (busCompany.getDefaultUsername().equals(username)
                 && busCompany.getDefaultPassword().equals(password)) {
             busCompany.setCurrentLoggedIn(null);
-            MainMenu mainMenu = new MainMenu();
+            ManagerMainMenu mainMenu = new ManagerMainMenu();
             mainMenu.show();
             this.hide();
             return;
@@ -185,7 +185,7 @@ public class LoginFrame extends javax.swing.JFrame {
                 if (manager.getUsername().equals(username)
                         && manager.getPassword().equals(password)) {
                     busCompany.setCurrentLoggedIn(manager);
-                    MainMenu mainMenu = new MainMenu();
+                    ManagerMainMenu mainMenu = new ManagerMainMenu();
                     mainMenu.show();
                     this.hide();
                     break;

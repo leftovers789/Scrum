@@ -7,7 +7,6 @@ import java.util.*;
 
 public class Registry extends Observable {
 
-    private List<BusTravelLog> busTravelLogs = new ArrayList<>();
     private List<DutyLog> dutyLogs = new ArrayList<>();
     private List<SalesLog> salesLogs = new ArrayList<>();
     private List<Trip> trips = new ArrayList<>();
@@ -23,20 +22,12 @@ public class Registry extends Observable {
         return registry;
     }
 
-    public List<BusTravelLog> getBusTravelLogs() {
-        return busTravelLogs;
-    }
-
-    public void addBusTravelLog(BusTravelLog busTravelLog) {
-        this.busTravelLogs.add(busTravelLog);
-    }
-
     public List<DutyLog> getDutyLogs() {
         return dutyLogs;
     }
 
-    public void addDutyLog(DutyLog dutyLogs) {
-        this.dutyLogs.add(dutyLogs);
+    public void addDutyLog(DutyLog dutyLog) {
+        this.dutyLogs.add(dutyLog);
     }
 
     public List<SalesLog> getSalesLogs() {

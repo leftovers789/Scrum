@@ -1,6 +1,5 @@
 package LogManagement;
 
-
 import EmployeeManagement.Employee;
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,49 +7,57 @@ import java.util.List;
 
 public class DutyLog {
 
-	private Employee employee;
-	private Date timeIn;
-	private Date timeOut;
-        private List<CashierLog> cashierLog = new ArrayList<>();
-        
-        public void addCashierLog(CashierLog log){
-            cashierLog.add(log);
+    private Date timeIn;
+    private Date timeOut;
+    private Employee employee;
+    private List<ActionLog> actionLogs = new ArrayList<>();
+    private static DutyLog dutyLog=null;
+
+    private DutyLog() {
+
+    }
+    
+    public static DutyLog getInstance() {
+        if (dutyLog==null) {
+            dutyLog=new DutyLog();
         }
+        return dutyLog;
+    }
+    
+    public void resetInstance() {
+        dutyLog=null;
+    }
 
-	public Employee getEmployee() {
-		return this.employee;
-	}
+    public void setTimeIn(Date timeIn) {
+        this.timeIn = timeIn;
+    }
 
-	/**
-	 * 
-	 * @param employee
-	 */
-	public void setEmployee(Employee employee) {
-		this.employee = employee;
-	}
+    public void setTimeOut(Date timeOut) {
+        this.timeOut = timeOut;
+    }
 
-	public Date getTimeIn() {
-		return this.timeIn;
-	}
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+    
+    public void addActionLog(ActionLog actionLog) {
+        this.actionLogs.add(actionLog);
+    }
 
-	/**
-	 * 
-	 * @param timeIn
-	 */
-	public void setTimeIn(Date timeIn) {
-		this.timeIn = timeIn;
-	}
+    public List<ActionLog> getActionLogs() {
+        return actionLogs;
+    }
 
-	public Date getTimeOut() {
-		return this.timeOut;
-	}
+    public Date getTimeIn() {
+        return timeIn;
+    }
 
-	/**
-	 * 
-	 * @param timeOut
-	 */
-	public void setTimeOut(Date timeOut) {
-		this.timeOut = timeOut;
-	}
+    public Date getTimeOut() {
+        return timeOut;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
 
 }

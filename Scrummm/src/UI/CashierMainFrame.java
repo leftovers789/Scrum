@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package UI;
 
-import EmployeeManagement.Cashier;
-import EmployeeManagement.Gender;
+import EmployeeManagement.*;
+import BusManagement.*;
+import LogManagement.DutyLog;
+import RegistryManagement.Registry;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,19 +19,24 @@ import java.util.List;
  * @author Sian Paul Lasaga
  */
 public class CashierMainFrame extends javax.swing.JFrame {
-    
+
     private List<String> logs = new ArrayList<>();
+    private BusCompany busCompany = BusCompany.getInstance();
+    private SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd,yyyy");
     private ScheduleDetailsFrame schedFrame = new ScheduleDetailsFrame();
     private ManagePassengerFrame manageFrame = new ManagePassengerFrame();
-    public Cashier cashier = new Cashier(30, Gender.FEMALE, "", "", "", "", "", "");
-    private Date timeIn;
-    private Date timeOut;
+    public Cashier cashier = (Cashier) busCompany.getCurrentLoggedIn();
+    private DutyLog dutyLog = DutyLog.getInstance();
 
     /**
      * Creates new form CashierMainFrame
      */
     public CashierMainFrame() {
         initComponents();
+        dutyLog.setEmployee(cashier);
+        dutyLog.setTimeIn(new Date());
+        cashierLabel.setText(cashier.getLastName() + ", " + cashier.getFirstName() + " " + cashier.getMiddleName());
+        dateLabel.setText(sdf.format(dutyLog.getTimeIn()));
     }
 
     /**
@@ -57,6 +64,11 @@ public class CashierMainFrame extends javax.swing.JFrame {
 
         logOutButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         logOutButton.setText("Log out");
+        logOutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logOutButtonActionPerformed(evt);
+            }
+        });
 
         bookButton.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         bookButton.setText("Book a Passenger");
@@ -111,11 +123,10 @@ public class CashierMainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void loadData(Cashier cashier){
+    public void loadData(Cashier cashier) {
         this.cashier = cashier;
-        timeIn = new Date();
     }
-    
+
     private void bookButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookButtonActionPerformed
         // TODO add your handling code here:
         schedFrame.loadCashier(cashier);
@@ -127,6 +138,16 @@ public class CashierMainFrame extends javax.swing.JFrame {
         manageFrame.loadCashier(cashier);
         manageFrame.show();
     }//GEN-LAST:event_manageButtonActionPerformed
+
+    private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
+        Registry registry=Registry.getInstance();
+        dutyLog.setTimeOut(new Date());
+        registry.addDutyLog(dutyLog);
+        dutyLog.resetInstance();
+        this.dispose();
+        LoginFrame loginFrame = new LoginFrame();
+        loginFrame.show();
+    }//GEN-LAST:event_logOutButtonActionPerformed
 
     /**
      * @param args the command line arguments

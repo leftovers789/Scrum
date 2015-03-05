@@ -5,29 +5,37 @@
  */
 package UI;
 
-
+import RegistryManagement.*;
 import BusManagement.*;
 import EmployeeManagement.*;
+import LogManagement.DutyLog;
+import java.util.Date;
 
 /**
  *
  * @author windows
  */
-public class MainMenu extends javax.swing.JFrame {
+public class ManagerMainMenu extends javax.swing.JFrame {
 
+    private Registry registry = Registry.getInstance();
     private BusCompany busCompany = BusCompany.getInstance();
     private Employee currentlyLoggedIn = busCompany.getCurrentLoggedIn();
+    private Date timeIn = new Date();
+    private DutyLog dutyLog = DutyLog.getInstance();
 
     /**
      * Creates new form BusInformationFrame
      */
-    public MainMenu() {
+    public ManagerMainMenu() {
         initComponents();
+        dutyLog.setTimeIn(timeIn);
         if (currentlyLoggedIn != null) {
             currentlyLoggedInLabel.setText(currentlyLoggedIn.getLastName() + ", "
                     + currentlyLoggedIn.getFirstName() + " " + currentlyLoggedIn.getMiddleName());
+            dutyLog.setEmployee(currentlyLoggedIn);
         } else {
             currentlyLoggedInLabel.setText("Admin");
+            dutyLog.setEmployee(null);
         }
 
     }
@@ -49,9 +57,6 @@ public class MainMenu extends javax.swing.JFrame {
         logOutButton = new javax.swing.JButton();
         exitButton = new javax.swing.JButton();
         currentlyLoggedInLabel = new javax.swing.JLabel();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -88,14 +93,6 @@ public class MainMenu extends javax.swing.JFrame {
                 exitButtonActionPerformed(evt);
             }
         });
-
-        jMenu1.setText("File");
-        jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
-
-        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -143,27 +140,37 @@ public class MainMenu extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public Date getTimeIn() {
+        return timeIn;
+    }
+
     private void manageBookingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageBookingButtonActionPerformed
-        AddTripFrame addTripFrame=new AddTripFrame();
-        ScheduleDetailsFrame scheduleDetailsFrame=new ScheduleDetailsFrame();
+        AddTripFrame addTripFrame = new AddTripFrame();
+        ScheduleDetailsFrame scheduleDetailsFrame = new ScheduleDetailsFrame();
         this.hide();
         addTripFrame.show();
         scheduleDetailsFrame.show();
     }//GEN-LAST:event_manageBookingButtonActionPerformed
 
     private void manageBusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageBusButtonActionPerformed
-        BusRegistrationFrame busRegistrationFrame=new BusRegistrationFrame();
+        BusRegistrationFrame busRegistrationFrame = new BusRegistrationFrame();
         this.hide();
         busRegistrationFrame.show();
     }//GEN-LAST:event_manageBusButtonActionPerformed
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
+        dutyLog.setTimeOut(new Date());
+        registry.addDutyLog(dutyLog);
+        dutyLog.resetInstance();
         this.dispose();
-        LoginFrame loginFrame=new LoginFrame();
+        LoginFrame loginFrame = new LoginFrame();
         loginFrame.show();
     }//GEN-LAST:event_logOutButtonActionPerformed
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
+        dutyLog.setTimeOut(new Date());
+        registry.addDutyLog(dutyLog);
+        dutyLog.resetInstance();
         this.dispose();
     }//GEN-LAST:event_exitButtonActionPerformed
 
@@ -184,20 +191,20 @@ public class MainMenu extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ManagerMainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ManagerMainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ManagerMainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ManagerMainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainMenu().setVisible(true);
+                new ManagerMainMenu().setVisible(true);
             }
         });
     }
@@ -206,9 +213,6 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JLabel currentlyLoggedInLabel;
     private javax.swing.JButton exitButton;
     private javax.swing.JButton financialReportButton;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JButton logOutButton;
     private javax.swing.JButton manageBookingButton;
     private javax.swing.JButton manageBusButton;

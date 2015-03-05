@@ -666,7 +666,7 @@ public class FixedAddTripFrame extends javax.swing.JFrame {
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         this.hide();
-        MainMenu mainMenu=new MainMenu();
+        ManagerMainMenu mainMenu=new ManagerMainMenu();
         mainMenu.show();
     }//GEN-LAST:event_backButtonActionPerformed
 

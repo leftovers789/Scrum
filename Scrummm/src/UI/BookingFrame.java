@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package UI;
 
 import EmployeeManagement.*;
@@ -24,11 +23,12 @@ public class BookingFrame extends javax.swing.JFrame {
     private Trip oldTrip;
     private Passenger passenger;
     private TicketType ticketType;
-    private CodeGenerator gen=CodeGenerator.getInstance();
+    private CodeGenerator gen = CodeGenerator.getInstance();
     private Ticket ticket;
     private SimpleDateFormat df = new SimpleDateFormat("EEE MMMM dd, YYYY  -  hh:mm a");
     private Gender gender;
 //    private static CodeGenerator gen = CodeGenerator.getInstance();
+
     /**
      * Creates new form BookingFrame
      */
@@ -40,7 +40,7 @@ public class BookingFrame extends javax.swing.JFrame {
         genderButtonGroup.add(femaleRadioButton);
         tickerTypeButtonGroup.add(regularRadioButton);
         tickerTypeButtonGroup.add(halfFareRadioButton);
-        tickerTypeButtonGroup.add(discountedRadioButton); 
+        tickerTypeButtonGroup.add(discountedRadioButton);
         editButton.hide();
         removeButton.hide();
         reBookButton.hide();
@@ -383,15 +383,15 @@ public class BookingFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void loadTrip(Cashier cashier, Trip trip){
+    public void loadTrip(Cashier cashier, Trip trip) {
         this.cashier = cashier;
         this.trip = trip;
         tripSchedLabel.setText(df.format(trip.getSchedule()));
         busTypeLabel.setText(String.valueOf(trip.getBus().getBusType()));
         tickerNoLabel.setText(gen.generateTicketNumber());
     }
-    
-    public void loadPassenger(Cashier cashier, Passenger passenger, Trip trip){
+
+    public void loadPassenger(Cashier cashier, Passenger passenger, Trip trip) {
         this.setSize(485, 525);
         editButton.show();
         removeButton.show();
@@ -406,14 +406,13 @@ public class BookingFrame extends javax.swing.JFrame {
         lNameTextField.setText(passenger.getLastName());
         maleRadioButton.disable();
         femaleRadioButton.disable();
-        if(passenger.getGender()==Gender.MALE){
+        if (passenger.getGender() == Gender.MALE) {
             maleRadioButton.setSelected(true);
-        }
-        else{
+        } else {
             femaleRadioButton.setSelected(true);
         }
         ageTextField.disable();
-        ageTextField.setText(passenger.getAge()+"");
+        ageTextField.setText(passenger.getAge() + "");
         addressTextField.disable();
         addressTextField.setText(passenger.getAddress());
         contactNoTextField.disable();
@@ -421,21 +420,19 @@ public class BookingFrame extends javax.swing.JFrame {
         regularRadioButton.disable();
         halfFareRadioButton.disable();
         discountedRadioButton.disable();
-        if(passenger.getTicket().getType()==TicketType.Regular){
+        if (passenger.getTicket().getType() == TicketType.Regular) {
             regularRadioButton.setSelected(true);
-        }
-        else if(passenger.getTicket().getType()==TicketType.Half_Fare){
+        } else if (passenger.getTicket().getType() == TicketType.Half_Fare) {
             halfFareRadioButton.setSelected(true);
-        }
-        else if(passenger.getTicket().getType()==TicketType.Discounted){
+        } else if (passenger.getTicket().getType() == TicketType.Discounted) {
             discountedRadioButton.setSelected(true);
         }
         this.cashier = cashier;
         this.passenger = passenger;
         this.trip = trip;
     }
-    
-    public void loadReBookData(Cashier cashier, Passenger passenger, Trip oldTrip, Trip trip){
+
+    public void loadReBookData(Cashier cashier, Passenger passenger, Trip oldTrip, Trip trip) {
         editButton.hide();
         removeButton.hide();
         reBookButton.hide();
@@ -447,22 +444,19 @@ public class BookingFrame extends javax.swing.JFrame {
         busTypeLabel.setText(String.valueOf(trip.getBus().getBusType()));
         fNameTextField.setText(passenger.getFirstName());
         lNameTextField.setText(passenger.getLastName());
-        if(passenger.getGender()==Gender.MALE){
+        if (passenger.getGender() == Gender.MALE) {
             maleRadioButton.setSelected(true);
-        }
-        else{
+        } else {
             femaleRadioButton.setSelected(true);
         }
-        ageTextField.setText(passenger.getAge()+"");
+        ageTextField.setText(passenger.getAge() + "");
         addressTextField.setText(passenger.getAddress());
         contactNoTextField.setText(passenger.getContactNumber());
-        if(passenger.getTicket().getType()==TicketType.Regular){
+        if (passenger.getTicket().getType() == TicketType.Regular) {
             regularRadioButton.setSelected(true);
-        }
-        else if(passenger.getTicket().getType()==TicketType.Half_Fare){
+        } else if (passenger.getTicket().getType() == TicketType.Half_Fare) {
             halfFareRadioButton.setSelected(true);
-        }
-        else if(passenger.getTicket().getType()==TicketType.Discounted){
+        } else if (passenger.getTicket().getType() == TicketType.Discounted) {
             discountedRadioButton.setSelected(true);
         }
         this.cashier = cashier;
@@ -470,7 +464,7 @@ public class BookingFrame extends javax.swing.JFrame {
         this.trip = trip;
         this.oldTrip = oldTrip;
     }
-    
+
     private void lNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lNameTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_lNameTextFieldActionPerformed
@@ -503,26 +497,23 @@ public class BookingFrame extends javax.swing.JFrame {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         // TODO add your handling code here:
         ConfirmBooking confirm = new ConfirmBooking();
-        if(fNameTextField.getText().isEmpty() || lNameTextField.getText().isEmpty() || gender==null || 
-                ageTextField.getText().isEmpty() || contactNoTextField.getText().isEmpty() || ticketType==null){
+        if (fNameTextField.getText().isEmpty() || lNameTextField.getText().isEmpty() || gender == null
+                || ageTextField.getText().isEmpty() || contactNoTextField.getText().isEmpty() || ticketType == null) {
             JOptionPane.showMessageDialog(null, "Please fill all the data.", "Not complete!", JOptionPane.ERROR_MESSAGE);
-        }
-        else if(ticketType==TicketType.Half_Fare){
-            if(Integer.parseInt(ageTextField.getText()) > Ticket.getMinimumAgeForHalfFare())
-                JOptionPane.showMessageDialog(null, "Maximum age for Half fare is "+Ticket.getMinimumAgeForHalfFare()+" yrs old.", "Not allowed!", JOptionPane.ERROR_MESSAGE);
-        }
-        else if(contactNoTextField.getText().length() != 11){
+        } else if (ticketType == TicketType.Half_Fare) {
+            if (Integer.parseInt(ageTextField.getText()) > Ticket.getMinimumAgeForHalfFare()) {
+                JOptionPane.showMessageDialog(null, "Maximum age for Half fare is " + Ticket.getMinimumAgeForHalfFare() + " yrs old.", "Not allowed!", JOptionPane.ERROR_MESSAGE);
+            }
+        } else if (contactNoTextField.getText().length() != 11) {
             JOptionPane.showMessageDialog(null, "Invalid contact number", "Error!", JOptionPane.ERROR_MESSAGE);
-        }
-        else{
+        } else {
             String fName = fNameTextField.getText();
             String lName = lNameTextField.getText();
             int age = Integer.parseInt(ageTextField.getText());
             String contactNo;
-            if(contactNoTextField.getText().isEmpty()){
+            if (contactNoTextField.getText().isEmpty()) {
                 contactNo = "Not available";
-            }
-            else{
+            } else {
                 contactNo = contactNoTextField.getText();
             }
             String ticketNo = tickerNoLabel.getText();
@@ -571,8 +562,9 @@ public class BookingFrame extends javax.swing.JFrame {
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
         // TODO add your handling code here:
         int reply = JOptionPane.showConfirmDialog(null, "Remove this passenger from the trip?", "Confirm removing", JOptionPane.YES_NO_OPTION);
-        if(reply == JOptionPane.YES_OPTION){
-            invoker.RemovePassengerWasExecuted(cashier, trip, passenger);
+        if (reply == JOptionPane.YES_OPTION) {
+            invoker.setCommand(new RemovePassengerCommand(cashier, trip, passenger));
+            invoker.executeCommand();
         }
     }//GEN-LAST:event_removeButtonActionPerformed
 
@@ -586,7 +578,8 @@ public class BookingFrame extends javax.swing.JFrame {
         String address = addressTextField.getText();
         double price = trip.getPrice();
         ticket = new Ticket(ticketNo, ticketType, price);
-        invoker.EditPassengerWasExecuted(cashier, trip, passenger, fName, lName, age, gender, contactNo, address, ticket);
+        invoker.setCommand(new EditPassengerCommand(cashier, trip, passenger, fName, lName, age, gender, contactNo, address, ticket));
+        invoker.executeCommand();
     }//GEN-LAST:event_updateButtonActionPerformed
 
     private void confirmReBookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmReBookingActionPerformed

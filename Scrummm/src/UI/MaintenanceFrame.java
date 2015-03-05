@@ -436,7 +436,7 @@ public class MaintenanceFrame extends javax.swing.JFrame {
     }
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
-        MainMenu mainMenu = new MainMenu();
+        ManagerMainMenu mainMenu = new ManagerMainMenu();
         //logging for duty will be inserted here
         mainMenu.show();
     }//GEN-LAST:event_logOutButtonActionPerformed

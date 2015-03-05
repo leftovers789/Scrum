@@ -3,32 +3,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package LogManagement;
 
 import BookingManagement.Passenger;
 import EmployeeManagement.Cashier;
+import EmployeeManagement.Employee;
 import java.util.Date;
 
 /**
  *
  * @author Sian Paul Lasaga
  */
-public class CashierLog {
-    
-    private Cashier cashier;
+public class CashierActionLog extends ActionLog{
+
     private Passenger passenger;
     private String actionType;
-    private Date date;
 
-    public CashierLog(Cashier cashier, Passenger passenger, String actionType, Date date) {
-        this.cashier = cashier;
+    public CashierActionLog(Passenger passenger, String actionType) {
         this.passenger = passenger;
         this.actionType = actionType;
-    }
-
-    public Cashier getCashier() {
-        return cashier;
     }
 
     public Passenger getPassenger() {
@@ -39,10 +32,4 @@ public class CashierLog {
         return actionType;
     }
 
-    public Date getDate() {
-        return date;
-    }
-    
-    
-    
 }

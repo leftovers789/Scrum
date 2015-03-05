@@ -17,7 +17,7 @@ import java.util.Date;
  */
 public class EditPassengerCommand implements Command{
     
-    private DutyLog log = new DutyLog();
+    private DutyLog log = DutyLog.getInstance();
     private Cashier cashier;
     private Trip trip;
     private Passenger passenger;
@@ -54,7 +54,7 @@ public class EditPassengerCommand implements Command{
         passenger.setTicket(ticket);
         trip.removePassenger(passenger);
         trip.addPassenger(passenger);
-        log.addCashierLog(new CashierLog(cashier, passenger, action, new Date()));
+        log.addActionLog(new CashierActionLog(passenger, action));
     }
     
 }

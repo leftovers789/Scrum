@@ -8,6 +8,7 @@ package UI;
 
 import BookingManagement.Invoker;
 import BookingManagement.Passenger;
+import BookingManagement.ReBookPassengerCommand;
 import BookingManagement.Trip;
 import EmployeeManagement.Cashier;
 import java.text.DecimalFormat;
@@ -400,7 +401,8 @@ public class ConfirmReBookingFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         JOptionPane.showMessageDialog(null, "The passenger has been re-booked", "Re-booking Completed", JOptionPane.INFORMATION_MESSAGE);
         bookingFrame.hide();
-        invoker.ReBookPassengerWasExecuted(cashier, passenger, trip, oldTrip);
+        invoker.setCommand(new ReBookPassengerCommand(cashier, passenger, trip, oldTrip));
+        invoker.executeCommand();
         bookingFrame.hide();
         this.hide();
     }//GEN-LAST:event_confirmButtonActionPerformed

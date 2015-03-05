@@ -7,7 +7,7 @@
 package BookingManagement;
 
 import EmployeeManagement.Cashier;
-import LogManagement.CashierLog;
+import LogManagement.*;
 import LogManagement.DutyLog;
 import java.util.Date;
 
@@ -17,7 +17,7 @@ import java.util.Date;
  */
 public class ReBookPassengerCommand implements Command{
     
-    private DutyLog log = new DutyLog();
+    private DutyLog log = DutyLog.getInstance();
     private Cashier cashier;
     private Passenger passenger;
     private Trip currentTrip;
@@ -36,7 +36,7 @@ public class ReBookPassengerCommand implements Command{
         action = "Re-booked a passenger from "+oldTrip.getReferenceNo()+" to "+currentTrip.getReferenceNo();
         oldTrip.removePassenger(passenger);
         currentTrip.addPassenger(passenger);
-        log.addCashierLog(new CashierLog(cashier, passenger, action, new Date()));
+        log.addActionLog(new CashierActionLog(passenger, action));
     }
     
 }

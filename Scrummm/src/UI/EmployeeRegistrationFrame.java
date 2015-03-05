@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import EmployeeManagement.*;
 import BusManagement.*;
+import LogManagement.DutyLog;
 import javafx.scene.control.RadioButton;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
@@ -23,6 +24,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class EmployeeRegistrationFrame extends javax.swing.JFrame {
 
+    private DutyLog dutyLog=DutyLog.getInstance();
+    private Registry registry = Registry.getInstance();
     private CodeGenerator codeGenerator = CodeGenerator.getInstance();
     private SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd,yyyy");
     private Gender gender = null;
@@ -422,12 +425,27 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
         jMenu1.add(jMenu3);
 
         jMenuItem6.setText("Main Menu");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem6);
 
         jMenuItem1.setText("Log Out");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem1);
 
         jMenuItem7.setText("Exit");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem7);
 
         jMenuBar1.add(jMenu1);
@@ -647,6 +665,29 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
         positionField.setText("Conductor");
         idField.setText(codeGenerator.generateId());
     }//GEN-LAST:event_jMenuItem10ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        ManagerMainMenu managerMainMenu = new ManagerMainMenu();
+        this.hide();
+        managerMainMenu.show();
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        LoginFrame loginFrame = new LoginFrame();
+        dutyLog = DutyLog.getInstance();
+        dutyLog.setTimeOut(new Date());
+        registry.addDutyLog(dutyLog);
+        dutyLog.resetInstance();
+        this.hide();
+        loginFrame.show();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        dutyLog.setTimeOut(new Date());
+        registry.addDutyLog(dutyLog);
+        dutyLog.resetInstance();
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     /**
      * @param args the command line arguments

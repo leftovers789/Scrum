@@ -383,7 +383,8 @@ public class ConfirmBooking extends javax.swing.JFrame {
         // TODO add your handling code here:    
         JOptionPane.showMessageDialog(null, "The passenger has been booked", "Booking Completed", JOptionPane.INFORMATION_MESSAGE);
         bookingFrame.hide();
-        invoker.addPassengerWasExecuted(cashier, trip, passenger);
+        invoker.setCommand(new AddPassengerCommand(cashier, trip, passenger));
+        invoker.executeCommand();
         this.hide();
     }//GEN-LAST:event_confirmButtonActionPerformed
 
