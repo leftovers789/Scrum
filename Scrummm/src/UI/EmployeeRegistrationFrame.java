@@ -10,11 +10,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import EmployeeManagement.*;
 import BusManagement.*;
+import CommandPatternStructure.*;
 import LogManagement.DutyLog;
-import javafx.scene.control.RadioButton;
+import java.awt.Color;
+import java.awt.Dimension;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -24,7 +28,12 @@ import javax.swing.table.DefaultTableModel;
  */
 public class EmployeeRegistrationFrame extends javax.swing.JFrame {
 
-    private DutyLog dutyLog=DutyLog.getInstance();
+    private Employee employee;
+    private Invoker invoker = new Invoker();
+    private SearchEngine searchEngine = new SearchEngine();
+    private boolean hasSelected = false;
+    private int selectedRow;
+    private DutyLog dutyLog = DutyLog.getInstance();
     private Registry registry = Registry.getInstance();
     private CodeGenerator codeGenerator = CodeGenerator.getInstance();
     private SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd,yyyy");
@@ -41,31 +50,11 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setExtendedState(MAXIMIZED_BOTH);
 
-        employeeDataTable.setModel(employeeDataTableModel);
-        employeeDataTable.getTableHeader().setReorderingAllowed(false);
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-        employeeDataTable.getTableHeader().setDefaultRenderer(centerRenderer);
-        employeeDataTable.setRowSelectionAllowed(true);
-        employeeDataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        employeeDataTable.setEnabled(true);
-        employeeDataTable.setSelectionBackground(java.awt.Color.GRAY);
-        employeeDataTable.getColumn("ID").setCellRenderer(centerRenderer);
-        employeeDataTable.getColumn("Name").setCellRenderer(centerRenderer);
-        employeeDataTable.getColumn("Position").setCellRenderer(centerRenderer);
-        employeeDataTable.getColumn("Cellphone Number").setCellRenderer(centerRenderer);
-        for (int c = 0; c < employeeDataTable.getColumnCount(); c++) {
-            Class<?> col_class = employeeDataTable.getColumnClass(c);
-            employeeDataTable.setDefaultEditor(col_class, null);        // remove editor
-        }
-        employeeDataTable.getTableHeader().setResizingAllowed(false);
-        employeeDataTable.setShowGrid(true);
+        configureTable(employeeDataTableModel);
         updateTableModel();
 
         hideUsernamePasswordField();
         employeeDataPanel.setVisible(false);
-
-        dateField.setText(sdf.format(new Date()));
 
         genderRadioButtonGroup.add(maleRadioButton);
         genderRadioButtonGroup.add(femaleRadioButton);
@@ -110,6 +99,8 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
         ageLabel = new javax.swing.JLabel();
         ageField = new javax.swing.JTextField();
         passwordField = new javax.swing.JPasswordField();
+        updateButton = new javax.swing.JButton();
+        removeButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         employeeDataTable = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -121,6 +112,7 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
+        jMenuItem11 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
@@ -198,79 +190,92 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
 
         ageLabel.setText("Age:");
 
+        updateButton.setText("Update");
+        updateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateButtonActionPerformed(evt);
+            }
+        });
+
+        removeButton.setText("Remove");
+        removeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout employeeDataPanelLayout = new javax.swing.GroupLayout(employeeDataPanel);
         employeeDataPanel.setLayout(employeeDataPanelLayout);
         employeeDataPanelLayout.setHorizontalGroup(
             employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(employeeDataPanelLayout.createSequentialGroup()
-                .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(6, 6, 6)
+                .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(employeeDataPanelLayout.createSequentialGroup()
-                        .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(employeeDataPanelLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(employeeDataPanelLayout.createSequentialGroup()
-                                        .addComponent(middleNameLabel)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(middleNameField))
-                                    .addGroup(employeeDataPanelLayout.createSequentialGroup()
-                                        .addComponent(firstNameLabel)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(firstNameField))
-                                    .addGroup(employeeDataPanelLayout.createSequentialGroup()
-                                        .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(positionLabel)
-                                            .addComponent(idLabel)
-                                            .addComponent(dateLabel))
-                                        .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addGroup(employeeDataPanelLayout.createSequentialGroup()
-                                                .addGap(33, 33, 33)
-                                                .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(dateField, javax.swing.GroupLayout.Alignment.TRAILING)
-                                                    .addComponent(idField)))
-                                            .addGroup(employeeDataPanelLayout.createSequentialGroup()
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(positionField))))
-                                    .addGroup(employeeDataPanelLayout.createSequentialGroup()
-                                        .addComponent(cellphoneNumberLabel)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(cellphoneNumberField))
-                                    .addGroup(employeeDataPanelLayout.createSequentialGroup()
-                                        .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(lastNameLabel)
-                                            .addComponent(ageLabel))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(employeeDataPanelLayout.createSequentialGroup()
-                                                .addComponent(ageField, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(0, 0, Short.MAX_VALUE))
-                                            .addComponent(lastNameField)))
-                                    .addGroup(employeeDataPanelLayout.createSequentialGroup()
-                                        .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(employeeDataPanelLayout.createSequentialGroup()
-                                                .addComponent(generLabel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(maleRadioButton)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(femaleRadioButton))
-                                            .addComponent(addressLabel)
-                                            .addGroup(employeeDataPanelLayout.createSequentialGroup()
-                                                .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(usernameLabel)
-                                                    .addComponent(passwordLabel))
-                                                .addGap(26, 26, 26)
-                                                .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                    .addComponent(usernameField)
-                                                    .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))))
-                                        .addGap(0, 0, Short.MAX_VALUE))))
-                            .addGroup(employeeDataPanelLayout.createSequentialGroup()
-                                .addGap(59, 59, 59)
-                                .addComponent(registerButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
-                                .addComponent(cancelButton)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(addressField))
-                .addContainerGap())
+                        .addComponent(updateButton)
+                        .addGap(0, 0, 0)
+                        .addComponent(removeButton)
+                        .addGap(0, 0, 0)
+                        .addComponent(registerButton)
+                        .addGap(0, 0, 0)
+                        .addComponent(cancelButton))
+                    .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(addressField, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(employeeDataPanelLayout.createSequentialGroup()
+                            .addComponent(middleNameLabel)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(middleNameField))
+                        .addGroup(employeeDataPanelLayout.createSequentialGroup()
+                            .addComponent(firstNameLabel)
+                            .addGap(18, 18, 18)
+                            .addComponent(firstNameField))
+                        .addGroup(employeeDataPanelLayout.createSequentialGroup()
+                            .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(positionLabel)
+                                .addComponent(idLabel)
+                                .addComponent(dateLabel))
+                            .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(employeeDataPanelLayout.createSequentialGroup()
+                                    .addGap(33, 33, 33)
+                                    .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(dateField, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(idField)))
+                                .addGroup(employeeDataPanelLayout.createSequentialGroup()
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(positionField))))
+                        .addGroup(employeeDataPanelLayout.createSequentialGroup()
+                            .addComponent(cellphoneNumberLabel)
+                            .addGap(18, 18, 18)
+                            .addComponent(cellphoneNumberField))
+                        .addGroup(employeeDataPanelLayout.createSequentialGroup()
+                            .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lastNameLabel)
+                                .addComponent(ageLabel))
+                            .addGap(18, 18, 18)
+                            .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(employeeDataPanelLayout.createSequentialGroup()
+                                    .addComponent(ageField, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(lastNameField)))
+                        .addGroup(employeeDataPanelLayout.createSequentialGroup()
+                            .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(employeeDataPanelLayout.createSequentialGroup()
+                                    .addComponent(generLabel)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(maleRadioButton)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(femaleRadioButton))
+                                .addComponent(addressLabel)
+                                .addGroup(employeeDataPanelLayout.createSequentialGroup()
+                                    .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(usernameLabel)
+                                        .addComponent(passwordLabel))
+                                    .addGap(26, 26, 26)
+                                    .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(usernameField)
+                                        .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))))
+                            .addGap(0, 0, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         employeeDataPanelLayout.setVerticalGroup(
             employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -330,7 +335,9 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addGroup(employeeDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(registerButton)
-                    .addComponent(cancelButton))
+                    .addComponent(cancelButton)
+                    .addComponent(updateButton)
+                    .addComponent(removeButton))
                 .addContainerGap())
         );
 
@@ -345,6 +352,11 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        employeeDataTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                employeeDataTableMousePressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(employeeDataTable);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -355,7 +367,7 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(employeeDataPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
                 .addGap(12, 12, 12))
         );
         jPanel1Layout.setVerticalGroup(
@@ -366,7 +378,7 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(employeeDataPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 23, Short.MAX_VALUE)))
+                        .addGap(0, 27, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -423,6 +435,14 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
         jMenu3.add(jMenuItem10);
 
         jMenu1.add(jMenu3);
+
+        jMenuItem11.setText("Edit/Remove Employee");
+        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem11ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem11);
 
         jMenuItem6.setText("Main Menu");
         jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
@@ -484,7 +504,38 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void configureTable(DefaultTableModel model) {
+        employeeDataTable.setModel(model);
+        employeeDataTable.getTableHeader().setReorderingAllowed(false);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        employeeDataTable.getTableHeader().setDefaultRenderer(centerRenderer);
+        employeeDataTable.setRowSelectionAllowed(true);
+        employeeDataTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        employeeDataTable.setEnabled(true);
+        employeeDataTable.setSelectionBackground(java.awt.Color.GRAY);
+        employeeDataTable.getColumn("ID").setCellRenderer(centerRenderer);
+        employeeDataTable.getColumn("Name").setCellRenderer(centerRenderer);
+        if (model == employeeDataTableModel) {
+            employeeDataTable.getColumn("Position").setCellRenderer(centerRenderer);
+            employeeDataTable.getColumn("Cellphone Number").setCellRenderer(centerRenderer);
+        } else {
+            employeeDataTable.getColumn("Time In").setCellRenderer(centerRenderer);
+            employeeDataTable.getColumn("Time Out").setCellRenderer(centerRenderer);
+        }
+        for (int c = 0; c < employeeDataTable.getColumnCount(); c++) {
+            Class<?> col_class = employeeDataTable.getColumnClass(c);
+            employeeDataTable.setDefaultEditor(col_class, null);        // remove editor
+        }
+        employeeDataTable.getTableHeader().setResizingAllowed(false);
+        employeeDataTable.setShowGrid(true);
+
+    }
+
     private void updateTableModel() {
+        while (employeeDataTable.getRowCount() > 0) {
+            employeeDataTableModel.removeRow(0);
+        }
         for (Employee employee : busCompany.getEmployees()) {
             String name = employee.getLastName() + ", " + employee.getFirstName() + " " + employee.getMiddleName();
             String position = "";
@@ -512,6 +563,7 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
         firstNameField.setText("");
         middleNameField.setText("");
         lastNameField.setText("");
+        ageField.setText("");
         addressField.setText("");
         genderRadioButtonGroup.clearSelection();
         cellphoneNumberField.setText("");
@@ -545,7 +597,6 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_dateFieldActionPerformed
 
     private void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButtonActionPerformed
-        Date dateRegistered;
         int age = 0;
 
         try {
@@ -561,16 +612,8 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
             return;
         }
 
-        try {
-            double cellphoneNumber = Double.parseDouble(cellphoneNumberField.getText());
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Invalid input on cellphone # field!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        try {
-            dateRegistered = sdf.parse(dateField.getText());
-        } catch (Exception e) {
-        }
+        cellphoneNumberVerification();
+        fieldsVerification();
 
         String address = addressField.getText();
         String firstName = firstNameField.getText();
@@ -582,32 +625,43 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
         String password = passwordField.getText();
         String cellphoneNumber = cellphoneNumberField.getText();
 
-        if (gender != null || !firstNameField.getText().isEmpty() || !middleNameField.getText().isEmpty()
-                || !lastNameField.getText().isEmpty() || !addressField.getText().isEmpty()) {
+        if (gender != null) {
+            if (position.equals("Manager") || position.equals("Operator") || position.equals("Cashier")) {
+                if (password.isEmpty() || password.length() < 4) {
+                    JOptionPane.showMessageDialog(null, "Password at least 4 in length", "Invalid", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (position.equals("Manager")) {
+                    if (username.isEmpty() || username.length() < 4) {
+                        JOptionPane.showMessageDialog(null, "Username at least 4 in length", "Invalid", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+            }
             if (position.equals("Manager")) {
-                busCompany.addEmployee(
-                        new Manager(username, password, age, gender, address, cellphoneNumber,
-                                firstName, lastName, middleName, id));
+                invoker.setCommand(new AddEmployeeCommand(new Manager(username, password, age, gender, address, cellphoneNumber,
+                        firstName, lastName, middleName, id), new Date()));
+                invoker.executeCommand();
             } else if (position.equals("Operator")) {
-                busCompany.addEmployee(
-                        new Operator(age, gender, address, cellphoneNumber, firstName,
-                                lastName, middleName, id));
+                invoker.setCommand(new AddEmployeeCommand(new Operator(password, age, gender, address, cellphoneNumber, firstName,
+                        lastName, middleName, id), new Date()));
+                invoker.executeCommand();
             } else if (position.equals("Mechanic")) {
-                busCompany.addEmployee(
-                        new Mechanic(age, gender, address, cellphoneNumber, firstName,
-                                lastName, middleName, id));
+                invoker.setCommand(new AddEmployeeCommand(new Mechanic(age, gender, address, cellphoneNumber, firstName,
+                        lastName, middleName, id), new Date()));
+                invoker.executeCommand();
             } else if (position.equals("Cashier")) {
-                busCompany.addEmployee(
-                        new Cashier(password, age, gender, address, cellphoneNumber,
-                                firstName, lastName, middleName, id));
+                invoker.setCommand(new AddEmployeeCommand(new Cashier(password, age, gender, address, cellphoneNumber,
+                        firstName, lastName, middleName, id), new Date()));
+                invoker.executeCommand();
             } else if (position.equals("Driver")) {
-                busCompany.addEmployee(
-                        new Driver(age, gender, address, cellphoneNumber, firstName,
-                                lastName, middleName, id));
+                invoker.setCommand(new AddEmployeeCommand(new Driver(age, gender, address, cellphoneNumber, firstName,
+                        lastName, middleName, id), new Date()));
+                invoker.executeCommand();
             } else if (position.equals("Conductor")) {
-                busCompany.addEmployee(
-                        new Conductor(age, gender, address, cellphoneNumber, firstName,
-                                lastName, middleName, id));
+                invoker.setCommand(new AddEmployeeCommand(new Conductor(age, gender, address, cellphoneNumber, firstName,
+                        lastName, middleName, id), new Date()));
+                invoker.executeCommand();
             }
 
             updateTableModel();
@@ -621,7 +675,17 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
 
     private void reset() {
         clearFields();
+        configureTable(employeeDataTableModel);
         hideUsernamePasswordField();
+        LineBorder lineBorder = new LineBorder(Color.BLACK, 1, true);
+        employeeDataPanel.setBorder(lineBorder);
+        maleRadioButton.setEnabled(true);
+        femaleRadioButton.setEnabled(true);
+        ageField.setEnabled(true);
+        dateField.setText(sdf.format(new Date()));
+        registerButton.show();
+        updateButton.hide();
+        removeButton.hide();
     }
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -687,6 +751,7 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
         loginFrame.show();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
         dutyLog.setTimeOut(new Date());
         registry.addDutyLog(dutyLog);
@@ -695,12 +760,148 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-        DefaultTableModel dutyLogTableModel=new DefaultTableModel(new Object[]{"ID","Name"}, 0);
-        for (DutyLog dutyLog1 : registry.getDutyLogs()) {
-            employeeDataTableModel.addRow(new Object[]{});
-        }
-        
+        DefaultTableModel dutyLogTableModel = new DefaultTableModel(new Object[]{"ID", "Name", "Time In", "Time Out",}, 0);
+        employeeDataPanel.setVisible(false);
+        configureTable(dutyLogTableModel);
     }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void employeeDataTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_employeeDataTableMousePressed
+
+        if (hasSelected && selectedRow == employeeDataTable.getSelectedRow()) {
+            reset();
+            dateField.setText("");
+            employeeDataTable.clearSelection();
+            employee = null;
+            hasSelected = false;
+            return;
+        }
+
+        selectedRow = employeeDataTable.getSelectedRow();
+        hasSelected = true;
+
+        if (selectedRow >= 0) {
+            String id = (String) employeeDataTable.getValueAt(selectedRow, 0);
+            employee = searchEngine.searchEmployeeById(id);
+            String name = employee.getLastName() + ", " + employee.getFirstName() + " " + employee.getMiddleName();
+            Date dateRegistered = searchEngine.searchEmployeeDateRegistered(name);
+            if (employee instanceof Manager) {
+                positionField.setText("Manager");
+            } else if (employee instanceof Cashier) {
+                positionField.setText("Cashier");
+            } else if (employee instanceof Driver) {
+                positionField.setText("Driver");
+            } else if (employee instanceof Conductor) {
+                positionField.setText("Conductor");
+            } else if (employee instanceof Mechanic) {
+                positionField.setText("Mechanic");
+            } else if (employee instanceof Operator) {
+                positionField.setText("Operator");
+            }
+
+            idField.setText(id);
+            if (dateRegistered != null) {
+                dateField.setText(sdf.format(dateRegistered));
+            }
+            firstNameField.setText(employee.getFirstName());
+            middleNameField.setText(employee.getMiddleName());
+            lastNameField.setText(employee.getLastName());
+            ageField.setText(Integer.toString(employee.getAge()));
+            if (employee.getGender() == Gender.MALE) {
+                maleRadioButton.setSelected(true);
+            } else {
+                femaleRadioButton.setSelected(true);
+            }
+            ageField.setEnabled(false);
+            maleRadioButton.setEnabled(false);
+            femaleRadioButton.setEnabled(false);
+            addressField.setText(employee.getAddress());
+            cellphoneNumberField.setText(employee.getCellphoneNumber());
+            updateButton.setEnabled(true);
+        }
+    }//GEN-LAST:event_employeeDataTableMousePressed
+
+    private void fieldsVerification() {
+        if (firstNameField.getText().isEmpty() || middleNameField.getText().isEmpty()
+                || lastNameField.getText().isEmpty() || addressField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Fill all the fields to continue!", "Invalid!", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    }
+
+    private void cellphoneNumberVerification() {
+        try {
+            double cellphoneNumber = Double.parseDouble(cellphoneNumberField.getText());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Invalid input on cellphone # field!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (cellphoneNumberField.getText().length() < 11) {
+            JOptionPane.showMessageDialog(null, "Invalid length of cellphone number! "
+                    + "\n Must be 11 digits!", "Invalid", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    }
+
+
+    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
+        cellphoneNumberVerification();
+        fieldsVerification();
+        String firstName = firstNameField.getText();
+        String middleName = middleNameField.getText();
+        String lastName = lastNameField.getText();
+        String address = addressField.getText();
+        String cellphoneNumber = cellphoneNumberField.getText();
+
+        employee.setFirstName(firstName);
+        employee.setMiddleName(middleName);
+        employee.setLastName(lastName);
+        employee.setAddress(address);
+        employee.setCellphoneNumber(cellphoneNumber);
+
+        /*       if (employee instanceof Manager) {
+         employee=(Manager)employee;
+         } else if (employee instanceof Operator) {
+         employee=(Operator)employee;
+         } else if (employee instanceof Cashier) {
+         employee=(Cashier)employee;
+         } else if (employee instanceof Mechanic) {
+         employee=(Mechanic)employee;
+         } else if (employee instanceof Conductor) {
+         employee=(Conductor)employee;
+         } else if (employee instanceof Driver) {
+         employee=(Driver)employee;
+         }*/
+        invoker.setCommand(new EditEmployeeDataCommand(employee, new Date()));
+        invoker.executeCommand();
+        updateTableModel();
+    }//GEN-LAST:event_updateButtonActionPerformed
+
+    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
+        configureTable(employeeDataTableModel);
+        employeeDataPanel.setVisible(true);
+        updateButton.setEnabled(false);
+        dateField.setText("");
+        positionField.setPreferredSize(new Dimension(155, 46));
+        positionField.setText("");
+        idField.setText("");
+        clearFields();
+        TitledBorder borderFactory = new TitledBorder(new LineBorder(Color.BLACK, 1, true),
+                "Select Row on Table", TitledBorder.CENTER, TitledBorder.BELOW_TOP);
+        employeeDataPanel.setBorder(borderFactory);
+        hideUsernamePasswordField();
+        updateButton.show();
+        removeButton.show();
+        registerButton.hide();
+    }//GEN-LAST:event_jMenuItem11ActionPerformed
+
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
+        invoker.setCommand(new RemoveEmployeeCommand(employee, new Date()));
+        invoker.executeCommand();
+        updateTableModel();
+        employee = null;
+        employeeDataPanel.setVisible(false);
+    }//GEN-LAST:event_removeButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -762,6 +963,7 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
+    private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -782,6 +984,8 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
     private javax.swing.JTextField positionField;
     private javax.swing.JLabel positionLabel;
     private javax.swing.JButton registerButton;
+    private javax.swing.JButton removeButton;
+    private javax.swing.JButton updateButton;
     private javax.swing.JTextField usernameField;
     private javax.swing.JLabel usernameLabel;
     // End of variables declaration//GEN-END:variables

@@ -4,8 +4,10 @@
  * and open the template in the editor.
  */
 
-package BookingManagement;
+package CommandPatternStructure;
 
+import BookingManagement.Passenger;
+import BookingManagement.Trip;
 import EmployeeManagement.Cashier;
 import LogManagement.*;
 import java.util.Date;
@@ -31,7 +33,7 @@ public class RemovePassengerCommand implements Command{
     @Override
     public void execute() {
         trip.removePassenger(passenger);
-        log.addActionLog(new CashierActionLog(passenger, action));
+        log.addActionLog(new CashierActionLog(passenger, action,new Date()));
     }
     
 }

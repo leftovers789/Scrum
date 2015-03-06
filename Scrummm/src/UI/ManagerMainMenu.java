@@ -68,6 +68,11 @@ public class ManagerMainMenu extends javax.swing.JFrame {
         });
 
         manageEmployeeButton.setText("Manage Employee");
+        manageEmployeeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                manageEmployeeButtonActionPerformed(evt);
+            }
+        });
 
         manageBookingButton.setText("Manage Booking");
         manageBookingButton.addActionListener(new java.awt.event.ActionListener() {
@@ -173,6 +178,12 @@ public class ManagerMainMenu extends javax.swing.JFrame {
         dutyLog.resetInstance();
         this.dispose();
     }//GEN-LAST:event_exitButtonActionPerformed
+
+    private void manageEmployeeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageEmployeeButtonActionPerformed
+        this.hide();
+        EmployeeRegistrationFrame employeeRegistrationFrame=new EmployeeRegistrationFrame();
+        employeeRegistrationFrame.show();
+    }//GEN-LAST:event_manageEmployeeButtonActionPerformed
 
     /**
      * @param args the command line arguments

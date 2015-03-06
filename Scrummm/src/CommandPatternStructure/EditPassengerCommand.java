@@ -4,8 +4,11 @@
  * and open the template in the editor.
  */
 
-package BookingManagement;
+package CommandPatternStructure;
 
+import BookingManagement.Passenger;
+import BookingManagement.Ticket;
+import BookingManagement.Trip;
 import EmployeeManagement.*;
 import EmployeeManagement.Gender;
 import LogManagement.*;
@@ -54,7 +57,7 @@ public class EditPassengerCommand implements Command{
         passenger.setTicket(ticket);
         trip.removePassenger(passenger);
         trip.addPassenger(passenger);
-        log.addActionLog(new CashierActionLog(passenger, action));
+        log.addActionLog(new CashierActionLog(passenger, action,new Date()));
     }
     
 }

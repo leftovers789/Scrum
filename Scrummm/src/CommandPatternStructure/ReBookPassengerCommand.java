@@ -4,8 +4,10 @@
  * and open the template in the editor.
  */
 
-package BookingManagement;
+package CommandPatternStructure;
 
+import BookingManagement.Passenger;
+import BookingManagement.Trip;
 import EmployeeManagement.Cashier;
 import LogManagement.*;
 import LogManagement.DutyLog;
@@ -36,7 +38,7 @@ public class ReBookPassengerCommand implements Command{
         action = "Re-booked a passenger from "+oldTrip.getReferenceNo()+" to "+currentTrip.getReferenceNo();
         oldTrip.removePassenger(passenger);
         currentTrip.addPassenger(passenger);
-        log.addActionLog(new CashierActionLog(passenger, action));
+        log.addActionLog(new CashierActionLog(passenger, action,new Date()));
     }
     
 }

@@ -9,6 +9,10 @@ package RegistryManagement;
 import BusManagement.*;
 import RegistryManagement.*;
 import BookingManagement.*;
+import EmployeeManagement.Employee;
+import LogManagement.ActionLog;
+import LogManagement.DutyLog;
+import LogManagement.ManagerActionLog;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -80,6 +84,27 @@ public class SearchEngine {
          for (Passenger passenger : trip.getPassenger()) {
             if(passenger.getTicket().getTickerNumber().equalsIgnoreCase(ticketNumber)){
                 return passenger;
+            }
+        }
+        return null;
+    }
+    
+    public Employee searchEmployeeById(String id) {
+        for (Employee employee : busCo.getEmployees()) {
+            if (employee.getId().equals(id)) {
+                return employee;
+            }
+        }
+        return null;
+    }
+    
+    public Date searchEmployeeDateRegistered(String name) {
+        for (DutyLog dutyLog : reg.getDutyLogs()) {
+            for (ActionLog actionLog : dutyLog.getActionLogs()) {
+                ManagerActionLog managerActionLog=(ManagerActionLog) actionLog;
+                if (managerActionLog.getAction().equalsIgnoreCase("Registered "+name)) {
+                    return managerActionLog.getDate();
+                }
             }
         }
         return null;

@@ -11,9 +11,15 @@ package EmployeeManagement;
  * @author windows
  */
 public class Operator extends Employee{
-
-    public Operator(int age, Gender gender, String address, String cellphoneNumber, String firstName, String lastName, String middleName, String id) {
+    
+    private String password;
+    public Operator(String password,int age, Gender gender, String address, String cellphoneNumber, String firstName, String lastName, String middleName, String id) {
         super(age, gender, address, cellphoneNumber, firstName, lastName, middleName, id);
+        this.password=password;
+    }
+
+    public String getPassword() {
+        return password;
     }
     
 }

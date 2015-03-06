@@ -18,12 +18,18 @@ public class CashierActionLog extends ActionLog{
 
     private Passenger passenger;
     private String actionType;
+    private Date time;
 
-    public CashierActionLog(Passenger passenger, String actionType) {
+    public CashierActionLog(Passenger passenger, String actionType,Date time) {
         this.passenger = passenger;
         this.actionType = actionType;
+        this.time=time;
     }
-
+    
+    public Date getTime() {
+        return time;
+    }
+    
     public Passenger getPassenger() {
         return passenger;
     }

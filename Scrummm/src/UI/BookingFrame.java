@@ -5,6 +5,9 @@
  */
 package UI;
 
+import CommandPatternStructure.Invoker;
+import CommandPatternStructure.RemovePassengerCommand;
+import CommandPatternStructure.EditPassengerCommand;
 import EmployeeManagement.*;
 import BookingManagement.*;
 import RegistryManagement.*;
