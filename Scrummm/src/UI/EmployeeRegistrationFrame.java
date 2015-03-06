@@ -453,6 +453,11 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
         jMenu4.setText("View");
 
         jMenuItem8.setText("Duty Log");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
         jMenu4.add(jMenuItem8);
 
         jMenuBar1.add(jMenu4);
@@ -688,6 +693,14 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
         dutyLog.resetInstance();
         this.dispose();
     }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        DefaultTableModel dutyLogTableModel=new DefaultTableModel(new Object[]{"ID","Name"}, 0);
+        for (DutyLog dutyLog1 : registry.getDutyLogs()) {
+            employeeDataTableModel.addRow(new Object[]{});
+        }
+        
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     /**
      * @param args the command line arguments
