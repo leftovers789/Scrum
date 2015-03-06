@@ -25,7 +25,7 @@ public class CashierMainFrame extends javax.swing.JFrame {
     private SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd,yyyy");
     private ScheduleDetailsFrame schedFrame = new ScheduleDetailsFrame();
     private ManagePassengerFrame manageFrame = new ManagePassengerFrame();
-    public Cashier cashier = (Cashier) busCompany.getCurrentLoggedIn();
+    public Cashier cashier = null;
     private DutyLog dutyLog = DutyLog.getInstance();
 
     /**
@@ -35,7 +35,7 @@ public class CashierMainFrame extends javax.swing.JFrame {
         initComponents();
         dutyLog.setEmployee(cashier);
         dutyLog.setTimeIn(new Date());
-        cashierLabel.setText(cashier.getLastName() + ", " + cashier.getFirstName() + " " + cashier.getMiddleName());
+//        cashierLabel.setText(cashier.getLastName() + ", " + cashier.getFirstName() + " " + cashier.getMiddleName());
         dateLabel.setText(sdf.format(dutyLog.getTimeIn()));
     }
 
