@@ -27,7 +27,7 @@ import javax.swing.table.DefaultTableModel;
  * @author windows
  */
 public class EmployeeRegistrationFrame extends javax.swing.JFrame {
-
+    
     private Employee employee;
     private Invoker invoker = new Invoker();
     private SearchEngine searchEngine = new SearchEngine();
@@ -40,7 +40,7 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
     private Gender gender = null;
     private BusCompany busCompany = BusCompany.getInstance();
     private DefaultTableModel employeeDataTableModel
-            = new DefaultTableModel(new Object[]{"ID", "Name", "Position", "Cellphone Number"}, 0);
+            = new DefaultTableModel(new Object[]{"ID", "Name", "Position", "Cellphone #", "Address"}, 0);
 
     /**
      * Creates new form EmployeeRegistrationFrame
@@ -116,8 +116,6 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
-        jMenu4 = new javax.swing.JMenu();
-        jMenuItem8 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -367,7 +365,7 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(employeeDataPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
                 .addGap(12, 12, 12))
         );
         jPanel1Layout.setVerticalGroup(
@@ -470,18 +468,6 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu4.setText("View");
-
-        jMenuItem8.setText("Duty Log");
-        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem8ActionPerformed(evt);
-            }
-        });
-        jMenu4.add(jMenuItem8);
-
-        jMenuBar1.add(jMenu4);
-
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -515,10 +501,26 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
         employeeDataTable.setEnabled(true);
         employeeDataTable.setSelectionBackground(java.awt.Color.GRAY);
         employeeDataTable.getColumn("ID").setCellRenderer(centerRenderer);
+        employeeDataTable.getColumn("ID").setMaxWidth(150);
+        employeeDataTable.getColumn("ID").setMinWidth(90);
+        employeeDataTable.getColumn("ID").setPreferredWidth(100);
         employeeDataTable.getColumn("Name").setCellRenderer(centerRenderer);
+        employeeDataTable.getColumn("Name").setMaxWidth(300);
+        employeeDataTable.getColumn("Name").setMinWidth(170);
+        employeeDataTable.getColumn("Name").setPreferredWidth(200);
+        employeeDataTable.getColumn("Address").setCellRenderer(centerRenderer);
+        employeeDataTable.getColumn("Address").setMaxWidth(1000);
+        employeeDataTable.getColumn("Address").setMinWidth(150);
+        employeeDataTable.getColumn("Address").setPreferredWidth(300);
         if (model == employeeDataTableModel) {
             employeeDataTable.getColumn("Position").setCellRenderer(centerRenderer);
-            employeeDataTable.getColumn("Cellphone Number").setCellRenderer(centerRenderer);
+            employeeDataTable.getColumn("Position").setMaxWidth(150);
+            employeeDataTable.getColumn("Position").setMinWidth(75);
+            employeeDataTable.getColumn("Position").setPreferredWidth(100);
+            employeeDataTable.getColumn("Cellphone #").setCellRenderer(centerRenderer);
+            employeeDataTable.getColumn("Cellphone #").setMaxWidth(150);
+            employeeDataTable.getColumn("Cellphone #").setMinWidth(95);
+            employeeDataTable.getColumn("Cellphone #").setPreferredWidth(120);
         } else {
             employeeDataTable.getColumn("Time In").setCellRenderer(centerRenderer);
             employeeDataTable.getColumn("Time Out").setCellRenderer(centerRenderer);
@@ -553,7 +555,7 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
                 position = "Driver";
             }
             employeeDataTableModel.addRow(
-                    new Object[]{employee.getId(), name, position, employee.getCellphoneNumber()});
+                    new Object[]{employee.getId(), name, position, employee.getCellphoneNumber(), employee.getAddress()});
         }
     }
 
@@ -611,8 +613,11 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
                     + "Must be 18 years old and above!", "Invalid", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-
-        cellphoneNumberVerification();
+        
+        if (cellphoneNumberVerification()) {
+            return;
+        }
+        
         fieldsVerification();
 
         String address = addressField.getText();
@@ -683,6 +688,9 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
         femaleRadioButton.setEnabled(true);
         ageField.setEnabled(true);
         dateField.setText(sdf.format(new Date()));
+        employeeDataTable.clearSelection();
+        hasSelected = false;
+        employee = null;
         registerButton.show();
         updateButton.hide();
         removeButton.hide();
@@ -759,12 +767,6 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
-    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-        DefaultTableModel dutyLogTableModel = new DefaultTableModel(new Object[]{"ID", "Name", "Time In", "Time Out",}, 0);
-        employeeDataPanel.setVisible(false);
-        configureTable(dutyLogTableModel);
-    }//GEN-LAST:event_jMenuItem8ActionPerformed
-
     private void employeeDataTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_employeeDataTableMousePressed
 
         if (hasSelected && selectedRow == employeeDataTable.getSelectedRow()) {
@@ -828,24 +830,27 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
         }
     }
 
-    private void cellphoneNumberVerification() {
+    private boolean cellphoneNumberVerification() {
         try {
             double cellphoneNumber = Double.parseDouble(cellphoneNumberField.getText());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Invalid input on cellphone # field!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+            return true;
         }
 
         if (cellphoneNumberField.getText().length() < 11) {
             JOptionPane.showMessageDialog(null, "Invalid length of cellphone number! "
                     + "\n Must be 11 digits!", "Invalid", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+            return true;
+        } 
+        return false;
     }
 
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
-        cellphoneNumberVerification();
+        if (cellphoneNumberVerification()) {
+            return;
+        }
         fieldsVerification();
         String firstName = firstNameField.getText();
         String middleName = middleNameField.getText();
@@ -899,7 +904,7 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
         invoker.setCommand(new RemoveEmployeeCommand(employee, new Date()));
         invoker.executeCommand();
         updateTableModel();
-        employee = null;
+        reset();
         employeeDataPanel.setVisible(false);
     }//GEN-LAST:event_removeButtonActionPerformed
 
@@ -959,7 +964,6 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
     private javax.swing.JLabel idLabel;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
@@ -970,7 +974,6 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
-    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
