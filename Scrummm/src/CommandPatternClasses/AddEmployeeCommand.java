@@ -4,13 +4,11 @@
  * and open the template in the editor.
  */
 
-package CommandPatternStructure;
+package CommandPatternClasses;
 
 import BusManagement.*;
 import EmployeeManagement.*;
 import LogManagement.DutyLog;
-import LogManagement.ManagerActionLog;
-import RegistryManagement.*;
 import java.util.Date;
 
 /**
@@ -20,22 +18,30 @@ import java.util.Date;
 public class AddEmployeeCommand implements Command{
     
     private BusCompany busCompany=BusCompany.getInstance();
-    private DutyLog dutyLog=DutyLog.getInstance();
     private Employee employee;
-    private Date dateAdded;
+    private Date dateAdded=new Date();
     private String action;
 
-    public AddEmployeeCommand(Employee employee, Date dateAdded) {
+    public AddEmployeeCommand(Employee employee) {
         this.employee = employee;
-        this.dateAdded = dateAdded;
     }
-    
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public Date getDateAdded() {
+        return dateAdded;
+    }
+
+    public String getAction() {
+        return action;
+    }
     
     @Override
     public void execute() {
         action="Registered "+employee.getLastName()+", "+employee.getFirstName()+" "+employee.getMiddleName();
         busCompany.addEmployee(employee);
-        dutyLog.addActionLog(new ManagerActionLog(employee, dateAdded, action));
     }
     
 }

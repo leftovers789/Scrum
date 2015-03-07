@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package CommandPatternStructure;
+package CommandPatternClasses;
 
 import BookingManagement.Passenger;
 import BookingManagement.Trip;
@@ -19,7 +19,7 @@ import java.util.Date;
  */
 public class AddPassengerCommand implements Command{
     
-    private DutyLog log = DutyLog.getInstance();
+    private Date date=new Date();
     private Cashier cashier;
     private Trip trip;
     private Passenger passenger;
@@ -31,10 +31,29 @@ public class AddPassengerCommand implements Command{
         this.passenger = passenger;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public Cashier getCashier() {
+        return cashier;
+    }
+
+    public Trip getTrip() {
+        return trip;
+    }
+
+    public Passenger getPassenger() {
+        return passenger;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
     @Override
     public void execute() {   
         trip.addPassenger(passenger);
-        log.addActionLog(new CashierActionLog(passenger, action,new Date()));      
     }
     
 }

@@ -158,9 +158,9 @@ public class ManagerMainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_manageBookingButtonActionPerformed
 
     private void manageBusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageBusButtonActionPerformed
-        BusRegistrationFrame busRegistrationFrame = new BusRegistrationFrame();
+        ManageBussesFrame manageBussesFrame=new ManageBussesFrame();
         this.hide();
-        busRegistrationFrame.show();
+        manageBussesFrame.show();
     }//GEN-LAST:event_manageBusButtonActionPerformed
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed

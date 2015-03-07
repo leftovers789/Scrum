@@ -4,9 +4,9 @@
  * and open the template in the editor.
  */
 
-package CommandPatternStructure;
+package CommandPatternClasses;
 
-import BusManagement.BusCompany;
+import BusManagement.*;
 import EmployeeManagement.*;
 import LogManagement.*;
 import java.util.Date;
@@ -19,13 +19,23 @@ public class EditEmployeeDataCommand implements Command{
     
     private BusCompany busCompany=BusCompany.getInstance();
     private Employee employee;
-    private DutyLog dutyLog=DutyLog.getInstance();
     private String action;
-    private Date dateModified;
+    private Date dateModified=new Date();
 
-    public EditEmployeeDataCommand(Employee employee, Date dateModified) {
+    public EditEmployeeDataCommand(Employee employee) {
         this.employee = employee;
-        this.dateModified = dateModified;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public Date getDateModified() {
+        return dateModified;
     }
     
     @Override
@@ -33,7 +43,6 @@ public class EditEmployeeDataCommand implements Command{
         action="Modified "+employee.getLastName()+", "+employee.getFirstName()+" "+employee.getMiddleName()+" data";
         busCompany.getEmployees().remove(employee);
         busCompany.addEmployee(employee);
-        dutyLog.addActionLog(new ManagerActionLog(employee, dateModified, action));
     }
     
 }

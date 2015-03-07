@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package CommandPatternStructure;
+package CommandPatternClasses;
 
 import BookingManagement.Passenger;
 import BookingManagement.Trip;
@@ -19,7 +19,7 @@ import java.util.Date;
  */
 public class ReBookPassengerCommand implements Command{
     
-    private DutyLog log = DutyLog.getInstance();
+    private Date date=new Date();
     private Cashier cashier;
     private Passenger passenger;
     private Trip currentTrip;
@@ -32,13 +32,36 @@ public class ReBookPassengerCommand implements Command{
         this.currentTrip = currentTrip;
         this.oldTrip = oldTrip;
     }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public Cashier getCashier() {
+        return cashier;
+    }
+
+    public Passenger getPassenger() {
+        return passenger;
+    }
+
+    public Trip getCurrentTrip() {
+        return currentTrip;
+    }
+
+    public Trip getOldTrip() {
+        return oldTrip;
+    }
+
+    public String getAction() {
+        return action;
+    }
     
     @Override
     public void execute() {
         action = "Re-booked a passenger from "+oldTrip.getReferenceNo()+" to "+currentTrip.getReferenceNo();
         oldTrip.removePassenger(passenger);
         currentTrip.addPassenger(passenger);
-        log.addActionLog(new CashierActionLog(passenger, action,new Date()));
     }
     
 }

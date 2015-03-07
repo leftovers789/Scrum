@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package CommandPatternStructure;
+package CommandPatternClasses;
 
 import BookingManagement.Passenger;
 import BookingManagement.Ticket;
@@ -20,7 +20,7 @@ import java.util.Date;
  */
 public class EditPassengerCommand implements Command{
     
-    private DutyLog log = DutyLog.getInstance();
+    private Date dateModified=new Date();
     private Cashier cashier;
     private Trip trip;
     private Passenger passenger;
@@ -45,6 +45,18 @@ public class EditPassengerCommand implements Command{
         this.address = address;
         this.ticket = ticket;
     }
+
+    public Date getDateModified() {
+        return dateModified;
+    }
+
+    public Cashier getCashier() {
+        return cashier;
+    }
+
+    public String getAction() {
+        return action;
+    }
     
     @Override
     public void execute() { 
@@ -57,7 +69,6 @@ public class EditPassengerCommand implements Command{
         passenger.setTicket(ticket);
         trip.removePassenger(passenger);
         trip.addPassenger(passenger);
-        log.addActionLog(new CashierActionLog(passenger, action,new Date()));
     }
     
 }

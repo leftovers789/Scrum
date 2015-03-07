@@ -6,9 +6,9 @@
 
 package UI;
 
-import CommandPatternStructure.Invoker;
+import CommandPatternClasses.Invoker;
+import CommandPatternClasses.ReBookPassengerCommand;
 import BookingManagement.Passenger;
-import CommandPatternStructure.ReBookPassengerCommand;
 import BookingManagement.Trip;
 import EmployeeManagement.Cashier;
 import java.text.DecimalFormat;

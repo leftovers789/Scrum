@@ -1,5 +1,6 @@
 package LogManagement;
 
+import CommandPatternClasses.Command;
 import EmployeeManagement.Employee;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,7 +11,7 @@ public class DutyLog {
     private Date timeIn;
     private Date timeOut;
     private Employee employee;
-    private List<ActionLog> actionLogs = new ArrayList<>();
+    private List<Command> commandLogs = new ArrayList<>();
     private static DutyLog dutyLog=null;
 
     private DutyLog() {
@@ -40,12 +41,12 @@ public class DutyLog {
         this.employee = employee;
     }
     
-    public void addActionLog(ActionLog actionLog) {
-        this.actionLogs.add(actionLog);
+    public void addCommandLog(Command commandLog) {
+        this.commandLogs.add(commandLog);
     }
 
-    public List<ActionLog> getActionLogs() {
-        return actionLogs;
+    public List<Command> getCommandLogs() {
+        return commandLogs;
     }
 
     public Date getTimeIn() {

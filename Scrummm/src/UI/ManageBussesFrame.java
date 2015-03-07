@@ -3,20 +3,58 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package UI;
+
+import BusManagement.*;
+import LogManagement.*;
+import RegistryManagement.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
+import java.util.Date;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author windows
  */
-public class ManageBussesFrame extends javax.swing.JFrame {
+public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocusListener{
+
+    private BusCompany busCompany = BusCompany.getInstance();
+    private SearchEngine searchEngine = new SearchEngine();
+    private DutyLog dutyLog = DutyLog.getInstance();
+    private Registry registry = Registry.getInstance();
+    private DefaultTableModel busTableModel = new DefaultTableModel(
+            new Object[]{"Bus Type", "Bus #", "Plate #", "Capacity", "Availability"}, 0);
 
     /**
      * Creates new form ManageBussesFrame
      */
     public ManageBussesFrame() {
         initComponents();
+        setLocationRelativeTo(null);
+        addWindowFocusListener(this);
+
+        busTable.setModel(busTableModel);
+        busTable.getTableHeader().setReorderingAllowed(false);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        busTable.getTableHeader().setDefaultRenderer(centerRenderer);
+        busTable.setRowSelectionAllowed(true);
+        busTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        busTable.setEnabled(true);
+        busTable.setSelectionBackground(java.awt.Color.GRAY);
+        for (int c = 0; c < busTable.getColumnCount(); c++) {
+            Class<?> col_class = busTable.getColumnClass(c);
+            busTable.setDefaultEditor(col_class, null);        // remove editor
+        }
+        busTable.getTableHeader().setResizingAllowed(false);
+        busTable.setShowGrid(true);
+        
+        updateTableModel();
+
     }
 
     /**
@@ -28,33 +66,199 @@ public class ManageBussesFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        busDataPanel = new javax.swing.JPanel();
+        addBusButton = new javax.swing.JButton();
+        editBusButton = new javax.swing.JButton();
+        mainMenuButton = new javax.swing.JButton();
+        logOutButton = new javax.swing.JButton();
+        exitButton = new javax.swing.JButton();
+        removeBusButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        busTable = new javax.swing.JTable();
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jMenu1.setText("File");
-        jMenuBar1.add(jMenu1);
+        busDataPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true), "Select Row to Edit/Remove Data"));
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
+        addBusButton.setText("Add Bus");
+        addBusButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addBusButtonActionPerformed(evt);
+            }
+        });
 
-        setJMenuBar(jMenuBar1);
+        editBusButton.setText("Edit Bus / Assign Crew");
+        editBusButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editBusButtonActionPerformed(evt);
+            }
+        });
+
+        mainMenuButton.setText("Main Menu");
+        mainMenuButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mainMenuButtonActionPerformed(evt);
+            }
+        });
+
+        logOutButton.setText("Log Out");
+        logOutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logOutButtonActionPerformed(evt);
+            }
+        });
+
+        exitButton.setText("Exit");
+        exitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitButtonActionPerformed(evt);
+            }
+        });
+
+        removeBusButton.setText("Remove Bus");
+        removeBusButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeBusButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout busDataPanelLayout = new javax.swing.GroupLayout(busDataPanel);
+        busDataPanel.setLayout(busDataPanelLayout);
+        busDataPanelLayout.setHorizontalGroup(
+            busDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(busDataPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(busDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(addBusButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(editBusButton, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                    .addComponent(mainMenuButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(logOutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(exitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(removeBusButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        busDataPanelLayout.setVerticalGroup(
+            busDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(busDataPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(addBusButton, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(editBusButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(removeBusButton, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(mainMenuButton, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(logOutButton, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(exitButton, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        busTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(busTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(busDataPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 277, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2)
+                    .addComponent(busDataPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void updateTableModel() {
+        while (busTable.getRowCount() > 0) {
+            busTableModel.removeRow(0);
+        }
+
+        for (Bus bus : busCompany.getBusses()) {
+            String busType=bus.getBusType()==BusType.ORDINARY?"Ordinary":"Air-conditioned";
+            String available=bus.isAvailable()?"Available":"Unavailable";
+            busTableModel.addRow(
+                    new Object[]{busType,bus.getBusNumber(),bus.getPlateNumber(),bus.getCapacity(),available});
+        }
+    }
+
+    private void removeBusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeBusButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_removeBusButtonActionPerformed
+
+    private void addBusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBusButtonActionPerformed
+        BusRegistrationFrame busRegistrationFrame = new BusRegistrationFrame();
+        busRegistrationFrame.show();
+    }//GEN-LAST:event_addBusButtonActionPerformed
+
+    private void mainMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mainMenuButtonActionPerformed
+        this.hide();
+        ManagerMainMenu managerMainMenu = new ManagerMainMenu();
+        managerMainMenu.show();
+    }//GEN-LAST:event_mainMenuButtonActionPerformed
+
+    private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
+        LoginFrame loginFrame = new LoginFrame();
+        dutyLog.setTimeOut(new Date());
+        registry.addDutyLog(dutyLog);
+        dutyLog.resetInstance();
+        this.dispose();
+        loginFrame.show();
+    }//GEN-LAST:event_logOutButtonActionPerformed
+
+    private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
+        dutyLog.setTimeOut(new Date());
+        registry.addDutyLog(dutyLog);
+        dutyLog.resetInstance();
+        this.dispose();
+    }//GEN-LAST:event_exitButtonActionPerformed
+
+    private void editBusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBusButtonActionPerformed
+        int selectedRow = busTable.getSelectedRow();
+        String busNumber = (String) busTable.getValueAt(selectedRow, 1);
+        Bus bus = searchEngine.searchBusByBusNo(busNumber);
+        BusRegistrationFrame busRegistrationFrame = new BusRegistrationFrame();
+        busRegistrationFrame.load(bus);
+        busRegistrationFrame.show();
+    }//GEN-LAST:event_editBusButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -92,8 +296,25 @@ public class ManageBussesFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JButton addBusButton;
+    private javax.swing.JPanel busDataPanel;
+    private javax.swing.JTable busTable;
+    private javax.swing.JButton editBusButton;
+    private javax.swing.JButton exitButton;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JButton logOutButton;
+    private javax.swing.JButton mainMenuButton;
+    private javax.swing.JButton removeBusButton;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void windowGainedFocus(WindowEvent e) {
+        updateTableModel();
+    }
+
+    @Override
+    public void windowLostFocus(WindowEvent e) {
+    }
 }

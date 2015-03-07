@@ -5,12 +5,15 @@
  */
 package UI;
 
+import CommandPatternClasses.Invoker;
+import CommandPatternClasses.RemoveEmployeeCommand;
+import CommandPatternClasses.EditEmployeeDataCommand;
+import CommandPatternClasses.AddEmployeeCommand;
 import RegistryManagement.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import EmployeeManagement.*;
 import BusManagement.*;
-import CommandPatternStructure.*;
 import LogManagement.DutyLog;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -645,27 +648,27 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
             }
             if (position.equals("Manager")) {
                 invoker.setCommand(new AddEmployeeCommand(new Manager(username, password, age, gender, address, cellphoneNumber,
-                        firstName, lastName, middleName, id), new Date()));
+                        firstName, lastName, middleName, id)));
                 invoker.executeCommand();
             } else if (position.equals("Operator")) {
                 invoker.setCommand(new AddEmployeeCommand(new Operator(password, age, gender, address, cellphoneNumber, firstName,
-                        lastName, middleName, id), new Date()));
+                        lastName, middleName, id)));
                 invoker.executeCommand();
             } else if (position.equals("Mechanic")) {
                 invoker.setCommand(new AddEmployeeCommand(new Mechanic(age, gender, address, cellphoneNumber, firstName,
-                        lastName, middleName, id), new Date()));
+                        lastName, middleName, id)));
                 invoker.executeCommand();
             } else if (position.equals("Cashier")) {
                 invoker.setCommand(new AddEmployeeCommand(new Cashier(password, age, gender, address, cellphoneNumber,
-                        firstName, lastName, middleName, id), new Date()));
+                        firstName, lastName, middleName, id)));
                 invoker.executeCommand();
             } else if (position.equals("Driver")) {
                 invoker.setCommand(new AddEmployeeCommand(new Driver(age, gender, address, cellphoneNumber, firstName,
-                        lastName, middleName, id), new Date()));
+                        lastName, middleName, id)));
                 invoker.executeCommand();
             } else if (position.equals("Conductor")) {
                 invoker.setCommand(new AddEmployeeCommand(new Conductor(age, gender, address, cellphoneNumber, firstName,
-                        lastName, middleName, id), new Date()));
+                        lastName, middleName, id)));
                 invoker.executeCommand();
             }
 
@@ -680,6 +683,7 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
 
     private void reset() {
         clearFields();
+        positionField.setPreferredSize(new Dimension(165, 46));
         configureTable(employeeDataTableModel);
         hideUsernamePasswordField();
         LineBorder lineBorder = new LineBorder(Color.BLACK, 1, true);
@@ -877,7 +881,7 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
          } else if (employee instanceof Driver) {
          employee=(Driver)employee;
          }*/
-        invoker.setCommand(new EditEmployeeDataCommand(employee, new Date()));
+        invoker.setCommand(new EditEmployeeDataCommand(employee));
         invoker.executeCommand();
         updateTableModel();
     }//GEN-LAST:event_updateButtonActionPerformed
@@ -887,7 +891,6 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
         employeeDataPanel.setVisible(true);
         updateButton.setEnabled(false);
         dateField.setText("");
-        positionField.setPreferredSize(new Dimension(155, 46));
         positionField.setText("");
         idField.setText("");
         clearFields();
@@ -901,7 +904,7 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
-        invoker.setCommand(new RemoveEmployeeCommand(employee, new Date()));
+        invoker.setCommand(new RemoveEmployeeCommand(employee));
         invoker.executeCommand();
         updateTableModel();
         reset();
