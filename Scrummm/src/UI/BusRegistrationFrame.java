@@ -5,9 +5,12 @@
  */
 package UI;
 
+import BusManagement.Bus;
 import BusManagement.BusCompany;
 import BusManagement.BusType;
-import BusManagement.Bus;
+import CommandPatternClasses.AddBusCommand;
+import CommandPatternClasses.EditBusDataCommand;
+import CommandPatternClasses.Invoker;
 import EmployeeManagement.*;
 import RegistryManagement.SearchEngine;
 import java.awt.EventQueue;
@@ -27,6 +30,7 @@ import javax.swing.JTextField;
  */
 public class BusRegistrationFrame extends javax.swing.JFrame {
 
+    private Invoker invoker = new Invoker();
     private boolean hide_flag = false;
     private JTextField tf = null;
     private Vector<String> v = new Vector<String>();
@@ -41,6 +45,7 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
     private Employee driver;
     private Employee conductor;
     private SearchEngine searchEngine = new SearchEngine();
+    private Bus bus;
 
     /**
      * Creates new form BusRegistrationFrame
@@ -164,8 +169,8 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
     private static DefaultComboBoxModel getSuggestedModel(java.util.List<String> list, String text) {
         DefaultComboBoxModel m = new DefaultComboBoxModel();
         for (String s : list) {
-            s = s.toUpperCase();
-            if (s.startsWith(text.toUpperCase())) {
+            s = s.toLowerCase();
+            if (s.startsWith(text.toLowerCase())) {
                 m.addElement(s);
             }
         }
@@ -222,7 +227,6 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
         conductorComboBox = new javax.swing.JComboBox();
         saveButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
-        mainMenuButton = new javax.swing.JButton();
         backButton = new javax.swing.JButton();
 
         jButton1.setText("jButton1");
@@ -342,13 +346,6 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
             }
         });
 
-        mainMenuButton.setText("Main Menu");
-        mainMenuButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mainMenuButtonActionPerformed(evt);
-            }
-        });
-
         backButton.setText("Back");
         backButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -422,16 +419,14 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(conductorComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(driverComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelLayout.createSequentialGroup()
-                        .addComponent(saveButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(cancelButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(backButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(mainMenuButton))))
+                                    .addComponent(driverComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(panelLayout.createSequentialGroup()
+                                .addComponent(saveButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(cancelButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(backButton)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         panelLayout.setVerticalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -494,7 +489,6 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
-                    .addComponent(mainMenuButton)
                     .addComponent(saveButton)
                     .addComponent(backButton))
                 .addGap(6, 6, 6))
@@ -580,7 +574,7 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
 
         driverComboBox.setSelectedItem(driversName);
         conductorComboBox.setSelectedItem(conductorsName);
-
+        this.bus = bus;
     }
 
     private void dateFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateFieldActionPerformed
@@ -647,82 +641,111 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
     }
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        String busNumber = busNumberField.getText();
+        int capacity = 0;
+        Bus bus = null;
+        try {
+            capacity = Integer.parseInt(capacityField.getText());
+            if (capacity <= 10) {
+                showEmptyFieldErrorDialog();
+                return;
+            }
+        } catch (Exception e) {
+            showEmptyFieldErrorDialog();
+            return;
+        }
+        if (engineSerialNumberField.getText().isEmpty() || numberOfTire == 0) {
+            showEmptyFieldErrorDialog();
+            return;
+        }
+
+        try {
+            dateAdded = sdf.parse(dateField.getText());
+        } catch (Exception e) {
+            return;
+        }
+
         if (busNumberField.isEnabled()) {
-            String busNumber = busNumberField.getText();
-            int capacity = 0;
-            try {
-                capacity = Integer.parseInt(capacityField.getText());
-                if (capacity <= 10) {
-                    showEmptyFieldErrorDialog();
-                    return;
-                }
-            } catch (Exception e) {
-                showEmptyFieldErrorDialog();
-                return;
-            }
-            if (engineSerialNumberField.getText().isEmpty() || numberOfTire == 0) {
-                showEmptyFieldErrorDialog();
-                return;
-            }
+            bus = new Bus(plateNumberField.getText(), type, true, busNumber, capacity, null, null, engineSerialNumberField.getText(), dateAdded);
+        } else {
+            bus = this.bus;
+        }
 
-            try {
-                dateAdded = sdf.parse(dateField.getText());
-            } catch (Exception e) {
+        bus.getTireSerialNumbers().removeAll(bus.getTireSerialNumbers());
+        if (numberOfTire >= 4) {
+            bus.addTireSerialNumber(tireSerialNumberField1.getText());
+            bus.addTireSerialNumber(tireSerialNumberField2.getText());
+            bus.addTireSerialNumber(tireSerialNumberField3.getText());
+            bus.addTireSerialNumber(tireSerialNumberField4.getText());
+
+            if (tireSerialNumberField1.getText().isEmpty() || tireSerialNumberField2.getText().isEmpty()
+                    || tireSerialNumberField3.getText().isEmpty() || tireSerialNumberField4.getText().isEmpty()) {
+                emptyTireSerialNumberPopUp();
                 return;
             }
 
-            Bus bus = new Bus(plateNumberField.getText(), type, true, busNumber, capacity, null, null, engineSerialNumberField.getText(), dateAdded);
+            if (numberOfTire >= 6) {
+                bus.addTireSerialNumber(tireSerialNumberField5.getText());
+                bus.addTireSerialNumber(tireSerialNumberField6.getText());
 
-            if (numberOfTire >= 4) {
-                bus.addTireSerialNumber(tireSerialNumberField1.getText());
-                bus.addTireSerialNumber(tireSerialNumberField2.getText());
-                bus.addTireSerialNumber(tireSerialNumberField3.getText());
-                bus.addTireSerialNumber(tireSerialNumberField4.getText());
-
-                if (tireSerialNumberField1.getText().isEmpty() || tireSerialNumberField2.getText().isEmpty()
-                        || tireSerialNumberField3.getText().isEmpty() || tireSerialNumberField4.getText().isEmpty()) {
+                if (tireSerialNumberField5.getText().isEmpty() || tireSerialNumberField6.getText().isEmpty()) {
                     emptyTireSerialNumberPopUp();
                     return;
                 }
 
-                if (numberOfTire >= 6) {
-                    bus.addTireSerialNumber(tireSerialNumberField5.getText());
-                    bus.addTireSerialNumber(tireSerialNumberField6.getText());
+                if (numberOfTire >= 8) {
+                    bus.addTireSerialNumber(tireSerialNumberField7.getText());
+                    bus.addTireSerialNumber(tireSerialNumberField8.getText());
 
-                    if (tireSerialNumberField5.getText().isEmpty() || tireSerialNumberField6.getText().isEmpty()) {
+                    if (tireSerialNumberField7.getText().isEmpty() || tireSerialNumberField8.getText().isEmpty()) {
                         emptyTireSerialNumberPopUp();
                         return;
                     }
 
-                    if (numberOfTire >= 8) {
-                        bus.addTireSerialNumber(tireSerialNumberField7.getText());
-                        bus.addTireSerialNumber(tireSerialNumberField8.getText());
+                    if (numberOfTire >= 10) {
+                        bus.addTireSerialNumber(tireSerialNumberField9.getText());
+                        bus.addTireSerialNumber(tireSerialNumberField10.getText());
 
-                        if (tireSerialNumberField7.getText().isEmpty() || tireSerialNumberField8.getText().isEmpty()) {
+                        if (tireSerialNumberField9.getText().isEmpty() || tireSerialNumberField10.getText().isEmpty()) {
                             emptyTireSerialNumberPopUp();
                             return;
                         }
 
-                        if (numberOfTire >= 10) {
-                            bus.addTireSerialNumber(tireSerialNumberField9.getText());
-                            bus.addTireSerialNumber(tireSerialNumberField10.getText());
-
-                            if (tireSerialNumberField9.getText().isEmpty() || tireSerialNumberField10.getText().isEmpty()) {
-                                emptyTireSerialNumberPopUp();
-                                return;
-                            }
-
-                        }
                     }
                 }
             }
+        }
 
+        bus.setConductor((Conductor) conductor);
+        bus.setDriver((Driver) driver);
+        String message = "";
+
+        if (conductor == null) {
+            message = "Data will be saved without Conductor!";
+        }
+        if (driver == null) {
+            message = message + "\nData will be saved without Driver!";
+        }
+        if (!message.isEmpty()) {
+            JOptionPane.showMessageDialog(null, message);
+        }
+        if (!bus.getPlateNumber().isEmpty() && bus.getConductor() != null && bus.getDriver() != null) {
             bus.setAvailability(true);
-            busCompany.addBus(bus);
+        } else {
+            bus.setAvailability(false);
+        }
+        if (busNumberField.isEnabled()) {
+            invoker.setCommand(new AddBusCommand(bus));
+            invoker.executeCommand();
             clearFields();
         } else {
-            
+            invoker.setCommand(new EditBusDataCommand(bus));
+            invoker.executeCommand();
+            JOptionPane.showMessageDialog(null, "Data successfully saved!", "Bus Data Modified", JOptionPane.INFORMATION_MESSAGE);
+            clearFields();
+            this.hide();
         }
+
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void emptyTireSerialNumberPopUp() {
@@ -736,6 +759,8 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
         engineSerialNumberField.setText("");
         numberOfTireComboBox.setSelectedIndex(0);
         typeComboBox.setSelectedIndex(0);
+        driverComboBox.setSelectedItem("");
+        conductorComboBox.setSelectedItem("");
 
         tireSerialNumberField1.setText("");
         tireSerialNumberField2.setText("");
@@ -765,13 +790,6 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
         ManagerMainMenu mainMenu = new ManagerMainMenu();
         mainMenu.show();
     }//GEN-LAST:event_cancelButtonActionPerformed
-
-    private void mainMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mainMenuButtonActionPerformed
-        ManagerMainMenu mainMenu = new ManagerMainMenu();
-        clearFields();
-        this.hide();
-        mainMenu.show();
-    }//GEN-LAST:event_mainMenuButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         this.hide();
@@ -834,7 +852,6 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
     private javax.swing.JTextField engineSerialNumberField;
     private javax.swing.JLabel engineSerialNumberLabel;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton mainMenuButton;
     private javax.swing.JComboBox numberOfTireComboBox;
     private javax.swing.JLabel numberOfTireLabel;
     private javax.swing.JPanel panel;

@@ -6,11 +6,14 @@
 package UI;
 
 import BusManagement.*;
+import CommandPatternClasses.Invoker;
+import CommandPatternClasses.RemoveBusCommand;
 import LogManagement.*;
 import RegistryManagement.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.util.Date;
+import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -20,8 +23,13 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author windows
  */
-public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocusListener{
+public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocusListener {
 
+    private Invoker invoker = new Invoker();
+    private String busNumber;
+    private Bus bus;
+    private boolean hasSelected = false;
+    private int selectedRow = 0;
     private BusCompany busCompany = BusCompany.getInstance();
     private SearchEngine searchEngine = new SearchEngine();
     private DutyLog dutyLog = DutyLog.getInstance();
@@ -52,7 +60,7 @@ public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocus
         }
         busTable.getTableHeader().setResizingAllowed(false);
         busTable.setShowGrid(true);
-        
+
         updateTableModel();
 
     }
@@ -77,6 +85,7 @@ public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocus
         removeBusButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         busTable = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -93,7 +102,7 @@ public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocus
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        busDataPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true), "Select Row to Edit/Remove Data"));
+        busDataPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true), "Select Row to Edit/Remove Data", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP));
 
         addBusButton.setText("Add Bus");
         addBusButton.addActionListener(new java.awt.event.ActionListener() {
@@ -156,18 +165,17 @@ public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocus
             busDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(busDataPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(addBusButton, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                .addComponent(addBusButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
-                .addComponent(editBusButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(editBusButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
-                .addComponent(removeBusButton, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                .addComponent(removeBusButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
-                .addComponent(mainMenuButton, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                .addComponent(mainMenuButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
-                .addComponent(logOutButton, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                .addComponent(logOutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
-                .addComponent(exitButton, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(exitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         busTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -181,7 +189,25 @@ public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocus
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        busTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                busTableMousePressed(evt);
+            }
+        });
         jScrollPane2.setViewportView(busTable);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true), "Filter", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -189,7 +215,9 @@ public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocus
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(busDataPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(busDataPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
                 .addContainerGap())
@@ -199,8 +227,11 @@ public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocus
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
-                    .addComponent(busDataPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(busDataPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -213,15 +244,22 @@ public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocus
         }
 
         for (Bus bus : busCompany.getBusses()) {
-            String busType=bus.getBusType()==BusType.ORDINARY?"Ordinary":"Air-conditioned";
-            String available=bus.isAvailable()?"Available":"Unavailable";
+            String busType = bus.getBusType() == BusType.ORDINARY ? "Ordinary" : "Air-conditioned";
+            String available = bus.isAvailable() ? "Available" : "Unavailable";
             busTableModel.addRow(
-                    new Object[]{busType,bus.getBusNumber(),bus.getPlateNumber(),bus.getCapacity(),available});
+                    new Object[]{busType, bus.getBusNumber(), bus.getPlateNumber(), bus.getCapacity(), available});
         }
     }
 
     private void removeBusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeBusButtonActionPerformed
-        // TODO add your handling code here:
+        if (hasSelected) {
+            invoker.setCommand(new RemoveBusCommand(bus));
+            invoker.executeCommand();
+            updateTableModel();
+        } else {
+            JOptionPane.showMessageDialog(
+                    null, "Select a row on the table before pressing remove button!", "No row selected", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_removeBusButtonActionPerformed
 
     private void addBusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBusButtonActionPerformed
@@ -252,13 +290,29 @@ public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocus
     }//GEN-LAST:event_exitButtonActionPerformed
 
     private void editBusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBusButtonActionPerformed
-        int selectedRow = busTable.getSelectedRow();
-        String busNumber = (String) busTable.getValueAt(selectedRow, 1);
-        Bus bus = searchEngine.searchBusByBusNo(busNumber);
-        BusRegistrationFrame busRegistrationFrame = new BusRegistrationFrame();
-        busRegistrationFrame.load(bus);
-        busRegistrationFrame.show();
+        if (hasSelected) {
+            BusRegistrationFrame busRegistrationFrame = new BusRegistrationFrame();
+            busRegistrationFrame.load(bus);
+            busRegistrationFrame.show();
+        } else {
+            JOptionPane.showMessageDialog(
+                    null, "Select a row on the table before pressing view/edit button!", "No Row Selected", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_editBusButtonActionPerformed
+
+    private void busTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_busTableMousePressed
+        if (hasSelected && selectedRow == busTable.getSelectedRow()) {
+            busTable.clearSelection();
+            hasSelected = false;
+            return;
+        }
+
+        selectedRow = busTable.getSelectedRow();
+        hasSelected = true;
+
+        busNumber = (String) busTable.getValueAt(selectedRow, 1);
+        bus = searchEngine.searchBusByBusNo(busNumber);
+    }//GEN-LAST:event_busTableMousePressed
 
     /**
      * @param args the command line arguments
@@ -301,6 +355,7 @@ public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocus
     private javax.swing.JTable busTable;
     private javax.swing.JButton editBusButton;
     private javax.swing.JButton exitButton;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
@@ -316,5 +371,6 @@ public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocus
 
     @Override
     public void windowLostFocus(WindowEvent e) {
+        hasSelected=false;
     }
 }
