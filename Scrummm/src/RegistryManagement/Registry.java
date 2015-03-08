@@ -2,7 +2,6 @@ package RegistryManagement;
 
 import LogManagement.*;
 import BookingManagement.*;
-import BusManagement.*;
 import java.util.*;
 
 public class Registry extends Observable {
@@ -49,11 +48,6 @@ public class Registry extends Observable {
     public void addTrip(Trip trip) {
         // TODO - implement Registry.addTrip
         this.trips.add(trip);
-    }
-
-    public void editTrip() {
-        // TODO - implement Registry.editTrip
-        throw new UnsupportedOperationException();
     }
 
     public void removeTrip(Trip trip) {

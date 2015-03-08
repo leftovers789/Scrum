@@ -14,7 +14,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author james
  */
-public class ViewTripMenu extends javax.swing.JFrame {
+public class ViewTripSchedulesFrame extends javax.swing.JFrame {
 
     private Registry reg = Registry.getInstance();
     private List<Trip> tripList;
@@ -25,7 +25,7 @@ public class ViewTripMenu extends javax.swing.JFrame {
     /**
      * Creates new form ViewTripMenu
      */
-    public ViewTripMenu() {
+    public ViewTripSchedulesFrame() {
         initComponents();
         
         tripListTable.setModel(tripsTableModel);
@@ -50,10 +50,12 @@ public class ViewTripMenu extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tripListTable = new javax.swing.JTable();
         removeButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        editTripButton.setText("Edit Trip");
+        editTripButton.setText("Edit...");
         editTripButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editTripButtonActionPerformed(evt);
@@ -97,12 +99,17 @@ public class ViewTripMenu extends javax.swing.JFrame {
             tripListTable.setDefaultEditor(col_class, null);        // remove editor
         }
 
-        removeButton.setText("Remove Trip");
+        removeButton.setText("Remove...");
         removeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeButtonActionPerformed(evt);
             }
         });
+
+        jButton1.setText("Change Status...");
+
+        jLabel1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        jLabel1.setText("Trip Schedules");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -116,20 +123,29 @@ public class ViewTripMenu extends javax.swing.JFrame {
                         .addComponent(editTripButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removeButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(BackButton)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(218, 218, 218)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(14, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(editTripButton)
                     .addComponent(BackButton)
-                    .addComponent(removeButton))
+                    .addComponent(removeButton)
+                    .addComponent(jButton1))
                 .addContainerGap())
         );
 
@@ -182,20 +198,20 @@ public class ViewTripMenu extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ViewTripMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ViewTripSchedulesFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ViewTripMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ViewTripSchedulesFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ViewTripMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ViewTripSchedulesFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ViewTripMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ViewTripSchedulesFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ViewTripMenu().setVisible(true);
+                new ViewTripSchedulesFrame().setVisible(true);
             }
         });
     }
@@ -203,6 +219,8 @@ public class ViewTripMenu extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BackButton;
     private javax.swing.JButton editTripButton;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton removeButton;
     private javax.swing.JTable tripListTable;
