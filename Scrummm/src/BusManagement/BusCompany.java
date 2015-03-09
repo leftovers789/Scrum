@@ -1,10 +1,11 @@
 package BusManagement;
 
 import EmployeeManagement.Employee;
+import EmployeeManagement.Mechanic;
 import java.util.*;
 
 public class BusCompany {
-
+    
     private List<Bus> busses = new ArrayList<>();
     private List<Employee> employees = new ArrayList<>();
     private String name;
@@ -79,5 +80,36 @@ public class BusCompany {
     public void setDateEstablished(Date dateEstablished) {
         this.dateEstablished = dateEstablished;
     }
-
+    
+    public void setMechanicMaintenanceList() {
+        int numberOfMechanic=0;
+        for (Employee employee : employees) {
+            if (employee instanceof Mechanic) {
+                numberOfMechanic++;
+            }
+        }
+        int numberOfBusToBeMaintainedPerMechanic=0;
+        if (busses.size()>numberOfMechanic) {
+            numberOfBusToBeMaintainedPerMechanic=busses.size()/numberOfMechanic;
+        } else {
+            numberOfBusToBeMaintainedPerMechanic=1;
+        }
+        int index=0;
+        
+        for (Employee employee : employees) {
+            if (employee instanceof Mechanic) {
+                for (int i = 0; i < numberOfBusToBeMaintainedPerMechanic; i++) {
+                    Mechanic mechanic=(Mechanic) employee;
+                    if (mechanic.getBussesForMaintenance().contains(busses.get(index))) {
+                        break;
+                    }
+                    mechanic.addBusForMaintenance(busses.get(index));
+                    index++;
+                }
+            }
+        }
+        
+        
+    }
+    
 }

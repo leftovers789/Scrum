@@ -5,7 +5,7 @@ import BookingManagement.*;
 import java.util.*;
 
 public class Registry extends Observable {
-
+    
     private List<DutyLog> dutyLogs = new ArrayList<>();
     private List<SalesLog> salesLogs = new ArrayList<>();
     private List<Trip> trips = new ArrayList<>();
@@ -56,4 +56,6 @@ public class Registry extends Observable {
             this.trips.remove(trip);
         }
     }
+    
+   
 }

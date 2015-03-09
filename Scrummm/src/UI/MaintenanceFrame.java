@@ -6,7 +6,10 @@
 package UI;
 
 import BusManagement.*;
+import CommandPatternClasses.AddMaintenanceReportCommand;
+import CommandPatternClasses.Invoker;
 import EmployeeManagement.*;
+import LogManagement.DutyLog;
 import LogManagement.MaintenanceReport;
 import RegistryManagement.*;
 import java.nio.charset.Charset;
@@ -23,7 +26,14 @@ import javax.swing.table.DefaultTableModel;
  * @author windows
  */
 public class MaintenanceFrame extends javax.swing.JFrame {
-
+    
+    private Invoker invoker=new Invoker();
+    private Registry registry=Registry.getInstance();
+    private DutyLog dutyLog = DutyLog.getInstance();
+    private boolean hasSelected = false;
+    private boolean hasSelected2 = false;
+    private boolean hasSelected3 = false;
+    private String tireSerialNumber = "";
     private Mechanic mechanic;
     private int issueComboBoxSelectedIndex;
     private boolean issue;
@@ -33,10 +43,11 @@ public class MaintenanceFrame extends javax.swing.JFrame {
     private Bus bus;
     private BusCompany busCompany = BusCompany.getInstance();
     private DefaultTableModel bussesForStateCheckTableModel
-            = new DefaultTableModel(new String[]{"Bus #", "Bus Plate #"}, 0);
+            = new DefaultTableModel(new Object[]{"Bus #", "Bus Plate #"}, 0);
     private DefaultTableModel bussesForRepairTableModel
-            = new DefaultTableModel(new String[]{"Bus #", "Bus Plate #"}, 0);
+            = new DefaultTableModel(new Object[]{"Bus #", "Bus Plate #"}, 0);
     private SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd,yyyy");
+    private DefaultTableModel tireSerialTableModel = new DefaultTableModel(new Object[]{"Tire Serial #"}, 0);
 
     /**
      * Creates new form MaintenanceFrame
@@ -46,16 +57,18 @@ public class MaintenanceFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setResizable(true);
         disableFields();
-        
 
+        dutyLog.setTimeIn(new Date());
+        setTableConfiguration(tireSerialTable, tireSerialTableModel);
         setTableConfiguration(bussesForStateCheckTable, bussesForStateCheckTableModel);
         setTableConfiguration(bussesForRepairTable, bussesForRepairTableModel);
 
-     //   updateTable();
+        updateTable();
 
         /*    currentlyLoggedInLabel.setText(mechanic.getLastName() + ", " + mechanic.getFirstName()
          + " " + mechanic.getMiddleName());*/
         dateLabel.setText(sdf.format(date));
+
     }
 
     /**
@@ -85,10 +98,12 @@ public class MaintenanceFrame extends javax.swing.JFrame {
         issueFixedComboBox = new javax.swing.JComboBox();
         issueEstimatedCostLabel = new javax.swing.JLabel();
         issueEstimatedCostField = new javax.swing.JTextField();
-        timeLabel = new javax.swing.JLabel();
         busStateLabel = new javax.swing.JLabel();
         busStateComboBox = new javax.swing.JComboBox();
         logOutButton = new javax.swing.JButton();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        tireSerialTable = new javax.swing.JTable();
+        replaceTireButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         currentlyLoggedInLabel = new javax.swing.JLabel();
         dateLabel = new javax.swing.JLabel();
@@ -140,7 +155,7 @@ public class MaintenanceFrame extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(6, 6, 6)
                 .addComponent(busNumberLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(busNumberField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -206,6 +221,31 @@ public class MaintenanceFrame extends javax.swing.JFrame {
             }
         });
 
+        tireSerialTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tireSerialTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tireSerialTableMousePressed(evt);
+            }
+        });
+        jScrollPane5.setViewportView(tireSerialTable);
+
+        replaceTireButton.setText("To Be Replaced");
+        replaceTireButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                replaceTireButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -213,12 +253,20 @@ public class MaintenanceFrame extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(issueEstimatedCostLabel)
+                            .addComponent(busStateComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(busStateLabel)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(issueFixedLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(timeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(issueFixedComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -227,62 +275,51 @@ public class MaintenanceFrame extends javax.swing.JFrame {
                                         .addComponent(issueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(issueDescriptionLabel))
                                 .addGap(88, 88, 88)
-                                .addComponent(issueEstimatedCostField, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(saveReportButton, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(issueEstimatedCostLabel)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(busStateComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(busStateLabel)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(issueFixedLabel)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(issueFixedComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(logOutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(9, 9, 9))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(issueEstimatedCostField, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(timeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(replaceTireButton, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(issueLabel)
-                            .addComponent(issueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(issueEstimatedCostLabel))
-                        .addGap(0, 0, 0)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(issueDescriptionLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(issueEstimatedCostField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(issueFixedLabel)
-                                    .addComponent(issueFixedComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(busStateLabel)
-                                .addGap(0, 0, 0)
-                                .addComponent(busStateComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(1, 1, 1)
+                        .addComponent(logOutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(saveReportButton, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(issueLabel)
+                    .addComponent(issueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(issueEstimatedCostLabel))
+                .addGap(0, 0, 0)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(saveReportButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(issueDescriptionLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(issueEstimatedCostField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(issueFixedLabel)
+                            .addComponent(issueFixedComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(busStateLabel)
                         .addGap(0, 0, 0)
-                        .addComponent(logOutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(busStateComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(replaceTireButton)))))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(saveReportButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(logOutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         currentlyLoggedInLabel.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
@@ -336,43 +373,46 @@ public class MaintenanceFrame extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(288, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addContainerGap(27, Short.MAX_VALUE))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel2)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel3Layout.createSequentialGroup()
                             .addComponent(currentlyLoggedInLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(0, 0, Short.MAX_VALUE))
+                            .addGap(0, 382, Short.MAX_VALUE))
                         .addGroup(jPanel3Layout.createSequentialGroup()
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                        .addGroup(jPanel3Layout.createSequentialGroup()
-                            .addGap(15, 15, 15)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(22, 22, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                     .addContainerGap()))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(65, 65, 65)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(193, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(255, Short.MAX_VALUE))
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(currentlyLoggedInLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(2, 2, 2)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(currentlyLoggedInLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(47, 47, 47)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
@@ -384,20 +424,20 @@ public class MaintenanceFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(12, 12, 12))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6))
+                .addContainerGap())
         );
 
         pack();
@@ -433,12 +473,18 @@ public class MaintenanceFrame extends javax.swing.JFrame {
         issueEstimatedCostField.setEnabled(false);
         issueFixedComboBox.setEnabled(false);
         busStateComboBox.setEnabled(false);
+        tireSerialTable.setEnabled(false);
+        replaceTireButton.setEnabled(false);
+
     }
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
-        ManagerMainMenu mainMenu = new ManagerMainMenu();
-        //logging for duty will be inserted here
-        mainMenu.show();
+        LoginFrame loginFrame = new LoginFrame();
+        dutyLog.setTimeOut(new Date());
+        registry.addDutyLog(dutyLog);
+        dutyLog.resetInstance();
+        this.dispose();
+        loginFrame.show();
     }//GEN-LAST:event_logOutButtonActionPerformed
 
     private void issueFixedComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_issueFixedComboBoxActionPerformed
@@ -487,20 +533,24 @@ public class MaintenanceFrame extends javax.swing.JFrame {
             }
         }
 
-        mechanic.addMaintenanceReport(new MaintenanceReport(bus, new Date(), issue,
-                issueDescriptionTextArea.getText(), issueEstimatedCost, issueFixed));
+        invoker.setCommand(new AddMaintenanceReportCommand(
+                mechanic, new MaintenanceReport(bus, new Date(), issue,
+                issueDescriptionTextArea.getText(), issueEstimatedCost, issueFixed), issueFixed));
+        invoker.executeCommand();
         
         if (bussesForStateCheckTable.getSelectedRow() >= 0) {
             mechanic.getBussesForMaintenance().remove(bus);
         }
-        
+
         if (bussesForRepairTable.getSelectedRow() >= 0) {
             mechanic.getBussesForRepair().remove(bus);
         }
-        
+
         busCompany.getBusses().remove(bus);
         busCompany.addBus(bus);
 
+        hasSelected = false;
+        hasSelected2 = false;
         issue = false;
         issueFixed = false;
         bus = null;
@@ -513,27 +563,61 @@ public class MaintenanceFrame extends javax.swing.JFrame {
     private void bussesForStateCheckTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bussesForStateCheckTableMousePressed
         SearchEngine searchEngine = new SearchEngine();
         clearFields();
+        if (hasSelected) {
+            bussesForStateCheckTable.clearSelection();
+            hasSelected = false;
+            removeTireSerialRows();
+            clearFields();
+            disableFields();
+            return;
+        }
         int selectedRow = bussesForStateCheckTable.getSelectedRow();
         if (selectedRow >= 0) {
+            hasSelected = true;
             String busNumber = (String) bussesForStateCheckTable.getValueAt(selectedRow, 0);
-            System.out.println(busNumber);
             bus = searchEngine.searchBusByBusNo(busNumber);
+            updateTireSerialTable();
             busNumberField.setText(bus.getBusNumber());
             busPlateNumberField.setText(bus.getPlateNumber());
             issueComboBox.setEnabled(true);
+            tireSerialTable.setEnabled(true);
+            replaceTireButton.setEnabled(true);
             bussesForRepairTable.getSelectionModel().clearSelection();
+
         } else {
             disableFields();
         }
     }//GEN-LAST:event_bussesForStateCheckTableMousePressed
 
+    private void removeTireSerialRows() {
+        while (tireSerialTable.getRowCount() > 0) {
+            tireSerialTableModel.removeRow(0);
+        }
+    }
+
+    private void updateTireSerialTable() {
+        removeTireSerialRows();
+        for (String string : bus.getTireSerialNumbers()) {
+            tireSerialTableModel.addRow(new Object[]{string});
+        }
+    }
+
     private void bussesForRepairTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bussesForRepairTableMousePressed
         SearchEngine searchEngine = new SearchEngine();
         clearFields();
+        if (hasSelected2) {
+            bussesForRepairTable.clearSelection();
+            hasSelected2 = false;
+            clearFields();
+            disableFields();
+            return;
+        }
         int selectedRow = bussesForRepairTable.getSelectedRow();
         if (selectedRow >= 0) {
+            hasSelected2 = true;
             String busNumber = (String) bussesForRepairTable.getValueAt(selectedRow, 0);
             bus = searchEngine.searchBusByBusNo(busNumber);
+            updateTireSerialTable();
             busNumberField.setText(bus.getBusNumber());
             busPlateNumberField.setText(bus.getPlateNumber());
             issueComboBox.setEnabled(true);
@@ -547,13 +631,16 @@ public class MaintenanceFrame extends javax.swing.JFrame {
         issueComboBoxSelectedIndex = issueComboBox.getSelectedIndex();
         if (issueComboBoxSelectedIndex == 1) {
             issue = true;
+            busAvailability = false;
             enableFields();
+            bus.setAvailability(busAvailability);
         }
 
         if (issueComboBoxSelectedIndex == 2) {
             issue = false;
             disableFields();
             busAvailability = true;
+            bus.setAvailability(busAvailability);
             issueComboBox.setEnabled(true);
             saveReportButton.setEnabled(true);
         }
@@ -571,16 +658,49 @@ public class MaintenanceFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_busStateComboBoxActionPerformed
 
+    private void tireSerialTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tireSerialTableMousePressed
+        if (hasSelected3) {
+            tireSerialTable.clearSelection();
+            hasSelected3 = false;
+            return;
+        }
+
+        int selectedRow = tireSerialTable.getSelectedRow();
+
+        if (selectedRow >= 0) {
+            hasSelected3 = true;
+            tireSerialNumber = (String) tireSerialTable.getValueAt(selectedRow, 0);
+        }
+
+    }//GEN-LAST:event_tireSerialTableMousePressed
+
+    private void replaceTireButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_replaceTireButtonActionPerformed
+        if (hasSelected3) {
+            issueComboBox.setSelectedIndex(1);
+            issueComboBoxActionPerformed(evt);
+            issueDescriptionTextArea.setText(issueDescriptionTextArea.getText() 
+                    + "\n Tire Serial Number: "+tireSerialNumber+" to be replaced");
+            bus.getTireSerialNumbers().remove(tireSerialNumber);
+            updateTireSerialTable();
+            hasSelected3 = false;
+        } else {
+            JOptionPane.showMessageDialog(
+                    null, "Select a tire serial on table to continue!", "No Selected Row", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_replaceTireButtonActionPerformed
+
     private void updateTable() {
         removeTableData();
         mechanic = (Mechanic) busCompany.getCurrentLoggedIn();
-        for (Bus bus : mechanic.getBussesForMaintenance()) {
-            bussesForStateCheckTableModel.addRow(new Object[]{bus.getBusNumber(), bus.getPlateNumber()});
+        if (mechanic != null) {
+            for (Bus bus : mechanic.getBussesForMaintenance()) {
+                bussesForStateCheckTableModel.addRow(new Object[]{bus.getBusNumber(), bus.getPlateNumber()});
+            }
+            for (Bus bus : mechanic.getBussesForRepair()) {
+                bussesForRepairTableModel.addRow(new Object[]{bus.getBusNumber(), bus.getPlateNumber()});
+            }
+        } else {
         }
-        for (Bus bus : mechanic.getBussesForRepair()) {
-            bussesForRepairTableModel.addRow(new Object[]{bus.getBusNumber(), bus.getPlateNumber()});
-        }
-
     }
 
     public void clearFields() {
@@ -600,6 +720,7 @@ public class MaintenanceFrame extends javax.swing.JFrame {
         while (bussesForStateCheckTable.getRowCount() > 0) {
             bussesForStateCheckTableModel.removeRow(0);
         }
+
     }
 
     /**
@@ -634,7 +755,9 @@ public class MaintenanceFrame extends javax.swing.JFrame {
             public void run() {
                 new MaintenanceFrame().setVisible(true);
             }
+
         });
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -665,9 +788,11 @@ public class MaintenanceFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jTable2;
     private javax.swing.JButton logOutButton;
+    private javax.swing.JButton replaceTireButton;
     private javax.swing.JButton saveReportButton;
-    private javax.swing.JLabel timeLabel;
+    private javax.swing.JTable tireSerialTable;
     // End of variables declaration//GEN-END:variables
 }

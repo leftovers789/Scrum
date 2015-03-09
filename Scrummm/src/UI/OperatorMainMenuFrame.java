@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package UI;
+
+import LogManagement.DutyLog;
+import RegistryManagement.Registry;
+import java.util.Date;
 
 /**
  *
@@ -12,11 +15,16 @@ package UI;
  */
 public class OperatorMainMenuFrame extends javax.swing.JFrame {
 
+    private DutyLog dutyLog = DutyLog.getInstance();
+    private Registry registry = Registry.getInstance();
+
     /**
      * Creates new form OperatorMainFrame
      */
     public OperatorMainMenuFrame() {
         initComponents();
+
+        dutyLog.setTimeIn(new Date());
         addFixedTripScheduleButton.setText("<html>Add Fixed Trip<br/> Schedule</html>");
         addSingleTripSchedule.setText("<html>Add Single Trip<br/> Schedule</html>");
     }
@@ -33,7 +41,6 @@ public class OperatorMainMenuFrame extends javax.swing.JFrame {
         addFixedTripScheduleButton = new javax.swing.JButton();
         addSingleTripSchedule = new javax.swing.JButton();
         viewTripSchedulesButton = new javax.swing.JButton();
-        addBusButton = new javax.swing.JButton();
         logOutButton = new javax.swing.JButton();
         exitButton = new javax.swing.JButton();
         smsButton = new javax.swing.JButton();
@@ -61,14 +68,6 @@ public class OperatorMainMenuFrame extends javax.swing.JFrame {
         viewTripSchedulesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 viewTripSchedulesButtonActionPerformed(evt);
-            }
-        });
-
-        addBusButton.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        addBusButton.setText("Add Bus");
-        addBusButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addBusButtonActionPerformed(evt);
             }
         });
 
@@ -102,18 +101,17 @@ public class OperatorMainMenuFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(viewTripSchedulesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(viewTripSchedulesButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(addBusButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(addSingleTripSchedule, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(logOutButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 0, 0)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(addFixedTripScheduleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(smsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(addFixedTripScheduleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(smsButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -126,9 +124,7 @@ public class OperatorMainMenuFrame extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addComponent(viewTripSchedulesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addBusButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(smsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(smsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(logOutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -151,16 +147,20 @@ public class OperatorMainMenuFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addSingleTripScheduleActionPerformed
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
-
+        dutyLog.setTimeOut(new Date());
+        registry.addDutyLog(dutyLog);
+        dutyLog.resetInstance();
+        this.hide();
+        LoginFrame loginFrame = new LoginFrame();
+        loginFrame.show();
     }//GEN-LAST:event_logOutButtonActionPerformed
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
-
+        dutyLog.setTimeOut(new Date());
+        registry.addDutyLog(dutyLog);
+        dutyLog.resetInstance();
+        this.dispose();
     }//GEN-LAST:event_exitButtonActionPerformed
-
-    private void addBusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBusButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_addBusButtonActionPerformed
 
     private void viewTripSchedulesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewTripSchedulesButtonActionPerformed
         // TODO add your handling code here:
@@ -209,7 +209,6 @@ public class OperatorMainMenuFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addBusButton;
     private javax.swing.JButton addFixedTripScheduleButton;
     private javax.swing.JButton addSingleTripSchedule;
     private javax.swing.JButton exitButton;

@@ -87,11 +87,12 @@
     <Component class="javax.swing.JComboBox" name="logInAsComboBox">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="4">
+          <StringArray count="5">
             <StringItem index="0" value="        Select"/>
             <StringItem index="1" value="       Manager"/>
             <StringItem index="2" value="       Cashier"/>
             <StringItem index="3" value="       Mechanic"/>
+            <StringItem index="4" value="       Operator"/>
           </StringArray>
         </Property>
       </Properties>
@@ -115,6 +116,8 @@
       </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="usernameFieldMouseClicked"/>
+        <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="usernameFieldMousePressed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="usernameFieldActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="idField">

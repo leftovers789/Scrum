@@ -5,11 +5,8 @@
  */
 package UI;
 
-import EmployeeManagement.Cashier;
-import EmployeeManagement.Mechanic;
+import EmployeeManagement.*;
 import BusManagement.BusCompany;
-import EmployeeManagement.Employee;
-import EmployeeManagement.Manager;
 import javax.swing.JOptionPane;
 
 /**
@@ -58,7 +55,7 @@ public class LoginFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        logInAsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "        Select", "       Manager", "       Cashier", "       Mechanic" }));
+        logInAsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "        Select", "       Manager", "       Cashier", "       Mechanic", "       Operator" }));
         logInAsComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 logInAsComboBoxActionPerformed(evt);
@@ -73,6 +70,14 @@ public class LoginFrame extends javax.swing.JFrame {
         usernameField.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 usernameFieldMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                usernameFieldMousePressed(evt);
+            }
+        });
+        usernameField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                usernameFieldActionPerformed(evt);
             }
         });
 
@@ -153,6 +158,10 @@ public class LoginFrame extends javax.swing.JFrame {
 
                 passwordLabel.setVisible(true);
                 passwordField.setVisible(true);
+            } else if (logInAsComboBoxSelectedIndex == 2 || logInAsComboBoxSelectedIndex == 4) {
+                passwordLabel.setVisible(true);
+                passwordField.setVisible(true);
+                idField.setVisible(true);
             } else {
                 idField.setVisible(true);
             }
@@ -200,8 +209,21 @@ public class LoginFrame extends javax.swing.JFrame {
                 if (employee.getId().equalsIgnoreCase(id)) {
                     busCompany.setCurrentLoggedIn(employee);
                     if (employee instanceof Cashier) {
-                        //put here sian lasaga cashier frame
+                        Cashier cashier = (Cashier) employee;
+                        if (cashier.getPassword().equals(passwordField.getText())) {
+                            CashierMainFrame cashierMainFrame = new CashierMainFrame();
+                            this.hide();
+                            cashierMainFrame.show();
+                        }
+                    } else if (employee instanceof Operator) {
+                        Operator operator=(Operator) employee;
+                        if (operator.getPassword().equals(passwordField.getText())) {
+                            OperatorMainMenuFrame operatorMainMenuFrame=new OperatorMainMenuFrame();
+                            this.hide();
+                            operatorMainMenuFrame.show();
+                        }
                     } else if (employee instanceof Mechanic) {
+                        busCompany.setMechanicMaintenanceList();
                         MaintenanceFrame maintenanceFrame = new MaintenanceFrame();
                         maintenanceFrame.show();
                         this.hide();
@@ -221,6 +243,14 @@ public class LoginFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         idField.setText("");
     }//GEN-LAST:event_idFieldMouseClicked
+
+    private void usernameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_usernameFieldActionPerformed
+
+    private void usernameFieldMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usernameFieldMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_usernameFieldMousePressed
 
     /**
      * @param args the command line arguments

@@ -774,7 +774,7 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
     private void employeeDataTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_employeeDataTableMousePressed
 
         if (hasSelected && selectedRow == employeeDataTable.getSelectedRow()) {
-            reset();
+            clearFields();
             dateField.setText("");
             employeeDataTable.clearSelection();
             employee = null;
