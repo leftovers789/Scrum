@@ -9,9 +9,8 @@ import BookingManagement.*;
 import BusManagement.*;
 import CommandPatternClasses.AddEmployeeCommand;
 import CommandPatternClasses.Command;
-import EmployeeManagement.Employee;
+import EmployeeManagement.*;
 import LogManagement.DutyLog;
-import RegistryManagement.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -121,5 +120,5 @@ public class SearchEngine {
         }
         return null;
     }
-
+    
 }

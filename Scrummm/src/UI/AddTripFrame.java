@@ -7,6 +7,7 @@
 package UI;
 
 import BookingManagement.*;
+import BusCrewNotificationSystem.Sms;
 import BusManagement.*;
 import RegistryManagement.*;
 import java.awt.EventQueue;
@@ -20,6 +21,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -120,7 +123,6 @@ public class AddTripFrame extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         priceText = new javax.swing.JTextField();
         AddTripButton = new javax.swing.JButton();
-        ViewTripsButton = new javax.swing.JButton();
         busNoCBox = new javax.swing.JComboBox();
         timeTextField = new javax.swing.JFormattedTextField();
         backButton = new javax.swing.JButton();
@@ -164,18 +166,10 @@ public class AddTripFrame extends javax.swing.JFrame {
         jLabel4.setText("Price:");
 
         AddTripButton.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        AddTripButton.setText("Add Trip");
+        AddTripButton.setText("Add Trip Schedule");
         AddTripButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 AddTripButtonActionPerformed(evt);
-            }
-        });
-
-        ViewTripsButton.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        ViewTripsButton.setText("View Trips");
-        ViewTripsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ViewTripsButtonActionPerformed(evt);
             }
         });
 
@@ -197,7 +191,7 @@ public class AddTripFrame extends javax.swing.JFrame {
         ReferenceNoLabel.setText("#######");
 
         updateTripButton.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        updateTripButton.setText("Update Trip");
+        updateTripButton.setText("Update Trip Schedule");
         updateTripButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateTripButtonActionPerformed(evt);
@@ -290,7 +284,6 @@ public class AddTripFrame extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(backButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ViewTripsButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(updateTripButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(AddTripButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -356,17 +349,15 @@ public class AddTripFrame extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
                             .addComponent(priceText, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-                        .addComponent(AddTripButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(updateTripButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ViewTripsButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(datePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(datePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(AddTripButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(updateTripButton)
+                .addGap(11, 11, 11)
+                .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -383,12 +374,12 @@ public class AddTripFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+   
     public void locationFromSuggestionBox(){
         locationFromText.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e){
@@ -586,7 +577,6 @@ public class AddTripFrame extends javax.swing.JFrame {
     public void loadData(Trip trip){
         updateTripButton.setEnabled(true);
         AddTripButton.setEnabled(false);
-        ViewTripsButton.setEnabled(false);
         ReferenceNoLabel.setText(trip.getReferenceNo());
         locationFromText.setText(trip.getTripFrom());
         locationToText.setText(trip.getTripTo());
@@ -635,19 +625,13 @@ public class AddTripFrame extends javax.swing.JFrame {
             reg.addTrip(trip);
             JOptionPane.showMessageDialog(null, "The trip has been updated", "Finished", JOptionPane.INFORMATION_MESSAGE);
             this.hide();
-            new ViewTripMenu().show();
+            new ViewTripSchedulesFrame().show();
         }
     }//GEN-LAST:event_updateTripButtonActionPerformed
 
     private void busNoCBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_busNoCBoxActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_busNoCBoxActionPerformed
-
-    private void ViewTripsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewTripsButtonActionPerformed
-        // TODO add your handling code here:
-        ViewTripMenu view = new ViewTripMenu();
-        view.show();
-    }//GEN-LAST:event_ViewTripsButtonActionPerformed
 
     private void AddTripButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddTripButtonActionPerformed
         // TODO add your handling code here:
@@ -669,20 +653,22 @@ public class AddTripFrame extends javax.swing.JFrame {
             Bus bus = search.searchBusByBusNo(busNo);      
             String venue = venueText.getText();
             String referenceNo = ReferenceNoLabel.getText();
-            double price = Double.parseDouble(priceText.getText());
+            double price = Double.parseDouble(priceText.getText());  
             trip = new Trip(TripStatus.READY, price, locationFrom, locationTo, bus, new Date(date+" "+time), referenceNo, venue);
             reg.addTrip(trip);
+            int reply = JOptionPane.showConfirmDialog(null, "Notify driver and conductor for this trip?", "Notify crews", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION){
+                new SmsChangeInScheduleFrame().showAddTripNotificationSms(trip);
+            }
             JOptionPane.showMessageDialog(null, "The trip has been added", "Finished", JOptionPane.INFORMATION_MESSAGE);
             this.hide();
             new AddTripFrame().show();
+            this.hide();
         }
-
     }//GEN-LAST:event_AddTripButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         this.hide();
-        ManagerMainMenu mainMenu=new ManagerMainMenu();
-        mainMenu.show();
     }//GEN-LAST:event_backButtonActionPerformed
 
     /**
@@ -723,7 +709,6 @@ public class AddTripFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddTripButton;
     private javax.swing.JLabel ReferenceNoLabel;
-    private javax.swing.JButton ViewTripsButton;
     private javax.swing.JButton ViewTripsButton1;
     private javax.swing.JButton backButton;
     private javax.swing.JComboBox busNoCBox;
