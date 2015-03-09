@@ -8,7 +8,6 @@ package UI;
 
 import BookingManagement.Passenger;
 import BookingManagement.Trip;
-import EmployeeManagement.Cashier;
 import RegistryManagement.SearchEngine;
 import java.awt.FlowLayout;
 import java.beans.PropertyChangeEvent;
@@ -16,6 +15,7 @@ import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -28,7 +28,6 @@ import net.sourceforge.jcalendarbutton.JCalendarButton;
  */
 public class ManagePassengerFrame extends javax.swing.JFrame {
 
-    private Cashier cashier;
     private Trip trip;
     private Passenger passenger;
     private List<Passenger> passengersList;
@@ -275,30 +274,37 @@ public class ManagePassengerFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    public void loadCashier(Cashier cashier){
-        this.cashier = cashier;
-    }
-    
+   
     private void viewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewButtonActionPerformed
         // TODO add your handling code here:
         BookingFrame booking = new BookingFrame();
         int row = passengersTable.getSelectedRow();
-        String ticketNumber = (String) passengersTableModel.getValueAt(row, 0);
-        passenger = (Passenger) search.searchPassengerByTicketNumber(trip, ticketNumber);
-        booking.loadPassenger(cashier, passenger, trip);
-        booking.show();
+        if(row >= 0){
+            String ticketNumber = (String) passengersTableModel.getValueAt(row, 0);
+            passenger = (Passenger) search.searchPassengerByTicketNumber(trip, ticketNumber);
+            booking.loadPassenger(passenger, trip);
+            booking.show();
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Please select a passenger!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_viewButtonActionPerformed
 
     private void viewPassengersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewPassengersButtonActionPerformed
         // TODO add your handling code here:
         int row = tripsTable.getSelectedRow();
-        String refNo = (String) tripsTableModel.getValueAt(row, 4);
-        trip = (Trip) search.searchByRefNo(refNo);
-        passengersList = (List<Passenger>) search.searchPassengersInATrip(trip);
-        for (Passenger passenger1 : passengersList) {
-            passengersTableModel.addRow(new Object[]{passenger1.getTicket().getTickerNumber(), passenger1.getLastName()+", "+passenger1.getFirstName()
-                    , passenger1.getAge(), passenger1.getTicket().getType()});
+        if(row >= 0){
+            passengersTable.setModel(passengersTableModel);
+            passengersTableModel.setRowCount(0);
+            String refNo = (String) tripsTableModel.getValueAt(row, 4);
+            trip = (Trip) search.searchByRefNo(refNo);
+            passengersList = (List<Passenger>) search.searchPassengersInATrip(trip);
+            for (Passenger passenger1 : passengersList) {
+                passengersTableModel.addRow(new Object[]{passenger1.getTicket().getTickerNumber(), passenger1.getLastName()+", "+passenger1.getFirstName()
+                        , passenger1.getAge(), passenger1.getTicket().getType()});
+            }   
+        }else{
+            JOptionPane.showMessageDialog(null, "Please select a trip!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_viewPassengersButtonActionPerformed
 

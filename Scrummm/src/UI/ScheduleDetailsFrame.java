@@ -7,7 +7,6 @@
 package UI;
 
 import BookingManagement.*;
-import EmployeeManagement.Cashier;
 import RegistryManagement.*;
 import java.awt.FlowLayout;
 import java.beans.PropertyChangeEvent;
@@ -15,7 +14,6 @@ import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -29,14 +27,12 @@ import net.sourceforge.jcalendarbutton.JCalendarButton;
  */
 public class ScheduleDetailsFrame extends javax.swing.JFrame {
 
-    private Registry reg = Registry.getInstance();
-    private Cashier cashier;
     private SearchEngine search = new SearchEngine();
     private List<Trip> tripList;
     private Trip trip;
     private Trip oldTrip;
     private Passenger passenger;
-    private DefaultTableModel tripsTableModel = new DefaultTableModel(new String[]{"Schedule", "Route", "Bus type", "Price", "Ref no."}, 0);
+    private DefaultTableModel tripsTableModel = new DefaultTableModel(new String[]{"Schedule", "Route", "Bus type", "Price", "Ref no.", "Seats left"}, 0);
     private SimpleDateFormat df = new SimpleDateFormat("M/dd/yy");
     private JCalendarButton jCalendar = new JCalendarButton();
     private FlowLayout flMain = new FlowLayout();
@@ -61,7 +57,7 @@ public class ScheduleDetailsFrame extends javax.swing.JFrame {
                     for (Trip trip1 : tripList) {
                         String route = trip1.getTripFrom()+" to "+trip1.getTripTo();
                         tripsTableModel.addRow(new Object[]{ df.format(trip1.getSchedule()), route, 
-                            trip1.getBus().getBusType(), "Php "+trip1.getPrice()+"0", trip1.getReferenceNo()});
+                            trip1.getBus().getBusType(), "Php "+trip1.getPrice()+"0", trip1.getReferenceNo(), trip1.getCapacity()});
                     }
                 }
             }
@@ -70,7 +66,7 @@ public class ScheduleDetailsFrame extends javax.swing.JFrame {
         for (Trip trip1 : tripList) {
             String route = trip1.getTripFrom()+" to "+trip1.getTripTo();
             tripsTableModel.addRow(new Object[]{ df.format(trip1.getSchedule()), route, 
-                trip1.getBus().getBusType(), "Php "+trip1.getPrice()+"0", trip1.getReferenceNo()});
+                trip1.getBus().getBusType(), "Php "+trip1.getPrice()+"0", trip1.getReferenceNo(), trip1.getCapacity()});
         }
     }
 
@@ -232,11 +228,7 @@ public class ScheduleDetailsFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    public void loadCashier(Cashier cashier){
-        this.cashier = cashier;
-    }
-    
+  
     public void loadData(Passenger passenger, Trip oldTrip){
         continueButton.show();
         proceedButton.hide();
@@ -248,10 +240,15 @@ public class ScheduleDetailsFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         BookingFrame booking = new BookingFrame();
         int row = tripListTable.getSelectedRow();
-        String refNo = (String) tripsTableModel.getValueAt(row, 4);
-        trip = (Trip) search.searchByRefNo(refNo);
-        booking.loadTrip(cashier, trip);
-        booking.show();
+        if(row >= 0){
+             String refNo = (String) tripsTableModel.getValueAt(row, 4);
+            trip = (Trip) search.searchByRefNo(refNo);
+            booking.loadTrip(trip);
+            booking.show();
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Select a trip before proceeding!", "Error", JOptionPane.ERROR_MESSAGE);
+        } 
     }//GEN-LAST:event_proceedButtonActionPerformed
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
@@ -263,11 +260,15 @@ public class ScheduleDetailsFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         BookingFrame booking = new BookingFrame();
         int row = tripListTable.getSelectedRow();
-        String refNo = (String) tripsTableModel.getValueAt(row, 4);
-        trip = (Trip) search.searchByRefNo(refNo);
-        booking.loadReBookData(cashier, passenger, oldTrip, trip);
-        booking.show();
-        this.hide();
+        if(row >= 0){
+            String refNo = (String) tripsTableModel.getValueAt(row, 4);
+            trip = (Trip) search.searchByRefNo(refNo);
+            booking.loadReBookData(passenger, oldTrip, trip);
+            booking.show();
+            this.hide();
+        }else{
+            JOptionPane.showMessageDialog(null, "Select a trip before proceeding!", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_continueButtonActionPerformed
 
     /**

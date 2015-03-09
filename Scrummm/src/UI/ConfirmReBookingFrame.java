@@ -21,13 +21,11 @@ import javax.swing.JOptionPane;
  */
 public class ConfirmReBookingFrame extends javax.swing.JFrame {
 
-    private Cashier cashier;
     private Invoker invoker = new Invoker();
     private Trip trip;
     private Trip oldTrip;
     private Passenger passenger;
     private DecimalFormat decimal = new DecimalFormat("#.##");
-    private double lessDiscount;
     private BookingFrame bookingFrame;
     private SimpleDateFormat df = new SimpleDateFormat("EEE MMMM dd, YYYY hh:mm a");
     /**
@@ -368,8 +366,7 @@ public class ConfirmReBookingFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void loadReBookingData(Cashier cashier, Passenger passenger, Trip oldTrip, Trip currentTrip, BookingFrame bookingFrame){
-        this.cashier = cashier;
+    public void loadReBookingData(Passenger passenger, Trip oldTrip, Trip currentTrip, BookingFrame bookingFrame){
         this.passenger = passenger;
         this.oldTrip = oldTrip;
         this.trip = currentTrip;
@@ -386,11 +383,11 @@ public class ConfirmReBookingFrame extends javax.swing.JFrame {
         contactNoLabel.setText(passenger.getContactNumber());
         addressLabel.setText(passenger.getAddress());
         ticketTypeLabel.setText(String.valueOf(passenger.getTicket().getType()));
-        currentPriceLabel.setText("Php  "+currentTrip.getPrice());
-        oldPriceLabel.setText("Php  "+oldTrip.getPrice());
+        currentPriceLabel.setText("Php  "+currentTrip.getPrice()+"0");
+        oldPriceLabel.setText("Php  "+oldTrip.getPrice()+"0");
         if(currentTrip.getPrice() > oldTrip.getPrice()){
             double additional = currentTrip.getPrice() - oldTrip.getPrice();
-            additionalPaymentLabel.setText("Php"+decimal.format(additional));
+            additionalPaymentLabel.setText("Php"+decimal.format(additional)+"0");
         }
         else{
             additionalPaymentLabel.setText("Php     0.00");
@@ -401,7 +398,7 @@ public class ConfirmReBookingFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         JOptionPane.showMessageDialog(null, "The passenger has been re-booked", "Re-booking Completed", JOptionPane.INFORMATION_MESSAGE);
         bookingFrame.hide();
-        invoker.setCommand(new ReBookPassengerCommand(cashier, passenger, trip, oldTrip));
+        invoker.setCommand(new ReBookPassengerCommand(passenger, trip, oldTrip));
         invoker.executeCommand();
         bookingFrame.hide();
         this.hide();

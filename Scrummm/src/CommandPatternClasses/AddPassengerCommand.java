@@ -8,9 +8,6 @@ package CommandPatternClasses;
 
 import BookingManagement.Passenger;
 import BookingManagement.Trip;
-import EmployeeManagement.Cashier;
-import LogManagement.*;
-import LogManagement.DutyLog;
 import java.util.Date;
 
 /**
@@ -20,23 +17,17 @@ import java.util.Date;
 public class AddPassengerCommand implements Command{
     
     private Date date=new Date();
-    private Cashier cashier;
     private Trip trip;
     private Passenger passenger;
     private String action = "Booked a passenger.";
 
-    public AddPassengerCommand(Cashier cashier, Trip trip, Passenger passenger) {
-        this.cashier = cashier;
+    public AddPassengerCommand(Trip trip, Passenger passenger) {
         this.trip = trip;
         this.passenger = passenger;
     }
 
     public Date getDate() {
         return date;
-    }
-
-    public Cashier getCashier() {
-        return cashier;
     }
 
     public Trip getTrip() {

@@ -9,6 +9,8 @@ import LogManagement.DutyLog;
 import RegistryManagement.Registry;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Sian Paul Lasaga
@@ -47,7 +49,7 @@ public class OperatorMainMenuFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        addFixedTripScheduleButton.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        addFixedTripScheduleButton.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         addFixedTripScheduleButton.setText("Add Fixed Trip Schedule");
         addFixedTripScheduleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -55,7 +57,7 @@ public class OperatorMainMenuFrame extends javax.swing.JFrame {
             }
         });
 
-        addSingleTripSchedule.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        addSingleTripSchedule.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         addSingleTripSchedule.setText("Add Trip Schedule");
         addSingleTripSchedule.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -166,11 +168,12 @@ public class OperatorMainMenuFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         ViewTripSchedulesFrame view = new ViewTripSchedulesFrame();
         view.show();
-
     }//GEN-LAST:event_viewTripSchedulesButtonActionPerformed
 
     private void smsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_smsButtonActionPerformed
         // TODO add your handling code here:
+        JOptionPane.showMessageDialog(null, "Loading device... Please wait...", "Loading", JOptionPane.INFORMATION_MESSAGE);
+        new SmsNotificationSystemForBusCrewsFrame().show();
     }//GEN-LAST:event_smsButtonActionPerformed
 
     /**

@@ -13,6 +13,7 @@ import BusManagement.Bus;
 import EmployeeManagement.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -27,6 +28,9 @@ public class SmsChangeInScheduleFrame extends javax.swing.JFrame {
      */
     public SmsChangeInScheduleFrame() {
         initComponents();
+        driverContactNoTextField.disable();
+        conductorContactNoTextField.disable();
+        messageTextArea.disable();
         messageTextArea.setLineWrap(true);
         try {
             sms.startService();
@@ -62,11 +66,26 @@ public class SmsChangeInScheduleFrame extends javax.swing.JFrame {
 
         messageTextArea.setColumns(20);
         messageTextArea.setRows(5);
+        messageTextArea.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                messageTextAreaMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(messageTextArea);
 
         conductorContactNoTextField.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        conductorContactNoTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                conductorContactNoTextFieldMouseClicked(evt);
+            }
+        });
 
         driverContactNoTextField.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        driverContactNoTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                driverContactNoTextFieldMouseClicked(evt);
+            }
+        });
 
         driverNameTextLabel.setText("Driver's name here");
 
@@ -178,17 +197,35 @@ public class SmsChangeInScheduleFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         String driverContactNo = driverContactNoTextField.getText();
         String conductorContactNo = conductorContactNoTextField.getText();
-        if(driverContactNo.isEmpty() || conductorContactNo.isEmpty()){
+        if(driverContactNo.isEmpty() || conductorContactNo.isEmpty() || driverContactNo.length() == 11 || conductorContactNo.length() == 11){
             try {
                 sms.sendSms(driverContactNo, messageTextArea.getText());        
                 sms.sendSms(conductorContactNo, messageTextArea.getText());
                 sms.stopService();
+                this.hide();
             } catch (Exception ex) {
                 Logger.getLogger(SmsChangeInScheduleFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        this.hide();
+        else{
+            JOptionPane.showMessageDialog(null, "Invalid contact number", "Cannot send", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_sendButtonActionPerformed
+
+    private void driverContactNoTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_driverContactNoTextFieldMouseClicked
+        // TODO add your handling code here:
+        driverContactNoTextField.enable();
+    }//GEN-LAST:event_driverContactNoTextFieldMouseClicked
+
+    private void conductorContactNoTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_conductorContactNoTextFieldMouseClicked
+        // TODO add your handling code here:
+        conductorContactNoTextField.enable();
+    }//GEN-LAST:event_conductorContactNoTextFieldMouseClicked
+
+    private void messageTextAreaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_messageTextAreaMouseClicked
+        // TODO add your handling code here:
+        messageTextArea.enable();
+    }//GEN-LAST:event_messageTextAreaMouseClicked
 
     public void showAddTripNotificationSms(Trip trip){
         this.show();
@@ -253,6 +290,32 @@ public class SmsChangeInScheduleFrame extends javax.swing.JFrame {
         driverNameTextLabel.setText(driverName);
         conductorNameTextLabel.setText(conductorName);
         messageTextArea.setText(template.getSetFixedScheduleTemplate(trip, bus, startMonth, lastMonth));
+    }
+    
+    public void showChangedInTripScheduleNotificationSms1(Trip oldTrip, Trip newTrip){
+        this.show();
+        Driver driver = oldTrip.getBus().getDriver();
+        Conductor conductor = oldTrip.getBus().getConductor();
+        String driverName = driver.getFirstName()+" "+driver.getLastName()+"(Driver)";
+        String conductorName = conductor.getFirstName()+" "+conductor.getLastName()+"(Conductor)";
+        driverContactNoTextField.setText(driver.getCellphoneNumber());
+        conductorContactNoTextField.setText(conductor.getCellphoneNumber());
+        driverNameTextLabel.setText(driverName);
+        conductorNameTextLabel.setText(conductorName);
+        messageTextArea.setText(template.getChangeInTripInfoTemplate(oldTrip, newTrip));
+    }
+    
+    public void showChangedInTripScheduleNotificationSms2(Trip oldTrip, Trip newTrip){
+        this.show();
+        Driver driver = newTrip.getBus().getDriver();
+        Conductor conductor = newTrip.getBus().getConductor();
+        String driverName = driver.getFirstName()+" "+driver.getLastName()+"(Driver)";
+        String conductorName = conductor.getFirstName()+" "+conductor.getLastName()+"(Conductor)";
+        driverContactNoTextField.setText(driver.getCellphoneNumber());
+        conductorContactNoTextField.setText(conductor.getCellphoneNumber());
+        driverNameTextLabel.setText(driverName);
+        conductorNameTextLabel.setText(conductorName);
+        messageTextArea.setText(template.getChangeInTripInfoTemplate(oldTrip, newTrip));
     }
     
     /**

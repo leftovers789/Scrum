@@ -7,7 +7,6 @@
 package UI;
 
 import BookingManagement.*;
-import BusCrewNotificationSystem.Sms;
 import BusManagement.*;
 import RegistryManagement.*;
 import java.awt.EventQueue;
@@ -21,8 +20,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -36,6 +33,7 @@ public class AddTripFrame extends javax.swing.JFrame {
 
     private BusCompany busCo = BusCompany.getInstance();
     private Trip trip = new Trip();
+    private Trip oldTrip;
     private List<Trip> tripList;
     private SearchEngine search = new SearchEngine();
     private Registry reg = Registry.getInstance();
@@ -586,7 +584,7 @@ public class AddTripFrame extends javax.swing.JFrame {
         venueText.setText(trip.getVenue());
         priceText.setText(trip.getPrice()+"");
         this.trip = trip;
-        
+        this.oldTrip = trip;
     }
     
     private void ViewTripsButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ViewTripsButton1ActionPerformed
@@ -623,6 +621,12 @@ public class AddTripFrame extends javax.swing.JFrame {
             reg.addTrip(trip);
             reg.removeTrip(trip);
             reg.addTrip(trip);
+            int reply = JOptionPane.showConfirmDialog(null, "Notify driver and conductor for this trip?", "Notify crews", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION){
+                JOptionPane.showMessageDialog(null, "Loading device... Please wait...", "Loading", JOptionPane.INFORMATION_MESSAGE);
+                new SmsChangeInScheduleFrame().showChangedInTripScheduleNotificationSms1(oldTrip, trip);
+                new SmsChangeInScheduleFrame().showChangedInTripScheduleNotificationSms2(oldTrip, trip);
+            }
             JOptionPane.showMessageDialog(null, "The trip has been updated", "Finished", JOptionPane.INFORMATION_MESSAGE);
             this.hide();
             new ViewTripSchedulesFrame().show();
@@ -658,11 +662,10 @@ public class AddTripFrame extends javax.swing.JFrame {
             reg.addTrip(trip);
             int reply = JOptionPane.showConfirmDialog(null, "Notify driver and conductor for this trip?", "Notify crews", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION){
+                JOptionPane.showMessageDialog(null, "Loading device... Please wait...", "Loading", JOptionPane.INFORMATION_MESSAGE);
                 new SmsChangeInScheduleFrame().showAddTripNotificationSms(trip);
             }
             JOptionPane.showMessageDialog(null, "The trip has been added", "Finished", JOptionPane.INFORMATION_MESSAGE);
-            this.hide();
-            new AddTripFrame().show();
             this.hide();
         }
     }//GEN-LAST:event_AddTripButtonActionPerformed

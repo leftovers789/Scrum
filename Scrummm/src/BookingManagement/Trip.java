@@ -27,6 +27,7 @@ public class Trip {
         this.schedule = schedule;
         this.referenceNo = referenceNo;
         this.venue = venue;
+        capacity = bus.getCapacity();
     }   
 
     public void addPassenger(Passenger passenger){
@@ -118,6 +119,7 @@ public class Trip {
     
     public void removePassenger(Passenger passenger){
         this.passenger.remove(passenger);
+        capacity++;
     }
         
 }

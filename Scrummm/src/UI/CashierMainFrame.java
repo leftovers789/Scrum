@@ -25,7 +25,7 @@ public class CashierMainFrame extends javax.swing.JFrame {
     private SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd,yyyy");
     private ScheduleDetailsFrame schedFrame = new ScheduleDetailsFrame();
     private ManagePassengerFrame manageFrame = new ManagePassengerFrame();
-    public Cashier cashier = null;
+    public Cashier cashier = (Cashier) busCompany.getCurrentLoggedIn();
     private DutyLog dutyLog = DutyLog.getInstance();
 
     /**
@@ -129,13 +129,11 @@ public class CashierMainFrame extends javax.swing.JFrame {
 
     private void bookButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookButtonActionPerformed
         // TODO add your handling code here:
-        schedFrame.loadCashier(cashier);
         schedFrame.show();
     }//GEN-LAST:event_bookButtonActionPerformed
 
     private void manageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageButtonActionPerformed
         // TODO add your handling code here:
-        manageFrame.loadCashier(cashier);
         manageFrame.show();
     }//GEN-LAST:event_manageButtonActionPerformed
 

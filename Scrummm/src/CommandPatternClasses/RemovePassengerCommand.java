@@ -8,8 +8,6 @@ package CommandPatternClasses;
 
 import BookingManagement.Passenger;
 import BookingManagement.Trip;
-import EmployeeManagement.Cashier;
-import LogManagement.*;
 import java.util.Date;
 
 /**
@@ -19,23 +17,17 @@ import java.util.Date;
 public class RemovePassengerCommand implements Command{
     
     private Date date=new Date();
-    private Cashier cashier;
     private Trip trip;
     private Passenger passenger;
     private String action = "Removed a passenger.";
 
-    public RemovePassengerCommand(Cashier cashier, Trip trip, Passenger passenger) {
-        this.cashier = cashier;
+    public RemovePassengerCommand(Trip trip, Passenger passenger) {
         this.trip = trip;
         this.passenger = passenger;
     }
 
     public Date getDate() {
         return date;
-    }
-
-    public Cashier getCashier() {
-        return cashier;
     }
 
     public Trip getTrip() {
