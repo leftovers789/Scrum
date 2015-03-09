@@ -12,7 +12,9 @@ import LogManagement.*;
 import RegistryManagement.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -62,6 +64,7 @@ public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocus
         busTable.setShowGrid(true);
 
         updateTableModel();
+        disableUnavailableFiltersCheckBox();
 
     }
 
@@ -85,7 +88,12 @@ public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocus
         removeBusButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         busTable = new javax.swing.JTable();
-        jPanel1 = new javax.swing.JPanel();
+        filtersPanel = new javax.swing.JPanel();
+        bussesWithUnavailableStatusCheckBox = new javax.swing.JCheckBox();
+        withNoDriverAssignedCheckBox = new javax.swing.JCheckBox();
+        withNoConductorAssignedCheckBox = new javax.swing.JCheckBox();
+        withMechanicalIssuesCheckBox = new javax.swing.JCheckBox();
+        allBussesButton = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -153,12 +161,12 @@ public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocus
             .addGroup(busDataPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(busDataPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(addBusButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(editBusButton, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
-                    .addComponent(mainMenuButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(logOutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(exitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(removeBusButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(addBusButton, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editBusButton, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(mainMenuButton, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(logOutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(exitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(removeBusButton, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         busDataPanelLayout.setVerticalGroup(
@@ -196,17 +204,70 @@ public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocus
         });
         jScrollPane2.setViewportView(busTable);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true), "Filter", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP));
+        filtersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true), "Filters", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+        bussesWithUnavailableStatusCheckBox.setText("Busses w/ Unavailable Status");
+        bussesWithUnavailableStatusCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bussesWithUnavailableStatusCheckBoxActionPerformed(evt);
+            }
+        });
+
+        withNoDriverAssignedCheckBox.setText("w/ No Driver Assigned");
+        withNoDriverAssignedCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                withNoDriverAssignedCheckBoxActionPerformed(evt);
+            }
+        });
+
+        withNoConductorAssignedCheckBox.setText("w/ No Conductor Assigned");
+        withNoConductorAssignedCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                withNoConductorAssignedCheckBoxActionPerformed(evt);
+            }
+        });
+
+        withMechanicalIssuesCheckBox.setText("w/ Mechanical Issues");
+        withMechanicalIssuesCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                withMechanicalIssuesCheckBoxActionPerformed(evt);
+            }
+        });
+
+        allBussesButton.setText("All Busses");
+        allBussesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                allBussesButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout filtersPanelLayout = new javax.swing.GroupLayout(filtersPanel);
+        filtersPanel.setLayout(filtersPanelLayout);
+        filtersPanelLayout.setHorizontalGroup(
+            filtersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(filtersPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(filtersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(bussesWithUnavailableStatusCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(withNoDriverAssignedCheckBox)
+                    .addComponent(withNoConductorAssignedCheckBox)
+                    .addComponent(withMechanicalIssuesCheckBox)
+                    .addComponent(allBussesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+        filtersPanelLayout.setVerticalGroup(
+            filtersPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(filtersPanelLayout.createSequentialGroup()
+                .addComponent(allBussesButton)
+                .addGap(2, 2, 2)
+                .addComponent(bussesWithUnavailableStatusCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(withNoDriverAssignedCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(withNoConductorAssignedCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(withMechanicalIssuesCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -217,32 +278,35 @@ public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocus
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(busDataPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(filtersPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(busDataPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(busDataPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(filtersPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void updateTableModel() {
+    private void removeTableRows() {
         while (busTable.getRowCount() > 0) {
             busTableModel.removeRow(0);
         }
+    }
 
+    private void updateTableModel() {
+        removeTableRows();
         for (Bus bus : busCompany.getBusses()) {
             String busType = bus.getBusType() == BusType.ORDINARY ? "Ordinary" : "Air-conditioned";
             String available = bus.isAvailable() ? "Available" : "Unavailable";
@@ -314,6 +378,120 @@ public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocus
         bus = searchEngine.searchBusByBusNo(busNumber);
     }//GEN-LAST:event_busTableMousePressed
 
+    private void bussesWithUnavailableStatusCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bussesWithUnavailableStatusCheckBoxActionPerformed
+        if (bussesWithUnavailableStatusCheckBox.isSelected()) {
+            enableUnavailableFiltersCheckBox();
+            checkUnavailableFilterCheckBoxes();
+        } else {
+            disableUnavailableFiltersCheckBox();
+            checkUnavailableFilterCheckBoxes();
+        }
+        hasSelected=false;
+    }//GEN-LAST:event_bussesWithUnavailableStatusCheckBoxActionPerformed
+
+    private void disableUnavailableFiltersCheckBox() {
+        withMechanicalIssuesCheckBox.setSelected(false);
+        withNoConductorAssignedCheckBox.setSelected(false);
+        withNoDriverAssignedCheckBox.setSelected(false);
+        withMechanicalIssuesCheckBox.setEnabled(false);
+        withNoDriverAssignedCheckBox.setEnabled(false);
+        withNoConductorAssignedCheckBox.setEnabled(false);
+    }
+
+    private void enableUnavailableFiltersCheckBox() {
+        withMechanicalIssuesCheckBox.setEnabled(true);
+        withNoDriverAssignedCheckBox.setEnabled(true);
+        withNoConductorAssignedCheckBox.setEnabled(true);
+    }
+
+    private void allBussesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allBussesButtonActionPerformed
+        updateTableModel();
+        disableUnavailableFiltersCheckBox();
+        bussesWithUnavailableStatusCheckBox.setSelected(false);
+        hasSelected=false;
+    }//GEN-LAST:event_allBussesButtonActionPerformed
+
+    private void checkUnavailableFilterCheckBoxes() {
+        List<Bus> busses = new ArrayList<>();
+        String available = "";
+        if (bussesWithUnavailableStatusCheckBox.isSelected()) {
+            for (Bus bus1 : busCompany.getBusses()) {
+                if (!bus1.isAvailable()) {
+                    busses.add(bus1);
+                }
+            }
+            if (withNoDriverAssignedCheckBox.isSelected()) {
+                int oldSize = busses.size();
+                List<Bus> bussesToBeRemoved= new ArrayList<>();
+                for (Bus bus1 : busses) {
+                    if (bus1.getDriver() != null) {
+                        bussesToBeRemoved.add(bus1);
+                    }
+                }
+                busses.removeAll(bussesToBeRemoved);
+                if (oldSize != busses.size()) {
+                    available = "No Driver";
+                }
+            }
+            if (withNoConductorAssignedCheckBox.isSelected()) {
+                int oldSize = busses.size();
+                List<Bus> bussesToBeRemoved= new ArrayList<>();
+                for (Bus bus1 : busses) {
+                    if (bus1.getConductor() != null) {
+                        bussesToBeRemoved.add(bus1);
+                    }
+                }
+                busses.removeAll(bussesToBeRemoved);
+                if (oldSize != busses.size()) {
+                    available = available + " & No Conductor";
+                }
+            }
+            if (withMechanicalIssuesCheckBox.isSelected()) {
+                int oldSize = busses.size();
+                List<Bus> bussesToBeRemoved= new ArrayList<>();
+                busses.removeAll(bussesToBeRemoved);
+                if (oldSize != busses.size()) {
+                    available = available + " & To Be Repaired";
+                }
+            }
+
+            if (available.isEmpty()) {
+                available = "Unavailable";
+            }
+        } else {
+            for (Bus bus1 : busCompany.getBusses()) {
+                if (bus1.isAvailable()) {
+                    busses.add(bus1);
+                }
+            }
+        }
+
+        removeTableRows();
+        if (!busses.isEmpty()) {
+            for (Bus bus1 : busses) {
+                String busType = bus1.getBusType() == BusType.ORDINARY ? "Ordinary" : "Air-conditioned";
+                busTableModel.addRow(
+                        new Object[]{busType, bus1.getBusNumber(), bus1.getPlateNumber(),
+                            bus1.getCapacity(), available.isEmpty() ? "Available" : available});
+            }
+        }
+
+    }
+
+    private void withNoDriverAssignedCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_withNoDriverAssignedCheckBoxActionPerformed
+        checkUnavailableFilterCheckBoxes();
+        hasSelected=false;
+    }//GEN-LAST:event_withNoDriverAssignedCheckBoxActionPerformed
+
+    private void withNoConductorAssignedCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_withNoConductorAssignedCheckBoxActionPerformed
+        checkUnavailableFilterCheckBoxes();
+        hasSelected=false;
+    }//GEN-LAST:event_withNoConductorAssignedCheckBoxActionPerformed
+
+    private void withMechanicalIssuesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_withMechanicalIssuesCheckBoxActionPerformed
+        hasSelected=false;
+    }//GEN-LAST:event_withMechanicalIssuesCheckBoxActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -351,26 +529,35 @@ public class ManageBussesFrame extends javax.swing.JFrame implements WindowFocus
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBusButton;
+    private javax.swing.JButton allBussesButton;
     private javax.swing.JPanel busDataPanel;
     private javax.swing.JTable busTable;
+    private javax.swing.JCheckBox bussesWithUnavailableStatusCheckBox;
     private javax.swing.JButton editBusButton;
     private javax.swing.JButton exitButton;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel filtersPanel;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JButton logOutButton;
     private javax.swing.JButton mainMenuButton;
     private javax.swing.JButton removeBusButton;
+    private javax.swing.JCheckBox withMechanicalIssuesCheckBox;
+    private javax.swing.JCheckBox withNoConductorAssignedCheckBox;
+    private javax.swing.JCheckBox withNoDriverAssignedCheckBox;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void windowGainedFocus(WindowEvent e) {
-        updateTableModel();
+        if (!bussesWithUnavailableStatusCheckBox.isSelected()) {
+            updateTableModel();
+        } else {
+            checkUnavailableFilterCheckBoxes();
+        }
     }
 
     @Override
     public void windowLostFocus(WindowEvent e) {
-        hasSelected=false;
+        hasSelected = false;
     }
 }

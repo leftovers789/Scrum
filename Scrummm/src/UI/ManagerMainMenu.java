@@ -74,6 +74,11 @@ public class ManagerMainMenu extends javax.swing.JFrame {
         });
 
         viewLogsButton.setText("View Logs");
+        viewLogsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewLogsButtonActionPerformed(evt);
+            }
+        });
 
         financialReportButton.setText("Financial Report");
 
@@ -166,6 +171,10 @@ public class ManagerMainMenu extends javax.swing.JFrame {
         EmployeeRegistrationFrame employeeRegistrationFrame=new EmployeeRegistrationFrame();
         employeeRegistrationFrame.show();
     }//GEN-LAST:event_manageEmployeeButtonActionPerformed
+
+    private void viewLogsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewLogsButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_viewLogsButtonActionPerformed
 
     /**
      * @param args the command line arguments

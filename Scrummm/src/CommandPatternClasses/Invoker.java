@@ -7,13 +7,15 @@ package CommandPatternClasses;
 
 import EmployeeManagement.Cashier;
 import EmployeeManagement.Gender;
+import LogManagement.DutyLog;
 
 /**
  *
  * @author Sian Paul Lasaga
  */
 public class Invoker {
-
+    
+    private DutyLog dutyLog=DutyLog.getInstance();
     private Command command;
 
     public void setCommand(Command command) {
@@ -22,5 +24,6 @@ public class Invoker {
 
     public void executeCommand() {
         command.execute();
+        dutyLog.addCommandLog(command);
     }
 }

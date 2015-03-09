@@ -42,10 +42,12 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
     private BusCompany busCompany = BusCompany.getInstance();
     private BusType type = null;
     private Date dateAdded;
-    private Employee driver;
-    private Employee conductor;
+    private Employee driver = null;
+    private Employee conductor = null;
     private SearchEngine searchEngine = new SearchEngine();
     private Bus bus;
+    private String driversName = "";
+    private String conductorsName = "";
 
     /**
      * Creates new form BusRegistrationFrame
@@ -65,6 +67,7 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
                     public void run() {
                         String text = tf.getText();
                         if (text.length() == 0) {
+                            driver = null;
                             driverComboBox.hidePopup();
                             setDriverComboBoxModel(new DefaultComboBoxModel(v), "");
                         } else {
@@ -115,6 +118,7 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
                     public void run() {
                         String text = tf2.getText();
                         if (text.length() == 0) {
+                            conductor = null;
                             conductorComboBox.hidePopup();
                             setConductorComboBoxModel(new DefaultComboBoxModel(v2), "");
                         } else {
@@ -329,8 +333,18 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
         conductorLabel.setText("Conductor:");
 
         driverComboBox.setEditable(true);
+        driverComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                driverComboBoxActionPerformed(evt);
+            }
+        });
 
         conductorComboBox.setEditable(true);
+        conductorComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                conductorComboBoxActionPerformed(evt);
+            }
+        });
 
         saveButton.setText("Save");
         saveButton.addActionListener(new java.awt.event.ActionListener() {
@@ -552,23 +566,23 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
 
         if (bus.getBusType() == BusType.ORDINARY) {
             typeComboBox.setSelectedIndex(1);
+            type = BusType.ORDINARY;
         } else if (bus.getBusType() == BusType.AIR_CONDITIONED) {
             typeComboBox.setSelectedIndex(2);
+            type = BusType.AIR_CONDITIONED;
         } else {
             typeComboBox.setSelectedIndex(3);
         }
 
         Employee driver = bus.getDriver();
         Employee conductor = bus.getConductor();
-        String driversName = null;
-        String conductorsName = null;
         if (driver != null) {
             driver = bus.getDriver();
-            driversName = driver.getLastName() + ", " + driver.getFirstName() + " " + driver.getMiddleName();
+            driversName = driver.getLastName() + "," + driver.getFirstName() + " " + driver.getMiddleName();
         }
         if (conductor != null) {
             conductor = bus.getConductor();
-            conductorsName = conductor.getLastName() + ", " + conductor.getFirstName() + " " + conductor.getMiddleName();
+            conductorsName = conductor.getLastName() + "," + conductor.getFirstName() + " " + conductor.getMiddleName();
 
         }
 
@@ -640,18 +654,36 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Fill all the fields properly to continue.", "Error", JOptionPane.ERROR_MESSAGE);
     }
 
+    private void invalidBusCapacity() {
+        JOptionPane.showMessageDialog(null, "Invalid bus capacity!", "Invalid", JOptionPane.ERROR_MESSAGE);
+    }
+
+    private void invalidBusNumber() {
+        JOptionPane.showMessageDialog(null, "Invalid Bus Number must be 4-5 in length \n Numbers only");
+    }
+
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        String busNumber = busNumberField.getText();
+        int busNumber = 0;
+        try {
+            busNumber = Integer.parseInt(busNumberField.getText());
+        } catch (Exception e) {
+            invalidBusNumber();
+            return;
+        }
+        if (busNumber < 4 || busNumber > 5) {
+            invalidBusNumber();
+            return;
+        }
         int capacity = 0;
         Bus bus = null;
         try {
             capacity = Integer.parseInt(capacityField.getText());
-            if (capacity <= 10) {
-                showEmptyFieldErrorDialog();
+            if (capacity <= 10 || capacity >= 50) {
+                invalidBusCapacity();
                 return;
             }
         } catch (Exception e) {
-            showEmptyFieldErrorDialog();
+            invalidBusCapacity();
             return;
         }
         if (engineSerialNumberField.getText().isEmpty() || numberOfTire == 0) {
@@ -666,9 +698,10 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
         }
 
         if (busNumberField.isEnabled()) {
-            bus = new Bus(plateNumberField.getText(), type, true, busNumber, capacity, null, null, engineSerialNumberField.getText(), dateAdded);
+            bus = new Bus(plateNumberField.getText(), type, true, Integer.toString(busNumber), capacity, null, null, engineSerialNumberField.getText(), dateAdded);
         } else {
             bus = this.bus;
+            bus.setBusType(type);
         }
 
         bus.getTireSerialNumbers().removeAll(bus.getTireSerialNumbers());
@@ -745,7 +778,8 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
             clearFields();
             this.hide();
         }
-
+        driver = null;
+        conductor = null;
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void emptyTireSerialNumberPopUp() {
@@ -794,6 +828,12 @@ public class BusRegistrationFrame extends javax.swing.JFrame {
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         this.hide();
     }//GEN-LAST:event_backButtonActionPerformed
+
+    private void driverComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_driverComboBoxActionPerformed
+    }//GEN-LAST:event_driverComboBoxActionPerformed
+
+    private void conductorComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_conductorComboBoxActionPerformed
+    }//GEN-LAST:event_conductorComboBoxActionPerformed
 
     /**
      * @param args the command line arguments

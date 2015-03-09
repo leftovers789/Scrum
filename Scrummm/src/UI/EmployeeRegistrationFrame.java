@@ -842,7 +842,7 @@ public class EmployeeRegistrationFrame extends javax.swing.JFrame {
             return true;
         }
 
-        if (cellphoneNumberField.getText().length() < 11) {
+        if (cellphoneNumberField.getText().length() < 11 || cellphoneNumberField.getText().length() > 11) {
             JOptionPane.showMessageDialog(null, "Invalid length of cellphone number! "
                     + "\n Must be 11 digits!", "Invalid", JOptionPane.ERROR_MESSAGE);
             return true;

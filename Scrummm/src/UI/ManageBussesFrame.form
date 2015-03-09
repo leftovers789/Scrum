@@ -50,27 +50,27 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="busDataPanel" max="32767" attributes="0"/>
-                  <Component id="jPanel1" max="32767" attributes="0"/>
+                  <Component id="filtersPanel" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane2" pref="440" max="32767" attributes="0"/>
+              <Component id="jScrollPane2" pref="390" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane2" pref="456" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="jScrollPane2" pref="0" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <Component id="busDataPanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jPanel1" max="32767" attributes="0"/>
+                      <Component id="busDataPanel" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="filtersPanel" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -95,12 +95,12 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="addBusButton" alignment="0" max="32767" attributes="0"/>
-                      <Component id="editBusButton" alignment="0" pref="178" max="32767" attributes="0"/>
-                      <Component id="mainMenuButton" alignment="0" max="32767" attributes="0"/>
-                      <Component id="logOutButton" alignment="0" max="32767" attributes="0"/>
-                      <Component id="exitButton" alignment="0" max="32767" attributes="0"/>
-                      <Component id="removeBusButton" max="32767" attributes="0"/>
+                      <Component id="addBusButton" alignment="0" min="-2" pref="186" max="-2" attributes="0"/>
+                      <Component id="editBusButton" alignment="0" min="-2" pref="186" max="-2" attributes="0"/>
+                      <Component id="mainMenuButton" alignment="0" min="-2" pref="186" max="-2" attributes="0"/>
+                      <Component id="logOutButton" alignment="0" min="-2" pref="186" max="-2" attributes="0"/>
+                      <Component id="exitButton" alignment="0" min="-2" pref="186" max="-2" attributes="0"/>
+                      <Component id="removeBusButton" min="-2" pref="186" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -200,11 +200,11 @@
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPanel" name="jPanel1">
+    <Container class="javax.swing.JPanel" name="filtersPanel">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder justification="2" position="2" title="Filter">
+            <TitledBorder justification="2" position="2" title="Filters">
               <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                 <LineBorder roundedCorners="true"/>
               </Border>
@@ -216,15 +216,78 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="bussesWithUnavailableStatusCheckBox" alignment="0" max="32767" attributes="0"/>
+                      <Component id="withNoDriverAssignedCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="withNoConductorAssignedCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="withMechanicalIssuesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="allBussesButton" alignment="0" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <Group type="102" alignment="0" attributes="0">
+                  <Component id="allBussesButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                  <Component id="bussesWithUnavailableStatusCheckBox" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="withNoDriverAssignedCheckBox" min="-2" pref="18" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Component id="withNoConductorAssignedCheckBox" min="-2" pref="18" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Component id="withMechanicalIssuesCheckBox" min="-2" pref="18" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
           </Group>
         </DimensionLayout>
       </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JCheckBox" name="bussesWithUnavailableStatusCheckBox">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Busses w/ Unavailable Status"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bussesWithUnavailableStatusCheckBoxActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="withNoDriverAssignedCheckBox">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="w/ No Driver Assigned"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="withNoDriverAssignedCheckBoxActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="withNoConductorAssignedCheckBox">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="w/ No Conductor Assigned"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="withNoConductorAssignedCheckBoxActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="withMechanicalIssuesCheckBox">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="w/ Mechanical Issues"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="withMechanicalIssuesCheckBoxActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="allBussesButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="All Busses"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="allBussesButtonActionPerformed"/>
+          </Events>
+        </Component>
+      </SubComponents>
     </Container>
   </SubComponents>
 </Form>
