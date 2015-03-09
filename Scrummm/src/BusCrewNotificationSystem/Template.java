@@ -30,7 +30,7 @@ public class Template {
                 + "starting first week of "+startMonth+" to the last week of "+lastMonth+". Route: "+route;
     }
     
-    public String getCanceledTripTemplate(Trip trip){
+    public String getCancelledTripTemplate(Trip trip){
         String route = trip.getTripFrom()+" to "+trip.getTripTo();
         return "Good day. Pls. be informed that your trip in "+route+" on "+df.format(trip.getSchedule())+" has been canceled.";
     }

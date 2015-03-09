@@ -653,12 +653,15 @@ public class AddTripFrame extends javax.swing.JFrame {
             Bus bus = search.searchBusByBusNo(busNo);      
             String venue = venueText.getText();
             String referenceNo = ReferenceNoLabel.getText();
-            double price = Double.parseDouble(priceText.getText());
+            double price = Double.parseDouble(priceText.getText());  
             trip = new Trip(TripStatus.READY, price, locationFrom, locationTo, bus, new Date(date+" "+time), referenceNo, venue);
             reg.addTrip(trip);
+            int reply = JOptionPane.showConfirmDialog(null, "Notify driver and conductor for this trip?", "Notify crews", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION){
+                new SmsChangeInScheduleFrame().showAddTripNotificationSms(trip);
+            }
             JOptionPane.showMessageDialog(null, "The trip has been added", "Finished", JOptionPane.INFORMATION_MESSAGE);
             this.hide();
-            new SmsChangeInScheduleFrame().showAddTripNotificationSms(trip);
             new AddTripFrame().show();
             this.hide();
         }

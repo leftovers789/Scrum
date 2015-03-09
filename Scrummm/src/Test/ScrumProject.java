@@ -45,7 +45,8 @@ public class ScrumProject {
         Ticket.setMinimumAgeForHalfFare(5);
         Passenger passenger = new Passenger("Sian", "Lasaga", 18, Gender.MALE, "09090909090", "Ioloi", new Ticket("00005", TicketType.Discounted, 1000));
         trip.addPassenger(passenger);
-        new AddTripFrame().show();
+//        new AddTripFrame().show();
+        new OperatorMainMenuFrame().show();
 //        new FixedAddTripFrame().show();
         
         //test: sending sms

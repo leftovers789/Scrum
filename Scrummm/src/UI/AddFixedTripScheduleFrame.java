@@ -680,6 +680,10 @@ public class AddFixedTripScheduleFrame extends javax.swing.JFrame {
                     reg.addTrip(trip);
                 }
             }
+            int reply = JOptionPane.showConfirmDialog(null, "Notify driver and conductor of this trips?", "Notify crews", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION){
+                new SmsChangeInScheduleFrame().showFixedScheduleNotificationSms(trip, bus, fromMonthsComboBox.getSelectedItem().toString(), toMonthsComboBox.getSelectedItem().toString());
+            }
             JOptionPane.showMessageDialog(null, "The trips has been added", "Finished", JOptionPane.INFORMATION_MESSAGE);
             this.hide();
             new AddTripFrame().show();

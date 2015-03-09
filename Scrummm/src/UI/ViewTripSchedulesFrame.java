@@ -19,20 +19,23 @@ public class ViewTripSchedulesFrame extends javax.swing.JFrame {
     private Registry reg = Registry.getInstance();
     private List<Trip> tripList;
     private Trip trip;
-    private DefaultTableModel tripsTableModel = new DefaultTableModel(new String[]{"Reference No.", "Route", "Schedule", "Bus No."}, 0);
+    private DefaultTableModel tripsTableModel = new DefaultTableModel(new String[]{"Reference No.", "Route", "Schedule", "Bus No.", "Status"}, 0);
     private SearchEngine search = new SearchEngine();
     private SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+    private TripStatus oldTripStatus;
+    private TripStatus statusArrays[] = {TripStatus.READY, TripStatus.NOT_READY, TripStatus.DELAYED, TripStatus.CANCELLED, TripStatus.TRAVELING,};
     /**
      * Creates new form ViewTripMenu
      */
     public ViewTripSchedulesFrame() {
         initComponents();
-        
+        statusComboBox.disable();
+        changeStatusButton.disable();
         tripListTable.setModel(tripsTableModel);
         tripList = (List<Trip>) search.searchAvailableTrips();
         for (Trip trip1 : tripList) {
             String route = trip1.getTripFrom()+" to "+trip1.getTripTo();
-            tripsTableModel.addRow(new Object[]{ trip1.getReferenceNo(), route, df.format(trip1.getSchedule()),  trip1.getBus().getBusNumber()});
+            tripsTableModel.addRow(new Object[]{ trip1.getReferenceNo(), route, df.format(trip1.getSchedule()),  trip1.getBus().getBusNumber(), trip1.getStatus()});
         }
     }
 
@@ -50,8 +53,10 @@ public class ViewTripSchedulesFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tripListTable = new javax.swing.JTable();
         removeButton = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        statusComboBox = new javax.swing.JComboBox();
+        changeStatusButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -80,6 +85,11 @@ public class ViewTripSchedulesFrame extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tripListTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tripListTableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tripListTable);
         DefaultTableCellRenderer centerRenderer= new DefaultTableCellRenderer();
         DefaultTableCellRenderer leftRenderer= new DefaultTableCellRenderer();
@@ -106,47 +116,80 @@ public class ViewTripSchedulesFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Change Status...");
-
         jLabel1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         jLabel1.setText("Trip Schedules");
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Change selectrip trip schedule status"));
+
+        statusComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "-Select-", "Ready", "Not Ready", "Delayed", "Cancelled", "Traveling" }));
+
+        changeStatusButton.setText("Change Status");
+        changeStatusButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeStatusButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(statusComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(changeStatusButton)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(statusComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(changeStatusButton))
+                .addGap(0, 1, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(218, 218, 218)
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(editTripButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removeButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(BackButton)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(218, 218, 218)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(editTripButton)
-                    .addComponent(BackButton)
-                    .addComponent(removeButton)
-                    .addComponent(jButton1))
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(editTripButton)
+                        .addComponent(BackButton)
+                        .addComponent(removeButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -173,13 +216,61 @@ public class ViewTripSchedulesFrame extends javax.swing.JFrame {
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
         // TODO add your handling code here:
-        int row = tripListTable.getSelectedRow();
-        String refNo = (String) tripListTable.getModel().getValueAt(row, 0);
-        trip = (Trip) search.searchByRefNo(refNo);
-        if(trip!=null){
-            reg.removeTrip(trip);
+        tripsTableModel = new DefaultTableModel(new String[]{"Reference No.", "Route", "Schedule", "Bus No.", "Status"}, 0);
+        int selectedRow = tripListTable.getSelectedRow();
+        if (tripListTable.getSelectedRow() >= 0) {
+            JOptionPane.showMessageDialog(null, "The trip has been removed.", "Information", JOptionPane.INFORMATION_MESSAGE);
+            tripListTable.setModel(tripsTableModel);
+            for (Trip trip1 : tripList) {
+                String route = trip1.getTripFrom()+" to "+trip1.getTripTo();
+                tripsTableModel.addRow(new Object[]{ trip1.getReferenceNo(), route, df.format(trip1.getSchedule()),  trip1.getBus().getBusNumber(), trip1.getStatus()});
+            }
+            int reply = JOptionPane.showConfirmDialog(null, "Remove this trip schedule?", "Confirm removing", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION){
+                String refNo = (String) tripListTable.getValueAt(selectedRow, 0);
+                trip = (Trip) search.searchByRefNo(refNo);
+                reg.removeTrip(trip);
+                int reply2 = JOptionPane.showConfirmDialog(null, "Inform the driver and conductor of this trip?", "Notify crew", JOptionPane.YES_NO_OPTION);
+                if (reply2 == JOptionPane.YES_OPTION){
+                    new SmsChangeInScheduleFrame().showRemovedScheduleNotificationSms(trip);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Select a Row before!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_removeButtonActionPerformed
+
+    private void tripListTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tripListTableMouseClicked
+        // TODO add your handling code here:
+        statusComboBox.enable();
+        changeStatusButton.enable();
+        int selectedRow = tripListTable.getSelectedRow();
+        oldTripStatus = (TripStatus) tripListTable.getValueAt(selectedRow, 4);
+    }//GEN-LAST:event_tripListTableMouseClicked
+
+    private void changeStatusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeStatusButtonActionPerformed
+        // TODO add your handling code here:
+        TripStatus newTripStatus = statusArrays[statusComboBox.getSelectedIndex()+1];
+        int selectedRow = tripListTable.getSelectedRow();
+        if(oldTripStatus != newTripStatus && statusComboBox.getSelectedIndex() != 0){
+            int reply = JOptionPane.showConfirmDialog(null, "Are you sure to change this selected trip status?", "Confirm change status", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION){
+                String refNo = (String) tripListTable.getValueAt(selectedRow, 0);
+                trip = (Trip) search.searchByRefNo(refNo);
+                trip.setStatus(newTripStatus);
+                reg.removeTrip(trip);
+                reg.addTrip(trip);
+                int reply2 = JOptionPane.showConfirmDialog(null, "Notify driver and conductor of that trip?", "Notify crews", JOptionPane.YES_NO_OPTION);
+                if (reply2 == JOptionPane.YES_OPTION){
+                    if(newTripStatus.equals(TripStatus.CANCELLED)){
+                        new SmsChangeInScheduleFrame().showCanceledTripNotificationSms(trip);
+                    } else if(newTripStatus.equals(TripStatus.DELAYED)){
+                        new SmsChangeInScheduleFrame().showDelayedTripNotificationSms(trip);
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_changeStatusButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -218,11 +309,13 @@ public class ViewTripSchedulesFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BackButton;
+    private javax.swing.JButton changeStatusButton;
     private javax.swing.JButton editTripButton;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton removeButton;
+    private javax.swing.JComboBox statusComboBox;
     private javax.swing.JTable tripListTable;
     // End of variables declaration//GEN-END:variables
 }

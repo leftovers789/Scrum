@@ -28,11 +28,11 @@ public class SmsChangeInScheduleFrame extends javax.swing.JFrame {
     public SmsChangeInScheduleFrame() {
         initComponents();
         messageTextArea.setLineWrap(true);
-//        try {
-//            sms.startService();
-//        } catch (Exception ex) {
-//            Logger.getLogger(SmsChangeInScheduleFrame.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        try {
+            sms.startService();
+        } catch (Exception ex) {
+            Logger.getLogger(SmsChangeInScheduleFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -226,7 +226,7 @@ public class SmsChangeInScheduleFrame extends javax.swing.JFrame {
         conductorContactNoTextField.setText(conductor.getCellphoneNumber());
         driverNameTextLabel.setText(driverName);
         conductorNameTextLabel.setText(conductorName);
-        messageTextArea.setText(template.getCanceledTripTemplate(trip));
+        messageTextArea.setText(template.getCancelledTripTemplate(trip));
     }
     
     public void showDelayedTripNotificationSms(Trip trip){

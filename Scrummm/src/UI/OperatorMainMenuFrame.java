@@ -142,13 +142,12 @@ public class OperatorMainMenuFrame extends javax.swing.JFrame {
     private void addFixedTripScheduleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFixedTripScheduleButtonActionPerformed
         AddFixedTripScheduleFrame addFixed = new AddFixedTripScheduleFrame();
         addFixed.show();
-        this.hide();
     }//GEN-LAST:event_addFixedTripScheduleButtonActionPerformed
 
     private void addSingleTripScheduleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSingleTripScheduleActionPerformed
         AddTripFrame add = new AddTripFrame();
         add.show();
-        this.hide();
+
     }//GEN-LAST:event_addSingleTripScheduleActionPerformed
 
     private void logOutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutButtonActionPerformed
@@ -167,7 +166,7 @@ public class OperatorMainMenuFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         ViewTripSchedulesFrame view = new ViewTripSchedulesFrame();
         view.show();
-        this.hide();
+
     }//GEN-LAST:event_viewTripSchedulesButtonActionPerformed
 
     private void smsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_smsButtonActionPerformed
