@@ -5,8 +5,6 @@
  */
 package CommandPatternClasses;
 
-import EmployeeManagement.Cashier;
-import EmployeeManagement.Gender;
 import LogManagement.DutyLog;
 
 /**
