@@ -173,7 +173,9 @@ public class ManagerMainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_manageEmployeeButtonActionPerformed
 
     private void viewLogsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewLogsButtonActionPerformed
-        // TODO add your handling code here:
+        LogsFrame logsFrame=new LogsFrame();
+        this.hide();
+        logsFrame.show();
     }//GEN-LAST:event_viewLogsButtonActionPerformed
 
     /**
