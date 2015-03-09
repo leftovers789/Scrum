@@ -8,9 +8,6 @@ package CommandPatternClasses;
 
 import BookingManagement.Passenger;
 import BookingManagement.Trip;
-import EmployeeManagement.Cashier;
-import LogManagement.*;
-import LogManagement.DutyLog;
 import java.util.Date;
 
 /**
@@ -20,14 +17,12 @@ import java.util.Date;
 public class ReBookPassengerCommand implements Command{
     
     private Date date=new Date();
-    private Cashier cashier;
     private Passenger passenger;
     private Trip currentTrip;
     private Trip oldTrip;
     private String action;
 
-    public ReBookPassengerCommand(Cashier cashier, Passenger passenger, Trip currentTrip, Trip oldTrip) {
-        this.cashier = cashier;
+    public ReBookPassengerCommand(Passenger passenger, Trip currentTrip, Trip oldTrip) {
         this.passenger = passenger;
         this.currentTrip = currentTrip;
         this.oldTrip = oldTrip;
@@ -35,10 +30,6 @@ public class ReBookPassengerCommand implements Command{
 
     public Date getDate() {
         return date;
-    }
-
-    public Cashier getCashier() {
-        return cashier;
     }
 
     public Passenger getPassenger() {

@@ -48,9 +48,9 @@ public class Template {
         String oldRoute = oldTrip.getTripFrom()+" to "+oldTrip.getTripTo();
         String newRoute = newTrip.getTripFrom()+" to "+newTrip.getTripTo();
         return "Good day. Pls be informed that the trip bellow has been changed/rescheduled:\n"
-                + "Bus no. "+oldTrip.getBus().getBusNumber()+" "+oldRoute+" - "+df.format(oldTrip.getSchedule()+"\n"
+                + "Bus no. "+oldTrip.getBus().getBusNumber()+" "+oldRoute+" - "+df.format(oldTrip.getSchedule())+"\n"
                         + "to\nBus no. "+newTrip.getBus().getBusNumber()+" "+newRoute+" - "+df.format(newTrip.getSchedule())+"\n"
-                        + "If the bus has changed and you are a driver or conductor in the new bus, pls prepare. Thank you.");
+                        + "If the bus has changed and you are a driver or conductor in the new bus, pls prepare. Thank you.";
     }
     
 }

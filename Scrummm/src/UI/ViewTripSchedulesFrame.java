@@ -243,15 +243,25 @@ public class ViewTripSchedulesFrame extends javax.swing.JFrame {
     private void tripListTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tripListTableMouseClicked
         // TODO add your handling code here:
         statusComboBox.enable();
-        changeStatusButton.enable();
-        int selectedRow = tripListTable.getSelectedRow();
-        oldTripStatus = (TripStatus) tripListTable.getValueAt(selectedRow, 4);
+        changeStatusButton.setEnabled(statusComboBox.isEnabled());
     }//GEN-LAST:event_tripListTableMouseClicked
 
     private void changeStatusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeStatusButtonActionPerformed
         // TODO add your handling code here:
-        TripStatus newTripStatus = statusArrays[statusComboBox.getSelectedIndex()+1];
+        TripStatus newTripStatus = null;
         int selectedRow = tripListTable.getSelectedRow();
+        oldTripStatus = (TripStatus) tripListTable.getValueAt(selectedRow, 4);
+        if(statusComboBox.getSelectedIndex() == 1){
+            newTripStatus = TripStatus.READY;
+        }else if(statusComboBox.getSelectedIndex() == 2){
+            newTripStatus = TripStatus.NOT_READY;
+        }else if(statusComboBox.getSelectedIndex() == 3){
+            newTripStatus = TripStatus.DELAYED;
+        }else if(statusComboBox.getSelectedIndex() == 4){
+            newTripStatus = TripStatus.CANCELLED;
+        }else if(statusComboBox.getSelectedIndex() == 5){
+            newTripStatus = TripStatus.TRAVELING;
+        }
         if(oldTripStatus != newTripStatus && statusComboBox.getSelectedIndex() != 0){
             int reply = JOptionPane.showConfirmDialog(null, "Are you sure to change this selected trip status?", "Confirm change status", JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION){
@@ -260,14 +270,20 @@ public class ViewTripSchedulesFrame extends javax.swing.JFrame {
                 trip.setStatus(newTripStatus);
                 reg.removeTrip(trip);
                 reg.addTrip(trip);
-                int reply2 = JOptionPane.showConfirmDialog(null, "Notify driver and conductor of that trip?", "Notify crews", JOptionPane.YES_NO_OPTION);
-                if (reply2 == JOptionPane.YES_OPTION){
-                    if(newTripStatus.equals(TripStatus.CANCELLED)){
+                if(newTripStatus == TripStatus.CANCELLED){
+                    int reply2 = JOptionPane.showConfirmDialog(null, "Notify driver and conductor of that trip?", "Notify crews", JOptionPane.YES_NO_OPTION);
+                    if (reply2 == JOptionPane.YES_OPTION){
+                        JOptionPane.showMessageDialog(null, "Loading device... Please wait...", "Loading", JOptionPane.INFORMATION_MESSAGE);
                         new SmsChangeInScheduleFrame().showCanceledTripNotificationSms(trip);
-                    } else if(newTripStatus.equals(TripStatus.DELAYED)){
+                    }       
+                } else if(newTripStatus == TripStatus.DELAYED){
+                    int reply2 = JOptionPane.showConfirmDialog(null, "Notify driver and conductor of that trip?", "Notify crews", JOptionPane.YES_NO_OPTION);
+                    if (reply2 == JOptionPane.YES_OPTION){
+                        JOptionPane.showMessageDialog(null, "Loading device... Please wait...", "Loading", JOptionPane.INFORMATION_MESSAGE);
                         new SmsChangeInScheduleFrame().showDelayedTripNotificationSms(trip);
                     }
                 }
+                JOptionPane.showMessageDialog(null, "The trip status has been changed", "Done", JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }//GEN-LAST:event_changeStatusButtonActionPerformed

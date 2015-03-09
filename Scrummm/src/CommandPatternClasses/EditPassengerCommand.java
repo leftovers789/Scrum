@@ -21,7 +21,6 @@ import java.util.Date;
 public class EditPassengerCommand implements Command{
     
     private Date dateModified=new Date();
-    private Cashier cashier;
     private Trip trip;
     private Passenger passenger;
     private String fName;
@@ -33,8 +32,7 @@ public class EditPassengerCommand implements Command{
     private Ticket ticket;
     private String action = "Edited a passenger's information.";
 
-    public EditPassengerCommand(Cashier cashier, Trip trip, Passenger passenger, String fName, String lName, int age, Gender gender, String contactNumber, String address, Ticket ticket) {
-        this.cashier = cashier;
+    public EditPassengerCommand(Trip trip, Passenger passenger, String fName, String lName, int age, Gender gender, String contactNumber, String address, Ticket ticket) {
         this.trip = trip;
         this.passenger = passenger;
         this.fName = fName;
@@ -48,10 +46,6 @@ public class EditPassengerCommand implements Command{
 
     public Date getDateModified() {
         return dateModified;
-    }
-
-    public Cashier getCashier() {
-        return cashier;
     }
 
     public String getAction() {

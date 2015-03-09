@@ -20,7 +20,6 @@ import javax.swing.JOptionPane;
  */
 public class BookingFrame extends javax.swing.JFrame {
 
-    private Cashier cashier;
     private Invoker invoker = new Invoker();
     private Trip trip;
     private Trip oldTrip;
@@ -386,15 +385,14 @@ public class BookingFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void loadTrip(Cashier cashier, Trip trip) {
-        this.cashier = cashier;
+    public void loadTrip(Trip trip) {
         this.trip = trip;
         tripSchedLabel.setText(df.format(trip.getSchedule()));
         busTypeLabel.setText(String.valueOf(trip.getBus().getBusType()));
         tickerNoLabel.setText(gen.generateTicketNumber());
     }
 
-    public void loadPassenger(Cashier cashier, Passenger passenger, Trip trip) {
+    public void loadPassenger(Passenger passenger, Trip trip) {
         this.setSize(485, 525);
         editButton.show();
         removeButton.show();
@@ -430,12 +428,11 @@ public class BookingFrame extends javax.swing.JFrame {
         } else if (passenger.getTicket().getType() == TicketType.Discounted) {
             discountedRadioButton.setSelected(true);
         }
-        this.cashier = cashier;
         this.passenger = passenger;
         this.trip = trip;
     }
 
-    public void loadReBookData(Cashier cashier, Passenger passenger, Trip oldTrip, Trip trip) {
+    public void loadReBookData(Passenger passenger, Trip oldTrip, Trip trip) {
         editButton.hide();
         removeButton.hide();
         reBookButton.hide();
@@ -462,7 +459,6 @@ public class BookingFrame extends javax.swing.JFrame {
         } else if (passenger.getTicket().getType() == TicketType.Discounted) {
             discountedRadioButton.setSelected(true);
         }
-        this.cashier = cashier;
         this.passenger = passenger;
         this.trip = trip;
         this.oldTrip = oldTrip;
@@ -524,7 +520,7 @@ public class BookingFrame extends javax.swing.JFrame {
             double price = trip.getPrice();
             ticket = new Ticket(ticketNo, ticketType, price);
             passenger = new Passenger(fName, lName, age, gender, contactNo, address, ticket);
-            confirm.loadData(cashier, passenger, trip, this);
+            confirm.loadData(passenger, trip, this);
             confirm.show();
         }
     }//GEN-LAST:event_okButtonActionPerformed
@@ -548,9 +544,10 @@ public class BookingFrame extends javax.swing.JFrame {
         ageTextField.enable();
         addressTextField.enable();
         contactNoTextField.enable();
-        regularRadioButton.enable();
-        halfFareRadioButton.enable();
-        discountedRadioButton.enable();
+        regularRadioButton.hide();
+        halfFareRadioButton.hide();
+        discountedRadioButton.hide();
+        jLabel9.hide();
         updateButton.show();
     }//GEN-LAST:event_editButtonActionPerformed
 
@@ -559,6 +556,7 @@ public class BookingFrame extends javax.swing.JFrame {
         ScheduleDetailsFrame sched = new ScheduleDetailsFrame();
         sched.loadData(passenger, trip);
         sched.show();
+        JOptionPane.showMessageDialog(null, "Please select a new trip", "Information", JOptionPane.INFORMATION_MESSAGE);
         this.hide();
     }//GEN-LAST:event_reBookButtonActionPerformed
 
@@ -566,9 +564,11 @@ public class BookingFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         int reply = JOptionPane.showConfirmDialog(null, "Remove this passenger from the trip?", "Confirm removing", JOptionPane.YES_NO_OPTION);
         if (reply == JOptionPane.YES_OPTION) {
-            invoker.setCommand(new RemovePassengerCommand(cashier, trip, passenger));
+            invoker.setCommand(new RemovePassengerCommand(trip, passenger));
             invoker.executeCommand();
         }
+        JOptionPane.showMessageDialog(null, "The passenger has been removed from the trip", "Removing completed", JOptionPane.INFORMATION_MESSAGE);
+        this.hide();
     }//GEN-LAST:event_removeButtonActionPerformed
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
@@ -581,14 +581,16 @@ public class BookingFrame extends javax.swing.JFrame {
         String address = addressTextField.getText();
         double price = trip.getPrice();
         ticket = new Ticket(ticketNo, ticketType, price);
-        invoker.setCommand(new EditPassengerCommand(cashier, trip, passenger, fName, lName, age, gender, contactNo, address, ticket));
+        invoker.setCommand(new EditPassengerCommand(trip, passenger, fName, lName, age, gender, contactNo, address, ticket));
         invoker.executeCommand();
+        JOptionPane.showMessageDialog(null, "Passenger's information has been updated", "Update completed", JOptionPane.INFORMATION_MESSAGE);
+        this.hide();
     }//GEN-LAST:event_updateButtonActionPerformed
 
     private void confirmReBookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmReBookingActionPerformed
         // TODO add your handling code here:
         ConfirmReBookingFrame reBook = new ConfirmReBookingFrame();
-        reBook.loadReBookingData(cashier, passenger, oldTrip, trip, this);
+        reBook.loadReBookingData(passenger, oldTrip, trip, this);
         reBook.show();
     }//GEN-LAST:event_confirmReBookingActionPerformed
 

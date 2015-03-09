@@ -9,7 +9,6 @@ package UI;
 import CommandPatternClasses.Invoker;
 import CommandPatternClasses.AddPassengerCommand;
 import BookingManagement.*;
-import EmployeeManagement.Cashier;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
@@ -20,7 +19,6 @@ import javax.swing.JOptionPane;
  */
 public class ConfirmBooking extends javax.swing.JFrame {
 
-    private Cashier cashier;
     private Invoker invoker = new Invoker();
     private Trip trip;
     private Passenger passenger;
@@ -35,7 +33,7 @@ public class ConfirmBooking extends javax.swing.JFrame {
         initComponents();
     }
     
-    public void loadData(Cashier cashier, Passenger passenger, Trip trip, BookingFrame booking){
+    public void loadData(Passenger passenger, Trip trip, BookingFrame booking){
         ticketNoLabel.setText(passenger.getTicket().getTickerNumber());
         routeLabel.setText(trip.getTripFrom()+" to "+trip.getTripTo());
         schedLabel.setText(df.format(trip.getSchedule()));
@@ -47,7 +45,7 @@ public class ConfirmBooking extends javax.swing.JFrame {
         contactNoLabel.setText(passenger.getContactNumber());
         addressLabel.setText(passenger.getAddress());
         ticketTypeLabel.setText(String.valueOf(passenger.getTicket().getType()));
-        priceLabel.setText(String.valueOf("Php  "+decimal.format(passenger.getTicket().getPrice())));
+        priceLabel.setText(String.valueOf("Php  "+decimal.format(passenger.getTicket().getPrice()))+".00");
         if(passenger.getTicket().getType()==TicketType.Discounted){
             lessDiscount = passenger.getTicket().getPrice() * Ticket.getDiscountedRate();
         }
@@ -57,11 +55,10 @@ public class ConfirmBooking extends javax.swing.JFrame {
         else{
             lessDiscount = 0;
         }
-        lessDiscountLabel.setText("Php -  "+decimal.format(lessDiscount));
+        lessDiscountLabel.setText("Php -  "+decimal.format(lessDiscount)+".00");
         double total = Double.parseDouble(decimal.format(passenger.getTicket().getPrice() - lessDiscount));
-        totalPriceLabel.setText("Php   "+String.valueOf(total));
+        totalPriceLabel.setText("Php   "+String.valueOf(total)+"0");
         passenger.getTicket().setPrice(total);
-        this.cashier = cashier;
         this.trip = trip;
         this.passenger = passenger;
         this.bookingFrame = booking;
@@ -385,7 +382,7 @@ public class ConfirmBooking extends javax.swing.JFrame {
         // TODO add your handling code here:    
         JOptionPane.showMessageDialog(null, "The passenger has been booked", "Booking Completed", JOptionPane.INFORMATION_MESSAGE);
         bookingFrame.hide();
-        invoker.setCommand(new AddPassengerCommand(cashier, trip, passenger));
+        invoker.setCommand(new AddPassengerCommand(trip, passenger));
         invoker.executeCommand();
         this.hide();
     }//GEN-LAST:event_confirmButtonActionPerformed
