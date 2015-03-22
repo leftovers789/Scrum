@@ -3,9 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package UI;
 
+import EmployeeManagement.*;
+import LogManagement.DutyLog;
+import RegistryManagement.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
@@ -15,24 +21,27 @@ import javax.swing.table.DefaultTableModel;
  * @author windows
  */
 public class LogsFrame extends javax.swing.JFrame {
-    
-    private DefaultTableModel logsTableModel=new DefaultTableModel(new Object[]{"Date"}, 0);
-    private DefaultTableModel salesLogsDataTableModel=
-            new DefaultTableModel(new Object[]{"Time","Name","Trip Source","Trip Location","Price"}, 0);
-    private DefaultTableModel maintenanceLogsDataTableModel=
-            new DefaultTableModel(new Object[]{"Time","Mechanic Name","Bus Number"}, 0);
-    private DefaultTableModel dutyLogsDataTableModel=
-            new DefaultTableModel(new Object[]{"Employee Name","Time In","Time Out"}, 0);
-    private DefaultTableModel noHistory=
-            new DefaultTableModel(new Object[]{"Select Log Data to View History Of Actions"}, 0);
-    private DefaultTableModel noData=
-            new DefaultTableModel(new Object[]{"Select Date of Log to View Data"}, 0);
+
+    private List<Date> logs = new ArrayList<>();
+    private Registry registry = Registry.getInstance();
+    private DefaultTableModel logsTableModel = new DefaultTableModel(new Object[]{"Date"}, 0);
+    private DefaultTableModel salesLogsDataTableModel
+            = new DefaultTableModel(new Object[]{"Time", "Name", "Trip Source", "Trip Location", "Price"}, 0);
+    private DefaultTableModel maintenanceLogsDataTableModel
+            = new DefaultTableModel(new Object[]{"Time", "Mechanic Name", "Bus Number"}, 0);
+    private DefaultTableModel dutyLogsDataTableModel
+            = new DefaultTableModel(new Object[]{"Employee Name", "Time In", "Time Out"}, 0);
+    private DefaultTableModel noHistory
+            = new DefaultTableModel(new Object[]{"Select Log Data to View History Of Actions"}, 0);
+    private DefaultTableModel noData
+            = new DefaultTableModel(new Object[]{"Select Date of Log to View Data"}, 0);
+
     /**
      * Creates new form LogsFrame
      */
     public LogsFrame() {
         initComponents();
-        
+
         setTableConfiguration(logDataTable, noData);
         setTableConfiguration(logsTable, logsTableModel);
         setTableConfiguration(historyOfActionsTable, noHistory);
@@ -213,7 +222,7 @@ public class LogsFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
     private void setTableConfiguration(JTable table, DefaultTableModel defaultTableModel) {
         table.setModel(defaultTableModel);
         table.getTableHeader().setReorderingAllowed(false);
@@ -228,15 +237,47 @@ public class LogsFrame extends javax.swing.JFrame {
         table.getTableHeader().setResizingAllowed(false);
         table.setShowGrid(true);
     }
-    
+
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         this.hide();
-        ManagerMainMenu managerMainMenu=new ManagerMainMenu();
+        ManagerMainMenu managerMainMenu = new ManagerMainMenu();
         managerMainMenu.show();
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void salesLogsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salesLogsButtonActionPerformed
+        SimpleDateFormat sdf=new SimpleDateFormat("MMMM dd,yyyy");
         setTableConfiguration(logDataTable, salesLogsDataTableModel);
+        Date checkDuplicate = null;
+        Date date = null;
+        for (DutyLog dutyLog : registry.getDutyLogs()) {
+            System.out.println("hahaha");
+            if (dutyLog.getEmployee() instanceof Cashier) {
+                System.out.println("1");
+                if (checkDuplicate == null || checkDuplicate.after(dutyLog.getTimeIn())) {
+                    System.out.println("2 setted");
+                    checkDuplicate = dutyLog.getTimeIn();
+                }
+                date = dutyLog.getTimeIn();
+                System.out.println("get");
+                if (!logs.isEmpty()) {
+                    if (checkDuplicate.getYear() != date.getYear() && checkDuplicate.getMonth()!=date.getMonth()
+                        && checkDuplicate.getDay()!=date.getDay()) {
+                    logs.add(dutyLog.getTimeIn());
+                    System.out.println("added");
+                }
+                } else {
+                    logs.add(date);
+                }
+                
+            }
+        }
+       
+        for (Date date1 : logs) {
+            logsTableModel.addRow(new Object[]{sdf.format(date1)});
+        }
+        
+        
+        
     }//GEN-LAST:event_salesLogsButtonActionPerformed
 
     private void dutyLogsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dutyLogsButtonActionPerformed

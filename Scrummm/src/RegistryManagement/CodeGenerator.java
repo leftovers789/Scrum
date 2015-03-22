@@ -5,7 +5,6 @@
  */
 package RegistryManagement;
 
-import BookingManagement.*;
 import java.util.Date;
 
 /**

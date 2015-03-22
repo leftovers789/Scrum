@@ -189,7 +189,7 @@ public class LoginFrame extends javax.swing.JFrame {
         }
 
         for (Employee employee : busCompany.getEmployees()) {
-            if (logInAsComboBoxSelectedIndex == 1) {
+            if (logInAsComboBoxSelectedIndex == 1 && employee instanceof Manager) {
                 Manager manager = (Manager) employee;
                 if (manager.getUsername().equals(username)
                         && manager.getPassword().equals(password)) {

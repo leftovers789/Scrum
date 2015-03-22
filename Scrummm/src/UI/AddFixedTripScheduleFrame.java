@@ -625,7 +625,7 @@ public class AddFixedTripScheduleFrame extends javax.swing.JFrame {
         return m;
     }
 
-    public static Date getDate(int day, int weekNo, int month, int year) {
+    public Date getDate(int day, int weekNo, int month, int year) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DATE,1);
         cal.set(Calendar.YEAR, year);
@@ -650,7 +650,6 @@ public class AddFixedTripScheduleFrame extends javax.swing.JFrame {
         } else if(fromMonthsComboBox.getSelectedIndex() > toMonthsComboBox.getSelectedIndex()){
             JOptionPane.showMessageDialog(null, "Please select an appropriate condition.", "Wrong condition!", JOptionPane.ERROR_MESSAGE);
         }
-
 
         else {
             if(fromMonthsComboBox.getSelectedIndex() == toMonthsComboBox.getSelectedIndex()){

@@ -4,7 +4,7 @@ import LogManagement.*;
 import BookingManagement.*;
 import java.util.*;
 
-public class Registry extends Observable {
+public class Registry {
     
     private List<DutyLog> dutyLogs = new ArrayList<>();
     private List<SalesLog> salesLogs = new ArrayList<>();

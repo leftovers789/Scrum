@@ -45,7 +45,7 @@ public class SearchEngine {
     public List<Trip> searchAvailableTrips() {
         List<Trip> results = new ArrayList<>();
         for (Trip trip : reg.getTrips()) {
-            if (trip.getStatus().equals(TripStatus.READY)) {
+            if (trip.getCapacity() > 0) {
                 results.add(trip);
             }
         }
